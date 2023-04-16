@@ -1,11 +1,5 @@
 ﻿using AunctionApp.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AunctionApp.DAL.Database
 {
@@ -22,9 +16,8 @@ namespace AunctionApp.DAL.Database
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {  
+        {
 
             modelBuilder.Entity<Product>()
                 .Property(t => t.Description)
@@ -43,12 +36,9 @@ namespace AunctionApp.DAL.Database
                 p.Property(p => p.BidTime)
                     .HasDefaultValueSql("getdate()");
 
-                p.Property(p => p.BidderFirstName)
+                p.Property(p => p.Bidder)
                     .HasMaxLength(50)
                     .IsRequired();
-                p.Property(p => p.BidderLastName)
-                   .HasMaxLength(50)
-                   .IsRequired();
             });
 
             modelBuilder.Entity<User>(e =>
@@ -74,7 +64,7 @@ namespace AunctionApp.DAL.Database
 
                 e.HasIndex(u => u.UserName, $"IX_Unique_{nameof(User.UserName)}")
                   .IsUnique();
-                  
+
                 e.HasIndex(p => new { p.Email, p.PhoneNumber }, $"IX_Unique_{nameof(User.Email)}{nameof(User.PhoneNumber)}")
                    .IsUnique();
 
@@ -113,6 +103,12 @@ namespace AunctionApp.DAL.Database
                    .IsRequired(false);
 
             });
+
+            modelBuilder.Entity<Product>()
+                 .HasMany(u => u.Bid)
+                 .WithOne(w => w.Product)
+                 .HasForeignKey(w => w.ProductId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

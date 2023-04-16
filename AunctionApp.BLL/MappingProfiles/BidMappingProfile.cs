@@ -14,6 +14,7 @@ namespace AunctionApp.BLL.MappingProfiles
         public BidMappingProfile() 
         {
             CreateMap<AddOrUpdateBidVM, Bid>();
+            CreateMap<AddOrUpdateBidVM, Bid>().ReverseMap();
         }
     }
 }

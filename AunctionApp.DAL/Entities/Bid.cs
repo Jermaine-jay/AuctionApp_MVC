@@ -10,9 +10,7 @@ namespace AunctionApp.DAL.Entities
     {
         public string BidPrice { get; set; }
         public DateTime BidTime { get; set; } = DateTime.Now;
-        public string BidderFirstName { get; set; }
-        public string BidderLastName { get; set; }
-
+        public string Bidder { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
     }

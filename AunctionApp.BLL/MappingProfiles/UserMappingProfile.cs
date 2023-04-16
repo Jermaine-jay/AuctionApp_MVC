@@ -13,7 +13,8 @@ namespace AunctionApp.BLL.MappingProfiles
     {
         public UserMappingProfile()
         {
-            CreateMap<CreateUserVM, User>();
+            CreateMap<User, UserVM>();
+            CreateMap<UserVM, User>();
         }
     }
 }

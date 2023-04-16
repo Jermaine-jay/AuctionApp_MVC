@@ -14,9 +14,9 @@ namespace AunctionApp.DAL.Entities
         public string Description { get; set; }
 
         [Range(100, 10000000, ErrorMessage ="Actual Amount must be within 100- 10000000")]
-        public long ActualAmount { get; set; }
-        public byte[]? ProductImage { get; set; }
+        public string ActualAmount { get; set; }
+        public string ProductImagePath { get; set; }
         public bool IsSold { get; set; }
-        public List<Bid>? Bids { get; set;}
+        public  IList<Bid>? Bid { get; set;}
     }
 }
