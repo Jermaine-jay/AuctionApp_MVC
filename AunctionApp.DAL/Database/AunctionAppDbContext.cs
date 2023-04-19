@@ -105,7 +105,7 @@ namespace AunctionApp.DAL.Database
             });
 
             modelBuilder.Entity<Product>()
-                 .HasMany(u => u.Bid)
+                 .HasMany(u => u.BidList)
                  .WithOne(w => w.Product)
                  .HasForeignKey(w => w.ProductId)
                  .OnDelete(DeleteBehavior.Cascade);

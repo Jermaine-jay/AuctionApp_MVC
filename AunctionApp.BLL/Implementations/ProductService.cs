@@ -21,10 +21,7 @@ namespace AunctionApp.BLL.Implementations
             _BidRepo = _unitOfWork.GetRepository<Bid>();
             _ProductRepo = _unitOfWork.GetRepository<Product>();
         }
-        public Task<(bool successful, string msg)> AddOrUpdateAsync(UpdateAunctionVM model)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<IEnumerable<AunctionVMForm>> GetAunctions()
         {
@@ -39,6 +36,14 @@ namespace AunctionApp.BLL.Implementations
             return aunctionViewModels;
         }
 
+        public async Task<AunctionVMForm> GetAunction(int productId)
+        {
+            var user = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
+            var Auser = _mapper.Map<AunctionVMForm>(user);
+
+            return Auser;
+        }
+
         public async Task<IEnumerable<AunctionWithBidVM>> GetAunctionsWithBidsAsync()
         {
 
@@ -47,7 +52,7 @@ namespace AunctionApp.BLL.Implementations
                 ProductName = u.ProductName,
                 ActualAmount = u.ActualAmount,
                 Description = u.Description,
-                ProductImage = u.ProductImagePath
+                ProductImage = u.ProductImagePath,
                 Bids = u.BidList.Select(t => new BidVM
                 {
                     Bidder = t.Bidder,

@@ -2,8 +2,6 @@
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
@@ -12,16 +10,12 @@ namespace AunctionApp.BLL.Implementations
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<User> _userRepo;
-        private readonly IRepository<Bid> _BidRepo;
         private readonly IRepository<Product> _ProductRepo;
 
         public AdminService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _userRepo = _unitOfWork.GetRepository<User>();
-            _BidRepo = _unitOfWork.GetRepository<Bid>();
             _ProductRepo = _unitOfWork.GetRepository<Product>();
         }
         public async Task<(bool successful, string msg)> CreateAunctionAsync(AunctionVM model)
@@ -91,55 +85,21 @@ namespace AunctionApp.BLL.Implementations
 
             await _ProductRepo.DeleteAsync(aunction);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
-            
+
         }
 
-        public async Task<IEnumerable<UserVM>> GetUsers()
+        public async Task<(bool Done, string msg)> ToggleProductStatus(int productId)
         {
-            var users = await _userRepo.GetAllAsync();
-            var userViewModels = users.Select(model => new UserVM
+            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId, tracking: true);
+
+            if (aunction != null)
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                PhoneNumber = model.PhoneNumber,
-                Email = model.Email,
-                UserName = model.UserName,
+                //_mapper.Map<AunctionVMForm>(aunction);
 
-            });
-            return userViewModels;
-        }
-
-        public async Task<IEnumerable<AunctionVMForm>> GetAunctions()
-        {
-            var aunction = await _ProductRepo.GetAllAsync();
-            var aunctionViewModels = aunction.Select(model => new AunctionVMForm
-            {
-                ProductImage = model.ProductImagePath,
-                ProductName = model.ProductName,
-                Description = model.Description,
-
-            });
-            return aunctionViewModels;
-        }
-
-        public async Task<IEnumerable<AunctionWithBidVM>> GetUsersWithTasksAsync()
-        {
-
-            return (await _ProductRepo.GetAllAsync(include: u => u.Include(t => t.BidList))).Select(u => new AunctionWithBidVM
-            {
-                ProductName = u.ProductName,
-                ActualAmount = u.ActualAmount,
-                Description = u.Description,
-                Bids = u.BidList.Select(t => new BidVM
-                {
-                    Bidder= t.Bidder,
-                    BidPrice = t.BidPrice,
-                    BidTime = t.BidTime.ToString("d"),                   
-                })
-            });
-        }
-        public Task<(bool Done, string msg)> ToggleProductStatus(int productId)
-        {
+                aunction.IsSold = !aunction.IsSold;
+                var rowChanges = await _unitOfWork.SaveChangesAsync();
+                return rowChanges > 0 ? (true, "Status updated") : (false, "Status not updated");
+            }
             throw new NotImplementedException();
         }
 

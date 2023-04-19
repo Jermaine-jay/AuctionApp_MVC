@@ -7,8 +7,7 @@ namespace AunctionApp.BLL.Interfaces
     {
         public Task<IEnumerable<AunctionVMForm>> GetAunctions();
         public Task<IEnumerable<AunctionWithBidVM>> GetAunctionsWithBidsAsync();
-
-        //Task<(bool successful, string msg)> AddOrUpdateAsync(UpdateAunctionVM model);
+        public Task<AunctionVMForm> GetAunction(int productId);
 
     }
 }

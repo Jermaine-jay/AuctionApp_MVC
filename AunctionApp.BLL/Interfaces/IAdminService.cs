@@ -14,8 +14,6 @@ namespace AunctionApp.BLL.Interfaces
         Task<(bool successful, string msg)> UpdateAunctionAsync(AunctionVM model);
         Task<(bool successful, string msg)> DeleteAunctionAsync(int productId);
         Task<(bool Done, string msg)> ToggleProductStatus(int productId);
-        Task<IEnumerable<UserVM>> GetUsers();
-        Task<IEnumerable<AunctionVMForm>> GetAunctions();
 
     }
 }

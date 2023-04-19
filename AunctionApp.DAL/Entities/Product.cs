@@ -17,6 +17,6 @@ namespace AunctionApp.DAL.Entities
         public string ActualAmount { get; set; }
         public string ProductImagePath { get; set; }
         public bool IsSold { get; set; }
-        public  IList<Bid>? Bid { get; set;}
+        public  IList<Bid>? BidList { get; set;}
     }
 }
