@@ -3,7 +3,7 @@
     Layout = "_Layout";
 }
 
-
+@model IEnumerable<AunctionApp.BLL.Models.AunctionVMForm>
 
 <section class="breadcrumbs">
     <div class="container">
@@ -21,17 +21,29 @@
             <th scope="col">Actions</th> <!-- new column for buttons -->
         </tr>
     </thead>
+    
+    @foreach (var item in Model.Select((value, i) => new { value, i }))
+    {
     <tbody>
         <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>sold</td>
+            <th scope="row">@(item.i + 1)</th>
+            <td>@item.value.ProductName</td>
+            <td>@item.value.ActualAmount</td>
+            <td>@item.value.Status</td>
+           
             <td>
                 <!-- new column for buttons -->
-                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                <button type="button" class="btn btn-success btn-sm">sell</button>
+                    <button type="button" class="btn btn-warning btn-rounded btn-sm">
+                            <a href="@Url.Action("Update", "Admin", new { userId = @item.value.Id, _method = "Get" })"></a>Edit
+                    </button>  
+
+                    <button type="button" class="btn btn-warning btn-rounded btn-sm">
+                        <a href="@Url.Action("Delete", "Admin", new { userId = @item.value.Id, _method = "Get" })"></a>Delete
+                    </button>  
+                    
+                    <button type="button" class="btn btn-warning btn-rounded btn-sm">
+                        <a href="@Url.Action("SaveStatus", "Admin", new { userId = @item.value.Id, _method = "Get" })"></a>Sell
+                    </button>           
             </td>
         </tr>
         <tr>
@@ -59,6 +71,7 @@
             </td>
         </tr>
     </tbody>
+    }
 </table>
 
 @section Scripts

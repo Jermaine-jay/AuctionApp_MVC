@@ -8,7 +8,7 @@ namespace AunctionApp.BLL.Models
 {
     public class AunctionWithBidVM
     {
-        public int ProductId { get; set; }
+        public int Id { get; set; }
         public string ProductName { get; set; }
         public string ActualAmount { get; set; }
         public string? ProductImage { get; set; }

@@ -28,9 +28,9 @@ namespace AunctionAppMVC.Controllers
         }
         public async Task<IActionResult> UpdateAunction(int ProductId)
         {
-            /*var user = await _ProductService.GetAunction(ProductId);
-            return View(user);*/
-            return View();
+            var user = await _ProductService.GetAunction(ProductId);
+            return View(user);
+
         }
 
         /*  public IActionResult DeleteAunction(int ProductId)
@@ -41,12 +41,12 @@ namespace AunctionAppMVC.Controllers
         public IActionResult AllAunctions()
         {
             var model = _ProductService.GetAunctions();
-            return View();
+            return View(model);
         }
 
         public async Task<IActionResult> UpdateStatus(int productId)
         {
-            return View(new AunctionVMForm { ProductId = productId });
+            return View(new AunctionVMForm { Id = productId });
         }
 
         [HttpPost]
