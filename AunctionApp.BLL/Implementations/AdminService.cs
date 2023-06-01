@@ -2,27 +2,32 @@
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using System.Threading.Tasks;
 using TodoList.DAL.Repository;
+
 
 namespace AunctionApp.BLL.Implementations
 {
     public class AdminService : IAdminService
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _ProductRepo;
 
-        public AdminService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _ProductRepo = _unitOfWork.GetRepository<Product>();
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<(bool successful, string msg)> CreateAunctionAsync(AunctionVM model)
         {
 
             var fileName = Path.GetFileName(model.ProductImage.FileName);
-            var imagePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", fileName);
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -31,7 +36,7 @@ namespace AunctionApp.BLL.Implementations
 
             AunctionVMForm form = new()
             {
-                ProductImage = "/UploadedFiles/" + fileName, // <-- Use fileName instead of "/images/" + fileName
+                ProductImage = "~/images/" + fileName, // <-- Use fileName instead of "/images/" + fileName
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -45,14 +50,14 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> UpdateAunctionAsync(AunctionVM model)
         {
-            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId);
+            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.Id);
             if (product == null)
             {
-                return (false, $"Product with ID:{model.ProductId} wasn't found");
+                return (false, $"Product with ID:{model.Id} wasn't found");
             }
 
             var fileName = Path.GetFileName(model.ProductImage.FileName);
-            var imagePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", fileName);
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -61,7 +66,7 @@ namespace AunctionApp.BLL.Implementations
 
             AunctionVMForm form = new()
             {
-                ProductImage = "/UploadedFiles/" + fileName, // <-- Use fileName instead of "/images/" + fileName
+                ProductImage = "~/images/" + fileName, // <-- Use fileName instead of "/images/" + fileName
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -71,18 +76,19 @@ namespace AunctionApp.BLL.Implementations
             var rowChanges = await _ProductRepo.UpdateAsync(updateproduct);
 
             return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
-
         }
 
         public async Task<(bool successful, string msg)> DeleteAunctionAsync(int productId)
         {
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
-
-            if (aunction == null)
+            var fileName = aunction.ProductImagePath;
+            var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+            if (aunction == null || File.Exists(filePathToDelete))
             {
                 return (false, $"Aunction with user:{aunction.Id} wasn't found");
             }
-
+           
+            File.Delete(filePathToDelete);         
             await _ProductRepo.DeleteAsync(aunction);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
 
@@ -94,13 +100,12 @@ namespace AunctionApp.BLL.Implementations
 
             if (aunction != null)
             {
-                //_mapper.Map<AunctionVMForm>(aunction);
-
                 aunction.IsSold = !aunction.IsSold;
-                var rowChanges = await _unitOfWork.SaveChangesAsync();
-                return rowChanges > 0 ? (true, "Status updated") : (false, "Status not updated");
+                var row = _mapper.Map<Product>(aunction);
+                var rowChanges = await _ProductRepo.UpdateAsync(row);
+                return rowChanges != null ? (true, "Status updated") : (false, "Failed to update status");
             }
-            throw new NotImplementedException();
+            return (false,"");
         }
 
     }

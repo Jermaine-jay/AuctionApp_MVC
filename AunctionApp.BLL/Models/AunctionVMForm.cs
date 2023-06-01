@@ -13,6 +13,6 @@ namespace AunctionApp.BLL.Models
 
         [Display(Name = "Image")]
         public string ProductImage { get; set; }
-        public string IsSold { get; set; }
+        public string Status { get; set; }
     }
 }

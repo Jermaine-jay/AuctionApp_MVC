@@ -1,21 +1,20 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
-using AunctionApp.DAL.Entities;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionAppMVC.Controllers
 {
+    [Route("[controller]/[action]/{id?}")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
         private readonly IProductService _ProductService;
         private readonly IAdminService _AdminService;
 
-        public AdminController(IUserService userService, IProductService _todoService, IAdminService adminService)
+        public AdminController(IUserService userService, IProductService productService, IAdminService adminService)
         {
             _userService = userService;
-            _ProductService = _todoService;
+            _ProductService = productService;
             _AdminService = adminService;
         }
         public IActionResult Index()
@@ -29,13 +28,22 @@ namespace AunctionAppMVC.Controllers
         }
         public async Task<IActionResult> UpdateAunction(int ProductId)
         {
-            var user = await _ProductService.GetAunction(ProductId);
-            return View(user);
+            /*var user = await _ProductService.GetAunction(ProductId);
+            return View(user);*/
+            return View();
         }
-        public IActionResult DeleteAunction(int ProductId)
+
+        /*  public IActionResult DeleteAunction(int ProductId)
+          {
+              return View(new AunctionVMForm { ProductId = ProductId });
+          }*/
+
+        public IActionResult AllAunctions()
         {
-            return View(new AunctionVMForm { ProductId = ProductId });
+            var model = _ProductService.GetAunctions();
+            return View();
         }
+
         public async Task<IActionResult> UpdateStatus(int productId)
         {
             return View(new AunctionVMForm { ProductId = productId });
@@ -61,9 +69,7 @@ namespace AunctionAppMVC.Controllers
 
                 return View("NewAunction");
             }
-
             return View("NewAunction");
-
         }
 
         [HttpPut]
@@ -87,7 +93,7 @@ namespace AunctionAppMVC.Controllers
             return View("UpdateAunction");
         }
 
-        [HttpPost("{productId}")]
+        [HttpPost]
         public async Task<IActionResult> Delete(int ProductId)
         {
             if (ModelState.IsValid)
@@ -108,12 +114,11 @@ namespace AunctionAppMVC.Controllers
 
         }
 
-        [HttpPatch("{productId}")]
+        [HttpGet]
         public async Task<IActionResult> SaveStatus(int ProductId)
         {
             if (ModelState.IsValid)
             {
-
                 var (success, msg) = await _AdminService.ToggleProductStatus(ProductId);
                 if (success)
                 {
@@ -126,9 +131,7 @@ namespace AunctionAppMVC.Controllers
 
             }
             return View("AllAunctions");
-
         }
-
 
     }
 }

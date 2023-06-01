@@ -31,7 +31,7 @@ namespace AunctionApp.BLL.Implementations
                 ProductImage = model.ProductImagePath,
                 ProductName = model.ProductName,
                 Description = model.Description,
-
+                Status = model.IsSold? "Sold" : "Not Sold"
             });
             return aunctionViewModels;
         }
@@ -58,7 +58,6 @@ namespace AunctionApp.BLL.Implementations
                     Bidder = t.Bidder,
                     BidPrice = t.BidPrice,
                     BidTime = t.BidTime.ToString("d"),
-
                 })
             });
         }

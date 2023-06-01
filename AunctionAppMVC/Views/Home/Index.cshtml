@@ -1,6 +1,13 @@
-﻿@{
+﻿@*@{
     ViewData["Title"] = "Home Page";
+}*@
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
 }
+
+
 <div class="text-center">
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center justify-content-center">
@@ -300,5 +307,4 @@
     @{
         Html.RenderPartial("_ValidationScriptsPartial");
     }
-    ;
 }

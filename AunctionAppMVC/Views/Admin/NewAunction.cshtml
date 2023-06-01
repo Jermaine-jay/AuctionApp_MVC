@@ -1,4 +1,10 @@
-﻿<main id="main">
+﻿@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+
+<main id="main">
 
     <main>
         <div class="container mt-5">
@@ -47,7 +53,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <button class="btn btn-secondary w-100" type="submit">Create Aunction</button>
+                                            <button class="btn btn-success w-100" type="submit">Create Aunction</button>
                                         </div>
 
                                     </form>
@@ -62,3 +68,11 @@
 
     </main><!-- End #main -->
     </div>
+
+
+    @section Scripts
+        {
+        @{
+            Html.RenderPartial("_ValidationScriptsPartial");
+        }
+    }

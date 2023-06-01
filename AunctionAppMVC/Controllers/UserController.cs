@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionAppMVC.Controllers
 {
+    [Route("[controller]/[action]/{id?}")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -112,7 +113,7 @@ namespace AunctionAppMVC.Controllers
             return View("UpdateUser");
         }
 
-        [HttpPost("{userId}")]
+        [HttpGet]
         public async Task<IActionResult> Delete(int userId)
         {
             if (ModelState.IsValid)

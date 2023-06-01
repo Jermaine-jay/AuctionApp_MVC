@@ -1,20 +1,25 @@
-﻿using AunctionAppMVC.Models;
+﻿using AunctionApp.BLL.Interfaces;
+using AunctionAppMVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace AunctionAppMVC.Controllers
 {
+    //[Route("[controller]/[action]/{id?}")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductService _ProductService;
+        public HomeController(ILogger<HomeController> logger, IProductService productService)
         {
             _logger = logger;
+            _ProductService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            /*var model = await _ProductService.GetAunctions();
+            return View(model);*/
             return View();
         }
 

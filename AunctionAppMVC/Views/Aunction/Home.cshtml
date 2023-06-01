@@ -1,4 +1,9 @@
-﻿  <main id="main">
+﻿@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+ 
+<main id="main">
 
     <!-- ======= Breadcrumbs ======= -->
     <section class="breadcrumbs">
@@ -98,3 +103,10 @@
 
     </div>
   </section><!-- End About Section -->
+    @section Scripts
+        {
+        @{
+            Html.RenderPartial("_ValidationScriptsPartial");
+        }
+
+    }

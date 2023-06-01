@@ -12,22 +12,17 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AunctionAppDbContext>(opts =>
 {
-    // this will only work if there's a section called ConnectionStrings on the appSettings
-    // var defaultConn = builder.Configuration.GetConnectionString("DefaultConn");
-
     var defaultConn = builder.Configuration.GetSection("ConnectionString")["DefaultConn"];
-
     opts.UseSqlServer(defaultConn);
-
 });
 
 builder.Services.AddControllersWithViews();
 // Add services to the container.
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<AunctionAppDbContext>>();
-builder.Services.AddScoped<IUserService, UserService>();//todo: show other life-cycles
-builder.Services.AddScoped<IProductService, ProductService>();//todo: show other life-cycles
-builder.Services.AddScoped<IAdminService, AdminService>();//todo: show other life-cycles
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddAutoMapper(Assembly.Load("AunctionApp.BLL"));
 
 var app = builder.Build();
@@ -50,5 +45,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+await DataAccess.EnsurePopulatedAsync(app);
 
 app.Run();
