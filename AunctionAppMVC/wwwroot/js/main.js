@@ -1,10 +1,10 @@
-/**
-* Template Name: Gp
-* Updated: Mar 09 2023 with Bootstrap v5.2.3
-* Template URL: https://bootstrapmade.com/gp-free-multipurpose-html-bootstrap-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+window.setTimeout(function () {
+    $(".alert").fadeTo(500, 0).slideUp(500, function () {
+        $(this).remove();
+    });
+}, 2000);
+
+
 (function() {
   "use strict";
 
@@ -292,3 +292,4 @@
   new PureCounter();
 
 })()
+

@@ -8,8 +8,11 @@ namespace AunctionApp.BLL.MappingProfiles
     {
         public AunctionMappingProfile()
         {
-            CreateMap<AunctionVM, Product>();
-            CreateMap<Product, AunctionVM>();
+            CreateMap<AuctionVM, Product>();
+            CreateMap<Product, AuctionVM>();
+
+            CreateMap<AuctionVMForm, Product>();
+            CreateMap<Product, AuctionVMForm>();
         }
     }
 }

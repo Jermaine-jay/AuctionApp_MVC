@@ -50,11 +50,10 @@ namespace AunctionApp.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Discription = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: false),
-                    ActualAmount = table.Column<long>(type: "bigint", nullable: false),
-                    ProductImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: false),
+                    ActualAmount = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -70,9 +69,9 @@ namespace AunctionApp.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    OtherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
@@ -93,8 +92,7 @@ namespace AunctionApp.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BidPrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BidTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    BidderFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BidderLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Bidder = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)

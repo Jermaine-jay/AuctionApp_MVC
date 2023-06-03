@@ -18,9 +18,8 @@ namespace AunctionAppMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            /*var model = await _ProductService.GetAunctions();
-            return View(model);*/
-            return View();
+            var model = await _ProductService.GetAuctions();
+            return View(model);
         }
 
         public IActionResult Privacy()

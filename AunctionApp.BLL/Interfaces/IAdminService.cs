@@ -10,9 +10,9 @@ namespace AunctionApp.BLL.Interfaces
 {
     public interface IAdminService
     {
-        Task<(bool successful, string msg)> CreateAunctionAsync(AunctionVM model);
-        Task<(bool successful, string msg)> UpdateAunctionAsync(AunctionVM model);
-        Task<(bool successful, string msg)> DeleteAunctionAsync(int productId);
+        Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model);
+        Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model);
+        Task<(bool successful, string msg)> DeleteAuctionAsync(int productId);
         Task<(bool Done, string msg)> ToggleProductStatus(int productId);
 
     }

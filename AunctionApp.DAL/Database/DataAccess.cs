@@ -25,28 +25,28 @@ namespace AunctionApp.DAL.Database
             {
                 new Product()
                 {
-                    ProductName = "English Bronze Of An Eel And Heron",
-                    ActualAmount = "1400",
-                    ProductImagePath = "~/imges/Eelandheron.jpg",
-                    Description = "Lady Fanny Maitland (english Fl. 1870s): A Unique English Bronze Of An Eel And Heron In Mortal Combat",
+                    ProductName = "1968 Chevrolet Corvette Convertible",
+                    ActualAmount = "5000",
+                    Description = "This third-generation 1968 Chevrolet Corvette Convertible has just came out a long-term ownership and is finished in its factory color LeMans Blue (976) combined with a black interior. This patinated C3 is equipped with a 4-speed manual transmission with a Hurst shifter, V8 engine, Street Demon carburetor, four-wheel disc brakes, dual exhaust outlets, concealed headlights, chrome trim, three-spoke steering wheel, quadruple tail lights, rear bumper integrated spoiler, black convertible soft top",
+                    ProductImagePath = "1968-Chevrolet-Corvette-Convertible.jpg",
                     BidList = new List<Bid>()
                     {
                         new Bid()
                         {
-                            BidPrice = "1500",
-                            Bidder = "germaine-jay",
+                            BidPrice = "5500",
+                            Bidder = "macsherano20",
                         },
 
                         new Bid()
                         {
-                            BidPrice = "1550",
-                            Bidder = "Odogwu-jay",
+                            BidPrice = "5550",
+                            Bidder = "codeine-crazy",
                         },
 
                         new Bid()
                         {
-                            BidPrice = "1700",
-                            Bidder = "germaine-jay",
+                            BidPrice = "6000",
+                            Bidder = "alexis sanchez",
                         }
 
                     }
@@ -56,7 +56,7 @@ namespace AunctionApp.DAL.Database
                 {
                     ProductName = "1958 Chevy Covette",
                     ActualAmount = "2000",
-                    ProductImagePath = "~/imges/chevycovette-1958.jpg",
+                    ProductImagePath = "chevycovette-1958.jpg",
                     Description = "The vehicle comes equipped with a 4-speed manual transmission, 283 V8 engine, steel wheels, knock-off hub caps, hard top, and white wall tires.",
                     BidList = new List<Bid>()
                     {
@@ -83,10 +83,10 @@ namespace AunctionApp.DAL.Database
 
                  new Product()
                 {
-                    ProductName = "alfa romeo gulia 1600 1965.jpg",
+                    ProductName = "1965 alfa romeo gulia 1600 ",
                     ActualAmount = "2000",
                     Description = "Alfa Romeo, with a new twin-cam, four-cylinder engine design. Sporting elegant coachwork designed and built by Pininfarina, the 1.3-litre Giulietta Spider ",
-                    ProductImagePath = "~/imges/alfa-romeo-gulia-1600 1965.jpg",
+                    ProductImagePath = "alfa-romeo-gulia-1600 1965.jpg",
                     BidList = new List<Bid>()
                     {
                         new Bid()

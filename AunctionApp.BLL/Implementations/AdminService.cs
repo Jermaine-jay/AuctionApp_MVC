@@ -23,20 +23,25 @@ namespace AunctionApp.BLL.Implementations
             _ProductRepo = _unitOfWork.GetRepository<Product>();
             _webHostEnvironment = webHostEnvironment;
         }
-        public async Task<(bool successful, string msg)> CreateAunctionAsync(AunctionVM model)
+        public async Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model)
         {
 
-            var fileName = Path.GetFileName(model.ProductImage.FileName);
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+            var fileName = model.ProductImagePath.FileName;
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "Auctions");
 
-            using (var stream = new FileStream(imagePath, FileMode.Create))
+            if (!Directory.Exists(imagePath))
             {
-                await model.ProductImage.CopyToAsync(stream);
+                Directory.CreateDirectory(imagePath);
+            }
+            string picPath = Path.Combine(imagePath, fileName);
+            using (var stream = new FileStream(picPath, FileMode.Create))
+            {
+                await model.ProductImagePath.CopyToAsync(stream);
             }
 
-            AunctionVMForm form = new()
+            AuctionVMForm form = new()
             {
-                ProductImage = "~/images/" + fileName, // <-- Use fileName instead of "/images/" + fileName
+                ProductImagePath = fileName, 
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -45,10 +50,10 @@ namespace AunctionApp.BLL.Implementations
             var product = _mapper.Map<Product>(form);
             var rowChanges = await _ProductRepo.AddAsync(product);
 
-            return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
+            return rowChanges != null ? (true, "Auction created successfully!") : (false, "Failed to create Auction");
         }
 
-        public async Task<(bool successful, string msg)> UpdateAunctionAsync(AunctionVM model)
+        public async Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model)
         {
             var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.Id);
             if (product == null)
@@ -56,17 +61,22 @@ namespace AunctionApp.BLL.Implementations
                 return (false, $"Product with ID:{model.Id} wasn't found");
             }
 
-            var fileName = Path.GetFileName(model.ProductImage.FileName);
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+            var fileName = model.ProductImagePath.FileName;
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "Auctions");
 
-            using (var stream = new FileStream(imagePath, FileMode.Create))
+            if (!Directory.Exists(imagePath))
             {
-                await model.ProductImage.CopyToAsync(stream);
+                Directory.CreateDirectory(imagePath);
+            }
+            string picPath = Path.Combine(imagePath, fileName);
+            using (var stream = new FileStream(picPath, FileMode.Create))
+            {
+                await model.ProductImagePath.CopyToAsync(stream);
             }
 
-            AunctionVMForm form = new()
+            AuctionVMForm form = new()
             {
-                ProductImage = "~/images/" + fileName, // <-- Use fileName instead of "/images/" + fileName
+                ProductImagePath = fileName, // <-- Use fileName instead of "/images/" + fileName
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -78,11 +88,13 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
         }
 
-        public async Task<(bool successful, string msg)> DeleteAunctionAsync(int productId)
+        public async Task<(bool successful, string msg)> DeleteAuctionAsync(int productId)
         {
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
+
             var fileName = aunction.ProductImagePath;
-            var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+            var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "img", fileName);
+
             if (aunction == null || File.Exists(filePathToDelete))
             {
                 return (false, $"Aunction with user:{aunction.Id} wasn't found");

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AunctionApp.DAL.Migrations
 {
     [DbContext(typeof(AunctionAppDbContext))]
-    [Migration("20230320152112_InitialMigration")]
+    [Migration("20230601214126_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,12 +85,7 @@ namespace AunctionApp.DAL.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("BidderFirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("BidderLastName")
+                    b.Property<string>("Bidder")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -150,13 +145,14 @@ namespace AunctionApp.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<long>("ActualAmount")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ActualAmount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discription")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
@@ -164,11 +160,9 @@ namespace AunctionApp.DAL.Migrations
                     b.Property<bool>("IsSold")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("ProductImage")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ProductImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -208,6 +202,9 @@ namespace AunctionApp.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("OtherName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -219,9 +216,6 @@ namespace AunctionApp.DAL.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -242,7 +236,7 @@ namespace AunctionApp.DAL.Migrations
             modelBuilder.Entity("AunctionApp.DAL.Entities.Bid", b =>
                 {
                     b.HasOne("AunctionApp.DAL.Entities.Product", "Product")
-                        .WithMany("Bids")
+                        .WithMany("BidList")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -252,7 +246,7 @@ namespace AunctionApp.DAL.Migrations
 
             modelBuilder.Entity("AunctionApp.DAL.Entities.Product", b =>
                 {
-                    b.Navigation("Bids");
+                    b.Navigation("BidList");
                 });
 #pragma warning restore 612, 618
         }

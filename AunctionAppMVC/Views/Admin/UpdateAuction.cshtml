@@ -3,7 +3,8 @@
     Layout = "_Layout";
 }
 
-@model AunctionApp.BLL.Models.AunctionVM;
+
+@model AunctionApp.BLL.Models.AuctionVMForm;
 
 @if (@TempData["SuccessMsg"] != null)
 {
@@ -22,8 +23,8 @@
     </div>
 }
 
-<main id="main">
 
+<main id="main">
     <main>
         <div class="container mt-5">
 
@@ -38,46 +39,47 @@
                                 <div class="card-body">
 
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Create New Aunction</h5>
+                                        <h5 class="card-title text-center pb-0 fs-4">Update Aunction</h5>
                                         <p class="text-center small">Make sure Every detail is correct</p>
                                     </div>
 
-                                    <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
 
-                                    <form class="row g-3 needs-validation" asp-controller="Admin" asp-action="Save" novalidate>
+                                    <form class="row g-3 needs-validation" asp-controller="Admin" asp-action="Update" novalidate>
+
+                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
 
                                         <div class="col-12">
                                             <label asp-for="@Model.ProductName" class="form-label">Product Name</label>
                                             <input type="text" asp-for="@Model.ProductName" class="form-control" id="" required>
-
+                                            <span asp-validation-for="@Model.ProductName"></span>
                                         </div>
 
                                         <div class="col-12">
                                             <label asp-for="@Model.ActualAmount" class="form-label">Product Initial Price</label>
                                             <input type="text" asp-for="@Model.ActualAmount" class="form-control" required>
-
+                                            <span asp-validation-for="@Model.ActualAmount"></span>
                                         </div>
 
                                         <div class="col-12">
                                             <label asp-for="@Model.Description" class="form-label">Description</label>
                                             <textarea asp-for="@Model.Description" type="textarea" class="form-control"></textarea>
-
+                                            <span asp-validation-for="@Model.Description"></span>
                                         </div>
 
 
                                         <div class="col-12">
-                                            <label asp-for="@Model.ProductImage" class="form-label">Product Image</label>
+                                            <label asp-for="@Model.ProductImagePath" class="form-label">Product Image</label>
                                             <div class="custom-file form-control">
-                                                <input asp-for="@Model.ProductImage" type="file" class="custom-file-input" required>
+                                                <input asp-for="@Model.ProductImagePath" type="file" class="custom-file-input" required>
+                                                <span asp-validation-for="@Model.ProductImagePath"></span>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <button class="btn btn-success w-100" type="submit">Create Aunction</button>
+                                            <button class="btn btn-success w-100" type="submit">Update Auction</button>
                                         </div>
 
                                     </form>
-
                                 </div>
                             </div>
                         </div>
@@ -85,7 +87,6 @@
                 </div>
 
             </section>
-
     </main><!-- End #main -->
     </div>
 
@@ -95,4 +96,5 @@
         @{
             Html.RenderPartial("_ValidationScriptsPartial");
         }
-    }
+   
+ }

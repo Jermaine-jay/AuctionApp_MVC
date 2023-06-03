@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionAppMVC.Controllers
 {
-    [Route("[controller]/[action]/{id?}")]
+    [Route("[controller]/[action]/{productid?}")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
@@ -22,14 +22,15 @@ namespace AunctionAppMVC.Controllers
             return View();
         }
 
-        public IActionResult NewAunction()
+        public IActionResult NewAuction()
         {
-            return View(new AunctionVM());
+            return View(new AuctionVM());
         }
-        public async Task<IActionResult> UpdateAunction(int ProductId)
+
+        public async Task<IActionResult> UpdateAuction(int productId)
         {
-            var user = await _ProductService.GetAunction(ProductId);
-            return View(user);
+            var model = await _ProductService.GetAuction(productId);
+            return View(model);
 
         }
 
@@ -38,59 +39,59 @@ namespace AunctionAppMVC.Controllers
               return View(new AunctionVMForm { ProductId = ProductId });
           }*/
 
-        public IActionResult AllAunctions()
+        public async Task<IActionResult> AllAuctions()
         {
-            var model = _ProductService.GetAunctions();
+            var model = await _ProductService.GetAuctions();
             return View(model);
         }
 
-        public async Task<IActionResult> UpdateStatus(int productId)
+        /*public async Task<IActionResult> UpdateStatus(int productId)
         {
             return View(new AunctionVMForm { Id = productId });
-        }
+        }*/
 
         [HttpPost]
-        public async Task<IActionResult> Save(AunctionVM model)
+        public async Task<IActionResult> Save(AuctionVM model)
         {
 
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _AdminService.CreateAunctionAsync(model);
+                var (successful, msg) = await _AdminService.CreateAuctionAsync(model);
 
                 if (successful)
                 {
 
                     TempData["SuccessMsg"] = msg;
 
-                    return RedirectToAction("AllAunctionsWithBids");
+                    return RedirectToAction("AllAuctionsWithBids");
                 }
 
                 TempData["ErrMsg"] = msg;
 
-                return View("NewAunction");
+                return View("NewAuction");
             }
-            return View("NewAunction");
+            return View("NewAuction");
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(AunctionVM model)
+        public async Task<IActionResult> Update(AuctionVM model)
         {
 
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _AdminService.UpdateAunctionAsync(model);
+                var (successful, msg) = await _AdminService.UpdateAuctionAsync(model);
 
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllAunctions");
+                    return RedirectToAction("AllAuctions");
                 }
 
                 TempData["ErrMsg"] = msg;
-                return View("UpdateAunction");
+                return View("UpdateAuction");
 
             }
-            return View("UpdateAunction");
+            return View("UpdateAuction");
         }
 
         [HttpPost]
@@ -99,22 +100,21 @@ namespace AunctionAppMVC.Controllers
             if (ModelState.IsValid)
             {
 
-                var (success, msg) = await _AdminService.DeleteAunctionAsync(ProductId);
+                var (success, msg) = await _AdminService.DeleteAuctionAsync(ProductId);
                 if (success)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllAunctions");
+                    return RedirectToAction("AllAuctions");
                 }
 
                 TempData["ErrMsg"] = msg;
-                return RedirectToAction("AllAunctions");
+                return View("AllAuctions");
 
             }
-            return View("AllAunctions");
+            return View("AllAuctions");
 
         }
 
-        [HttpGet]
         public async Task<IActionResult> SaveStatus(int ProductId)
         {
             if (ModelState.IsValid)
@@ -123,14 +123,14 @@ namespace AunctionAppMVC.Controllers
                 if (success)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllAunctions");
+                    return RedirectToAction("AllAuctions");
                 }
 
                 TempData["ErrMsg"] = msg;
-                return RedirectToAction("AllAunctions");
+                return View("AllAuctions");
 
             }
-            return View("AllAunctions");
+            return View("AllAuctions");
         }
 
     }

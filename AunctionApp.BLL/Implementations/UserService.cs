@@ -33,7 +33,7 @@ namespace AunctionApp.BLL.Implementations
                 return (false, $"User with id:{model.ProductId} wasn't found");
             }
 
-            var bid = product.BidList.SingleOrDefault(t => t.Bidder == model.BidderUsername);
+            var bid = product.BidList.SingleOrDefault(t => t.Bidder == model.Bidder);
             if (bid != null)
             {
                 bid.BidPrice = model.BidPrice;
@@ -47,7 +47,7 @@ namespace AunctionApp.BLL.Implementations
             product.BidList.Add(newbid);
             var rowChanges = await _unitOfWork.SaveChangesAsync();
 
-            return rowChanges > 0 ? (true, $"User: {model.BidderUsername} bid was successfully created!") : (false, "Failed To save changes!");
+            return rowChanges > 0 ? (true, $"User: {model.Bidder} bid was successfully created!") : (false, "Failed To save changes!");
         }
         public async Task<(bool successful, string msg)> Create(UserVM model)
         {

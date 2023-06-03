@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+ 
+@model IEnumerable<AunctionApp.BLL.Models.AuctionWithBidVM>
+
+
+
+ @if (@TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+@if (@TempData["ErrMsg"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> @TempData["ErrMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- ======= Breadcrumbs ======= -->
+<section class="breadcrumbs">
+    <div class="container">
+
+    </div>
+</section><!-- End Breadcrumbs -->
+
+
+<!-- ======= Features Section ======= -->
+@foreach (var item in Model.Select((value, i) => new { value, i }))
+{
+       
+  <section id="features" class="features">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row">
+                <div class="image col-lg-6" style='background-image: url("../img/Auctions/@item.value.ProductImagePath");' data-aos="fade-right"></div>
+        
+        <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right" data-aos-delay="100">
+          <h3>@item.value.ProductName</h3>
+
+          <p class="fst-bold">
+           @item.value.Description
+          </p>
+          
+          <p class="fst-bold">
+            PRICE: @item.value.ActualAmount
+          </p>
+            
+          <p class="fst-bold">
+            STATUS: @item.value.Status
+          </p>
+
+            @if(item.value.Status != "Sold" )
+            {               
+                <span>
+                    <form action="@Url.Action("MakeBid", "Auction", new { ProductId = @item.value.Id})" method="Get">
+                        <input type="submit" class="btn btn-success" value="Make Bid" placeholder="@item.value.Id" />
+                    </form>
+                </span>
+            }
+
+
+            <div class="column mw-100 mt-5">
+                <div class="col-lg-6 order-2 order-lg-2" data-aos="fade-right" data-aos-delay="100">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Bidder</th>
+                                <th scope="col">Bid Time</th>
+                                <th scope="col">Bid Price</th>
+
+                            </tr>
+                        </thead>
+
+                        @foreach (var bid in item.value.Bids.Select((value, i) => new { value, i }))
+                        {
+                            <tbody>
+                                <tr>
+                                    <th scope="row">@(bid.i + 1)</th>
+                                    <td>@bid.value.Bidder</td>
+                                    <td>@bid.value.BidTime</td>
+                                    <td>@bid.value.BidPrice</td>
+                                </tr>
+
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>    
+    </div>
+
+  </section><!-- End Features Section -->
+
+<hr />
+
+  }
+
+@section Scripts
+    {
+    @{
+        Html.RenderPartial("_ValidationScriptsPartial");
+    }
+ }

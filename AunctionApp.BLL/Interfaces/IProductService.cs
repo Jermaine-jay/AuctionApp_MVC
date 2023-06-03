@@ -5,9 +5,10 @@ namespace AunctionApp.BLL.Interfaces
 {
     public interface IProductService
     {
-        public Task<IEnumerable<AunctionVMForm>> GetAunctions();
-        public Task<IEnumerable<AunctionWithBidVM>> GetAunctionsWithBidsAsync();
-        public Task<AunctionVMForm> GetAunction(int productId);
+        public Task<IEnumerable<AuctionVMForm>> GetAuctions();
+        public Task<IEnumerable<AuctionWithBidVM>> GetAuctionsWithBidsAsync();
+        public Task<AuctionVMForm> GetAuction(int Id);
+        Task<(bool successful, string msg)> AddOrUpdateAsync(AddOrUpdateBidVM model);
 
     }
 }
