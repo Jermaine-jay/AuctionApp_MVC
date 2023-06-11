@@ -1,9 +1,6 @@
-using AunctionApp.BLL.Implementations;
-using AunctionApp.BLL.Interfaces;
 using AunctionApp.DAL.Database;
+using AunctionAppMVC.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using TodoList.DAL.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +14,11 @@ builder.Services.AddDbContext<AunctionAppDbContext>(opts =>
 });
 
 builder.Services.AddControllersWithViews();
-// Add services to the container.
+builder.Services.RegisterServices();
+builder.Services.ConfigureIdentity();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork<AunctionAppDbContext>>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddAutoMapper(Assembly.Load("AunctionApp.BLL"));
+builder.Services.AddControllersWithViews();
+// Add services to the container.
 
 var app = builder.Build();
 
@@ -40,6 +35,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -48,5 +44,10 @@ app.MapControllerRoute(
 
 
 await DataAccess.EnsurePopulatedAsync(app);
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    ServiceExtensions.Configure(services);
+}
 
 app.Run();

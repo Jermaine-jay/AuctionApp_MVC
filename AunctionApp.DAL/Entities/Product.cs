@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AunctionApp.DAL.Entities
+﻿namespace AunctionApp.DAL.Entities
 {
     public class Product : BaseEntity
     {
@@ -16,6 +9,6 @@ namespace AunctionApp.DAL.Entities
         public string ActualAmount { get; set; }
         public string ProductImagePath { get; set; }
         public bool IsSold { get; set; }
-        public  IList<Bid>? BidList { get; set;}
+        public IList<Bid>? BidList { get; set; }
     }
 }

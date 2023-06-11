@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+
+@model AunctionApp.BLL.Models.ProfileVM;
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section class="breadcrumbs">
+    <div class="container">
+    </div>
+</section><!-- End Breadcrumbs -->
+
+@if (@TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+@if (@TempData["ErrMsg"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> @TempData["ErrMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<section id="about" class="about">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Profie</h2>
+            <p></p>
+        <div class="row">
+            <div class="col-lg-4">
+
+                <img src="~/img/Blank-Pfp.jpg" class="img-fluid" alt="">
+                    <form asp-controller="User" asp-action="UpdateProfileImage" method="Get">
+                        <input type="file" asp-for="@Model.Image.ProfileImagePath"/>
+                        <span asp-validation-for="@Model.Image.ProfileImagePath"></span>             
+                    </form>
+            </div>
+            <div class="col-lg-8 pt-4 pt-lg-0 content">
+                    @*<h3>UserName: @Model.User.UserName</h3>*@
+                <p class="fst-italic">
+                    
+                </p>
+                <div class="row">
+                    <div class="col-lg-6 m-2">
+                        <ul>
+                            @*<li class ="m-3"><i class="bi bi-rounded-right"></i> <strong>First Name: </strong>@Model.User.FirstName</li>
+                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Last Name: </strong>@Model.User.FirstName</li>
+                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Address: </strong>@Model.User.OtherName</li>
+                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>UserName:  </strong>@Model.User.UserName</li>
+                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Phone:  </strong>@Model.User.PhoneNumber</li>
+                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Email:  </strong>@Model.User.Email</li>*@
+                        </ul>
+                    </div>
+                  
+                </div>
+               
+            </div>
+        </div>
+
+    </div>
+</section><!-- End About Section -->
+</section><!-- End Testimonials Section -->

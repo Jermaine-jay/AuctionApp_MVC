@@ -3,7 +3,6 @@ using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using System.Threading.Tasks;
 using TodoList.DAL.Repository;
 
 
@@ -41,7 +40,7 @@ namespace AunctionApp.BLL.Implementations
 
             AuctionVMForm form = new()
             {
-                ProductImagePath = fileName, 
+                ProductImagePath = fileName,
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -76,7 +75,7 @@ namespace AunctionApp.BLL.Implementations
 
             AuctionVMForm form = new()
             {
-                ProductImagePath = fileName, // <-- Use fileName instead of "/images/" + fileName
+                ProductImagePath = fileName,
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
@@ -99,8 +98,8 @@ namespace AunctionApp.BLL.Implementations
             {
                 return (false, $"Aunction with user:{aunction.Id} wasn't found");
             }
-           
-            File.Delete(filePathToDelete);         
+
+            File.Delete(filePathToDelete);
             await _ProductRepo.DeleteAsync(aunction);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
 
@@ -117,7 +116,7 @@ namespace AunctionApp.BLL.Implementations
                 var rowChanges = await _ProductRepo.UpdateAsync(row);
                 return rowChanges != null ? (true, "Status updated") : (false, "Failed to update status");
             }
-            return (false,"");
+            return (false, "");
         }
 
     }

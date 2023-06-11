@@ -12,14 +12,13 @@
     <link href="~/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" asp-append-version="true">
     <link href="~/vendor/remixicon/remixicon.css" rel="stylesheet" asp-append-version="true">
     <link href="~/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" asp-append-version="true">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Aunction.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AunctionAppMVC.styles.css" asp-append-version="true" />
     
 </head>
 <body>
-
     <header id="header" class="fixed-top ">
         <div class="container d-flex align-items-center justify-content-lg-between">
 
@@ -37,8 +36,14 @@
                     <li><a class="nav-link scrollto" asp-area=" " asp-controller="Aunction" asp-action="Register">Register</a></li>
                     <li><a class="nav-link scrollto" asp-area=" " asp-controller="Auction" asp-action="GetAuction">Get Auction</a></li>
 
-                    @*<li><a class="nav-link scrollto" asp-area="" asp-controller="TodoList" asp-action="New">Aunctions</a></li>*@
+                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterUser">Register user</a></li>
+                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>
+                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Profile">Profile</a></li>
 
+                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignIn">Login</a></li>
+                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a></li>
+
+                    @*<li><a class="nav-link scrollto" asp-area="" asp-controller="TodoList" asp-action="New">Aunctions</a></li>*@
 
                 </ul>
 
@@ -92,7 +97,6 @@
                         </form>
 
                     </div>
-
                 </div>
             </div>
         </div>

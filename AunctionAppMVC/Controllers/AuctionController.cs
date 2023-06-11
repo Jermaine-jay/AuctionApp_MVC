@@ -11,10 +11,12 @@ namespace AunctionAppMVC.Controllers
     public class AuctionController : Controller
     {
         private readonly IProductService _ProductService;
+        private readonly IUserService _UserService;
 
-        public AuctionController( IProductService productService)
+        public AuctionController( IProductService productService, IUserService userService)
         {       
-            _ProductService = productService;      
+            _ProductService = productService;  
+            _UserService = userService;
         }
 
         public async Task<IActionResult> GetAuction(int productId)
@@ -22,7 +24,6 @@ namespace AunctionAppMVC.Controllers
             var model = await _ProductService.GetAuction(productId);
             return View(model);
         }
-
 
         public async Task<IActionResult> MakeBid(int productId)
         {
@@ -35,13 +36,12 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _ProductService.AddOrUpdateAsync(model);
+                var (successful, msg) = await _UserService.AddOrUpdateBidAsync(model);
                 if (successful)
                 {
 

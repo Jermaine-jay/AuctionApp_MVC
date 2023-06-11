@@ -103,11 +103,12 @@
                             <div class="portfolio-wrap">
                                 <img src="~/img/Auctions/@item.value.ProductImagePath" class="img-fluid" alt="">
                                 <div class="portfolio-info">
-                                    <h4>@item.value.ProductName</h4>
-                                   
-                                 
+                                    <strong>
+                                        <h4>@item.value.ProductName</h4>
+                                    </strong>
+                                                   
                                     <div class="portfolio-links">
-                                        <a href="~/img/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="bx bx-plus"></i></a>
+                                        <a href="~/img/Auctions/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="bx bx-plus"></i></a>
 
                                         <form method="post" action="@Url.Action("GetAuction", "Auction", new { ProductId = @item.value.Id })">
                                             <input type="submit" class="btn btn-warning btn-rounded" value="Details" />

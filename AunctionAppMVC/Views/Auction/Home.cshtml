@@ -48,12 +48,12 @@
           <p class="fst-bold">
            @item.value.Description
           </p>
-          
-          <p class="fst-bold">
-            PRICE: @item.value.ActualAmount
+
+          <p class="fw-bold">
+            PRICE: $@item.value.ActualAmount
           </p>
-            
-          <p class="fst-bold">
+
+          <p class="fw-bold">
             STATUS: @item.value.Status
           </p>
 
@@ -75,7 +75,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Bidder</th>
                                 <th scope="col">Bid Time</th>
-                                <th scope="col">Bid Price</th>
+                                <th scope="col">($)Bid Price</th>
 
                             </tr>
                         </thead>
@@ -93,10 +93,11 @@
                             </tbody>
                         }
                     </table>
-                </div>
+                </div>     
             </div>
         </div>
-      </div>    
+      </div>
+
     </div>
 
   </section><!-- End Features Section -->

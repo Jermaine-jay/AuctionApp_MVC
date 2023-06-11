@@ -83,7 +83,7 @@ namespace AunctionApp.BLL.Implementations
                 return (false, $"User with id:{model.Id} wasn't found");
             }
 
-            Bid bid = product.BidList.SingleOrDefault(t => t.Bidder == model.Bidder);
+            Bid? bid = product.BidList?.SingleOrDefault(t => t.Bidder == model.Bidder);
             if (bid != null)
             {
                 var update = _mapper.Map(model, bid);
