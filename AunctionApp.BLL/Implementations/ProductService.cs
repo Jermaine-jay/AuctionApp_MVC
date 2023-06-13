@@ -3,7 +3,6 @@ using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
@@ -22,11 +21,11 @@ namespace AunctionApp.BLL.Implementations
             _BidRepo = _unitOfWork.GetRepository<Bid>();
             _ProductRepo = _unitOfWork.GetRepository<Product>();
         }
-       
+
 
         public async Task<IEnumerable<AuctionVMForm>> GetAuctions()
         {
-            var aunction = await _ProductRepo.GetAllAsync();      
+            var aunction = await _ProductRepo.GetAllAsync();
             var aunctionViewModels = aunction.Select(model => new AuctionVMForm
             {
                 Id = model.Id,
@@ -34,7 +33,7 @@ namespace AunctionApp.BLL.Implementations
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
-                Status = model.IsSold? "Sold" : "Not Sold"
+                Status = model.IsSold ? "Sold" : "Not Sold"
             });
             return aunctionViewModels;
         }
@@ -65,7 +64,7 @@ namespace AunctionApp.BLL.Implementations
                 Description = u.Description,
                 ProductImagePath = u.ProductImagePath,
                 Status = u.IsSold ? "Sold" : "Not sold",
-                Bids = u.BidList.OrderByDescending(u=>u.BidPrice).Select(t => new BidVM
+                Bids = u.BidList.OrderByDescending(u => u.BidPrice).Select(t => new BidVM
                 {
                     Bidder = t.Bidder,
                     BidPrice = t.BidPrice,
@@ -74,28 +73,41 @@ namespace AunctionApp.BLL.Implementations
             });
         }
 
+        public async Task<IEnumerable<UserBidsVM>> GetUserBidsAsync(string bidder)
+        {
+            var actions = await _ProductRepo.GetAllAsync(include: u => u.Include(t => t.BidList));
+            var productDetails = actions.Where(p => p.BidList != null && p.BidList.Any(b => b.Bidder == bidder))
+                                .Select(p => new UserBidsVM
+                                {
+                                    ProductName = p.ProductName,
+                                    ActualAmount = p.ActualAmount,
+                                    BidPrice = p.BidList.First(b => b.Bidder == bidder).BidPrice,
+                                    BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString()
+                                });                           
+            return productDetails;
+        }
+
         public async Task<(bool successful, string msg)> AddOrUpdateAsync(AddOrUpdateBidVM model)
         {
 
             Product product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
             if (product == null)
             {
-                return (false, $"User with id:{model.Id} wasn't found");
+                return (false, $"User with id:{model.ProductId} wasn't found");
             }
 
             Bid? bid = product.BidList?.SingleOrDefault(t => t.Bidder == model.Bidder);
             if (bid != null)
             {
                 var update = _mapper.Map(model, bid);
-                await _BidRepo.AddAsync(update);
+                await _BidRepo.UpdateAsync(update);
                 return (true, "Update Successful!");
             }
 
             var newBid = _mapper.Map<Bid>(model);
             product.BidList.Add(newBid);
-
-            var rowChanges = await _ProductRepo.SaveAsync();
-            return rowChanges > 0 ? (true, $"Bid: {model.Id} was successfully created!") : (false, "Failed To save changes!");
+            var rowChanges = await _unitOfWork.SaveChangesAsync();
+            return rowChanges > 0 ? (true, $"Bid: {model.ProductId} was successfully created!") : (false, "Failed To save changes!");
         }
     }
 }

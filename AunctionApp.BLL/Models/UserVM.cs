@@ -20,9 +20,6 @@ namespace AunctionApp.BLL.Models
         [Required, MaxLength(50)]
         public string LastName { get; set; }
 
-        [Required, MaxLength(50)]
-        public string? OtherName { get; set; }
-
         [Required, DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -30,5 +27,6 @@ namespace AunctionApp.BLL.Models
 
         [Required, DataType(DataType.PhoneNumber), MaxLength(12)]
         public string PhoneNumber { get; set; }
+        public string? ProfilePicturePath { get; set; }
     }
 }

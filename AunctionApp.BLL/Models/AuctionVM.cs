@@ -10,6 +10,6 @@ namespace AunctionApp.BLL.Models
         public string Description { get; set; }
         public string ActualAmount { get; set; }
         public IFormFile ProductImagePath { get; set; }
-        public string IsSold { get; set; }
+        public string? IsSold { get; set; }
     }
 }

@@ -14,11 +14,8 @@ namespace AunctionApp.BLL.Interfaces
         Task<IEnumerable<UserVM>> GetUsers();
         Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register);
         Task<(bool successful, string msg)> RegisterUser(RegisterVM register);
-        Task<UserVM> UserProfileAsync(string? userId);
+        Task<UserVM> UserProfileAsync(string userId);
         Task<(bool successful, string msg)> UpdateProfileImage(string userId, ProfileImageVM model);
-
-        /*Task<(bool successful, string msg)> AddAsync(AddBidVM model);
-        Task<(bool successful, string msg)> UpdateAsync(UpdateBidVM model);*/
 
     }
 }

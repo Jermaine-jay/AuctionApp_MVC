@@ -1,9 +1,7 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
-using AunctionApp.DAL.Entities;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Dynamic;
+using System.Security.Claims;
 
 namespace AunctionAppMVC.Controllers
 {
@@ -12,11 +10,13 @@ namespace AunctionAppMVC.Controllers
     {
         private readonly IProductService _ProductService;
         private readonly IUserService _UserService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuctionController( IProductService productService, IUserService userService)
-        {       
-            _ProductService = productService;  
+        public AuctionController(IProductService productService, IUserService userService, IHttpContextAccessor httpContextAccessor)
+        {
+            _ProductService = productService;
             _UserService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> GetAuction(int productId)
@@ -27,11 +27,12 @@ namespace AunctionAppMVC.Controllers
 
         public async Task<IActionResult> MakeBid(int productId)
         {
-            return View(new AddOrUpdateBidVM { ProductId = productId });   
+            var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
+            return View(new AddOrUpdateBidVM { ProductId = productId, Bidder = bidder });
         }
-       
+
         public async Task<IActionResult> Home()
-        {       
+        {
             var model = await _ProductService.GetAuctionsWithBidsAsync();
             return View(model);
         }
@@ -41,7 +42,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _UserService.AddOrUpdateBidAsync(model);
+                var (successful, msg) = await _ProductService.AddOrUpdateAsync(model);
                 if (successful)
                 {
 

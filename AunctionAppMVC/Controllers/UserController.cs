@@ -1,6 +1,6 @@
-﻿using AunctionApp.BLL.Implementations;
-using AunctionApp.BLL.Interfaces;
+﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,15 +10,23 @@ namespace AunctionAppMVC.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
+            _productService = productService;
         }
         public IActionResult Home()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Users()
+        {
+            var model = await _userService.GetUsers();
+            return View(model);
         }
 
         public IActionResult RegisterUser()
@@ -33,27 +41,24 @@ namespace AunctionAppMVC.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            var profile = new ProfileVM();
-            profile.User = new UserVM();
-            profile.Image = new ProfileImageVM();
-            /*var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userService.UserProfileAsync(userId);
-            if (user == null)
+
+            var profile = new ProfileVM() 
+            { 
+                User = user,
+                Image = new ProfileImageVM(),
+            };
+            if (user != null)
             {
-                return View(new UserVM());
-            }*/
-            return View(new ProfileVM());
+                return View(profile);
+            }
+            return View(profile);
         }
 
         public IActionResult SignIn()
         {
             return View(new SignInVM());
-        }
-
-        public async Task<IActionResult> AllUsers()
-        {
-            var model = await _userService.GetUsers();
-            return View(model);
         }
 
         public async Task<IActionResult> GetUser(string userId)
@@ -78,11 +83,13 @@ namespace AunctionAppMVC.Controllers
             return View(user);
         }
 
-        /*public IActionResult DeleteUser(int userId)
+        public async Task<IActionResult> UserBids()
         {
-            return View(new UserVM { Id = userId });
+            var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
+            var model = await _productService.GetUserBidsAsync(bidder);
+            return View(model);
 
-        }*/
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
@@ -171,9 +178,9 @@ namespace AunctionAppMVC.Controllers
                     return RedirectToAction("Profile");
                 }
                 TempData["ErrMsg"] = msg;
-                return View("Profile");
+                return View("SignIn");
             }
-            return View("Profile");
+            return View("SignIn");
         }
 
         public async Task<IActionResult> SignOut()
@@ -192,45 +199,45 @@ namespace AunctionAppMVC.Controllers
             return View("Index", "Home");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(string userId)
-        {
-            if (ModelState.IsValid)
-            {
-                var (success, msg) = await _userService.Delete(userId);
-                if (success)
-                {
-                    TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllUsers");
-                }
-
-                TempData["ErrMsg"] = msg;
-                return RedirectToAction("AllUsers");
-
-            }
-            return View("AllUsers");
-
-        }
-
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileImageVM model)
         {
-            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.UpdateProfileImage(userId,model);
+                var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var (successful, msg) = await _userService.UpdateProfileImage(userId, model);
 
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllUsers");
+                    return RedirectToAction("Profile");
                 }
 
                 TempData["ErrMsg"] = msg;
-                return View("UpdateUser");
+                return View("Profile");
 
             }
-            return View("UpdateUser");
+            return View("Profile");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string Id)
+        {
+            if (ModelState.IsValid)
+            {
+                var (success, msg) = await _userService.Delete(Id);
+                if (success)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("Users");
+                }
+
+                TempData["ErrMsg"] = msg;
+                return View("Users");
+
+            }
+            return View("Users");
+
         }
     }
 }

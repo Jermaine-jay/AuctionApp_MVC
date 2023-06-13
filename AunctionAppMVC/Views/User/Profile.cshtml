@@ -3,15 +3,19 @@
     Layout = "_Layout";
 }
 
+@using AunctionApp.DAL.Entities;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
 
 @model AunctionApp.BLL.Models.ProfileVM;
 
-
-<!-- ======= Breadcrumbs ======= -->
 <section class="breadcrumbs">
     <div class="container">
     </div>
-</section><!-- End Breadcrumbs -->
+</section>
 
 @if (@TempData["SuccessMsg"] != null)
 {
@@ -37,30 +41,45 @@
             <h2>Profie</h2>
             <p></p>
         <div class="row">
-            <div class="col-lg-4">
-
-                <img src="~/img/Blank-Pfp.jpg" class="img-fluid" alt="">
-                    <form asp-controller="User" asp-action="UpdateProfileImage" method="Get">
-                        <input type="file" asp-for="@Model.Image.ProfileImagePath"/>
-                        <span asp-validation-for="@Model.Image.ProfileImagePath"></span>             
+                <div class="col-lg-4">
+                    <img src="~/img/@Model.User.ProfilePicturePath" class="img-fluid" alt="">
+                    <form asp-controller="User" asp-action="UpdateProfileImage" method="post" id="profileImageForm">
+                        <div>
+                            <input type="file" asp-for="@Model.Image.ProfileImagePath" onchange="submitForm()" />
+                            <span asp-validation-for="@Model.Image.ProfileImagePath"></span>
+                        </div>
                     </form>
-            </div>
+                </div>
+
+                <script>
+                    function submitForm() {
+                        document.getElementById("profileImageForm").submit();
+                    }
+                </script>
+
             <div class="col-lg-8 pt-4 pt-lg-0 content">
-                    @*<h3>UserName: @Model.User.UserName</h3>*@
+                    <h3>UserName: @Model.User.UserName</h3>
                 <p class="fst-italic">
                     
                 </p>
                 <div class="row">
                     <div class="col-lg-6 m-2">
-                        <ul>
-                            @*<li class ="m-3"><i class="bi bi-rounded-right"></i> <strong>First Name: </strong>@Model.User.FirstName</li>
-                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Last Name: </strong>@Model.User.FirstName</li>
-                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Address: </strong>@Model.User.OtherName</li>
-                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>UserName:  </strong>@Model.User.UserName</li>
-                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Phone:  </strong>@Model.User.PhoneNumber</li>
-                                <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Email:  </strong>@Model.User.Email</li>*@
+                        <ul>                      
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>First Name: </strong>@Model.User.FirstName</li>
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Last Name: </strong>@Model.User.LastName</li>
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>UserName:  </strong>@Model.User.UserName</li>
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Phone:  </strong>@Model.User.PhoneNumber</li>
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Email:  </strong>@Model.User.Email</li>
+                            <li class="m-3"><i class="bi bi-rounded-right"></i> <strong>Email:  </strong>@Model.User.Address</li>
                         </ul>
-                    </div>
+
+                        @if (User.IsInRole("User"))
+                        {
+                            <span class="px-1">
+                                <a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="UserBids">Check all placed bids</a>
+                            </span>
+                        }
+                        </div>
                   
                 </div>
                
@@ -68,5 +87,4 @@
         </div>
 
     </div>
-</section><!-- End About Section -->
-</section><!-- End Testimonials Section -->
+</section>

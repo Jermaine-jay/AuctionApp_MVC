@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using AunctionApp.DAL.Entities;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,32 +31,41 @@
             <h1 class="logo me-auto me-lg-0"><a href="index.html">GERMANE AUCTION<span>.</span></a></h1>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
-                    <li><a class="nav-link scrollto " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
 
-                    <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a class="nav-link scrollto " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Profile">Profile</a></li>
 
-                    <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="NewAuction">New Auction</a></li>
-                    <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="UpdateAuction">Update Auction</a></li>
-                    <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="AllAuctions">All Auction</a></li>
-
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="Aunction" asp-action="Register">Register</a></li>
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="Auction" asp-action="GetAuction">Get Auction</a></li>
-
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterUser">Register user</a></li>
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Profile">Profile</a></li>
-
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignIn">Login</a></li>
-                    <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a></li>
-
-                    @*<li><a class="nav-link scrollto" asp-area="" asp-controller="TodoList" asp-action="New">Aunctions</a></li>*@
-
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="NewAuction">New Auction</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="UpdateAuction">Update Auction</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="AllAuctions">All Auction</a></li>
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>
+                            
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="UserBids">bids</a></li>
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Users">All Users</a></li>
+                        }                 
+                        <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a></li>
+                    }
+                    @if(!User.Identity.IsAuthenticated)
+                    {              
+                        <li><a class="nav-link scrollto " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterUser">Register</a></li>
+                        <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignIn">Login</a></li>
+                    }
                 </ul>
 
         </div>
-    </header><!-- End Header -->
+    </header>
             @RenderBody()
-    <!-- ======= Footer ======= -->
+    
     <footer id="footer">
         <div class="footer-top">
             <div class="container">
@@ -88,7 +103,6 @@
                         </ul>
                     </div>
 
-
                     <div class="col-lg-4 col-md-6 footer-newsletter">
                         <h4>Our Newsletter</h4>
                         <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
@@ -107,9 +121,8 @@
             </div>
         </div>
     </footer>
-    <!-- End Footer-->
 
-    <!-- Vendor JS Files -->
+    
     <script src="~/vendor/purecounter/purecounter_vanilla.js" asp-append-version="true"> </script>
     <script src="~/vendor/aos/aos.js" asp-append-version="true"></script>
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
@@ -118,7 +131,6 @@
     <script src="~/vendor/swiper/swiper-bundle.min.js" asp-append-version="true"></script>
     <script src="~/vendor/php-email-form/validate.js" asp-append-version="true"></script>
 
-    <!-- Template Main JS File -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>

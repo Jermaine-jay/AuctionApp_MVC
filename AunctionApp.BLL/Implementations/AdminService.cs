@@ -38,17 +38,15 @@ namespace AunctionApp.BLL.Implementations
                 await model.ProductImagePath.CopyToAsync(stream);
             }
 
-            AuctionVMForm form = new()
+            Product product = new Product()
             {
-                ProductImagePath = fileName,
                 ProductName = model.ProductName,
                 Description = model.Description,
                 ActualAmount = model.ActualAmount,
+                ProductImagePath = fileName,
             };
 
-            var product = _mapper.Map<Product>(form);
             var rowChanges = await _ProductRepo.AddAsync(product);
-
             return rowChanges != null ? (true, "Auction created successfully!") : (false, "Failed to create Auction");
         }
 
@@ -92,14 +90,14 @@ namespace AunctionApp.BLL.Implementations
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
 
             var fileName = aunction.ProductImagePath;
-            var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "img", fileName);
+            var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "img", "Auctions");
 
-            if (aunction == null || File.Exists(filePathToDelete))
+            string picPath = Path.Combine(filePathToDelete, fileName);
+            if (aunction == null || !File.Exists(picPath))
             {
-                return (false, $"Aunction with user:{aunction.Id} wasn't found");
+                return (false, $"Aunction with user:{aunction.ProductName} wasn't found");
             }
-
-            File.Delete(filePathToDelete);
+            File.Delete(picPath);
             await _ProductRepo.DeleteAsync(aunction);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
 

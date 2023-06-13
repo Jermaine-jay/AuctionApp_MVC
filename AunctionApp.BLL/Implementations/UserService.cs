@@ -63,7 +63,7 @@ namespace AunctionApp.BLL.Implementations
         }
         public async Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register)
         {
-            var newUser = await CreateAUser(register);
+            var newUser = _mapper.Map<User>(register);
             IdentityResult result = await _userManager.CreateAsync(newUser, register.Password);
 
             await _userManager.AddToRoleAsync(newUser, "Admin");
@@ -73,9 +73,8 @@ namespace AunctionApp.BLL.Implementations
         }
         public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)
         {
-            var newUser = await CreateAUser(register);
+            var newUser = _mapper.Map<User>(register);
             IdentityResult result = await _userManager.CreateAsync(newUser, register.Password);
-
             await _userManager.AddToRoleAsync(newUser, "User");
             await _signInManager.SignInAsync(newUser, isPersistent: false);
 
@@ -113,12 +112,11 @@ namespace AunctionApp.BLL.Implementations
                 UserName = register.Username,
                 FirstName = register.FirstName,
                 LastName = register.LastName,
-                OtherName = register.OtherName,
                 Email = register.Email,
-                PhoneNumber = register.PhoneNumber,
                 Address = register.Address,
+                PhoneNumber = register.PhoneNumber,
 
-            }; ;
+            };
             return newUser;
         }
         public async Task<(bool successful, string msg)> Update(UserVM model)
@@ -137,12 +135,10 @@ namespace AunctionApp.BLL.Implementations
         public async Task<(bool successful, string msg)> Delete(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
-
             if (user == null)
             {
                 return (false, $"User with user:{user?.UserName} wasn't found");
             }
-
             await _userRepo.DeleteAsync(user);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{user.FirstName} was deleted") : (false, $"Delete Failed");
         }
@@ -158,16 +154,18 @@ namespace AunctionApp.BLL.Implementations
             var users = await _userRepo.GetAllAsync();
             var userViewModels = users.Select(model => new UserVM
             {
+                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
                 UserName = model.UserName,
+                Address = model.Address
 
             });
             return userViewModels;
         }
-        public async Task<UserVM> UserProfileAsync(string? userId)
+        public async Task<UserVM> UserProfileAsync(string userId)
         {
             var u = await _userRepo.GetSingleByAsync(u => u.Id == userId);
             var useres = new UserVM()
@@ -176,23 +174,26 @@ namespace AunctionApp.BLL.Implementations
                 UserName = u.UserName,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                OtherName = u.OtherName,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
                 Address = u.Address,
+                ProfilePicturePath = u.ProfileImagePath
             };
             return useres;
         }
         public async Task<(bool successful, string msg)> UpdateProfileImage(string userId, ProfileImageVM model)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
-            var fileName = model.ProfileImagePath.FileName;
+            var fileName = model?.ProfileImagePath?.FileName;
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
+
+            Console.WriteLine("filename:{0} image path: {1}", fileName, imagePath);
 
             if (!Directory.Exists(imagePath))
             {
                 Directory.CreateDirectory(imagePath);
             }
+
             string picPath = Path.Combine(imagePath, fileName);
             using (var stream = new FileStream(picPath, FileMode.Create))
             {
@@ -201,11 +202,13 @@ namespace AunctionApp.BLL.Implementations
             if (user != null)
             {
                 user.ProfileImagePath = fileName;
+                var row = _mapper.Map<User>(user);
                 var result = await _userRepo.UpdateAsync(user);
                 return (true, "Profile picture updated!");
             }
 
             return (false, "couldn't update profile picture!");
         }
+
     }
 }

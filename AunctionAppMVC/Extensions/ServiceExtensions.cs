@@ -16,8 +16,6 @@ namespace AunctionAppMVC.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork<AunctionAppDbContext>>();
-            services.AddAutoMapper(Assembly.Load("AunctionApp.BLL"));
             services.AddHttpContextAccessor();
         }
 
@@ -25,6 +23,7 @@ namespace AunctionAppMVC.Extensions
         {
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AunctionAppDbContext>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(opt =>
@@ -32,7 +31,7 @@ namespace AunctionAppMVC.Extensions
                 opt.Password.RequiredLength = 6;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireDigit = true;
-                opt.Password.RequireLowercase = true;
+                opt.Password.RequireLowercase = false;
                 opt.Password.RequireUppercase = false;
                 opt.User.RequireUniqueEmail = true;
                 opt.Lockout.MaxFailedAccessAttempts = 3;
@@ -47,22 +46,29 @@ namespace AunctionAppMVC.Extensions
 
         public static void Configure(IServiceProvider serviceProvider)
         {
+            // Other app configurations
+
+            // Create roles
             CreateRoles(serviceProvider).Wait();
+
+            // Other app configurations
         }
 
         private static async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+            // Check if the roles exist
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
-                
+                // Create Admin role
                 var role = new IdentityRole("Admin");
                 await roleManager.CreateAsync(role);
             }
 
             if (!await roleManager.RoleExistsAsync("User"))
             {
+                // Create User role
                 var role = new IdentityRole("User");
                 await roleManager.CreateAsync(role);
             }

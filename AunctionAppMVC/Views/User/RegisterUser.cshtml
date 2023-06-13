@@ -6,15 +6,29 @@
 @model AunctionApp.BLL.Models.RegisterVM;
 
 
-<!-- ======= Breadcrumbs ======= -->
 <section class="breadcrumbs">
     <div class="container">
     </div>
-</section><!-- End Breadcrumbs -->
+</section>
+
+@if (@TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+@if (@TempData["ErrMsg"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> @TempData["ErrMsg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <main id="main">
-
-    <main>
         <div class="container mt-4">
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
@@ -29,8 +43,11 @@
                                         <h5 class="card-title text-center pb-0 fs-4">Register</h5>
                                     </div>
 
-                                    <form class="row g-3 needs-validation" asp-controller="User" asp-action="SaveUser">
+                                    <form class="row g-3" asp-controller="User" asp-action="SaveUser">
 
+                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
+
+                                       
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.FirstName" class="form-label"></label>
                                             <input type="text" asp-for="@Model.FirstName" placeholder="First Name" class="form-control" required>
@@ -41,15 +58,14 @@
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.LastName" class="form-label"></label>
                                             <input type="text" asp-for="@Model.LastName" placeholder="Last Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.LastName"></span>
-                                         
+                                            <span asp-validation-for="@Model.LastName"></span>                                
 
                                         </div>
 
                                         <div class="col-12 m-2">
-                                            <label asp-for="@Model.OtherName" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.OtherName" placeholder="Other Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.OtherName"></span>
+                                            <label asp-for="@Model.Username" class="form-label"></label>
+                                            <input type="text" asp-for="@Model.Username" placeholder="UserName" class="form-control" required>
+                                            <span asp-validation-for="@Model.Username"></span>
 
                                         </div>
 
@@ -85,7 +101,6 @@
                                             <label asp-for="@Model.ConfirmPassword" class="form-label"></i></label>
                                             <input type="text" asp-for="@Model.ConfirmPassword" placeholder="confirm password" class="form-control" required />
                                             <span asp-validation-for="@Model.ConfirmPassword"></span>
-
                                         </div>
 
                                         <div class="col-12">
@@ -104,4 +119,13 @@
                 </div>
 
             </section>
-    </main><!-- End #main -->
+                </div>
+    </main>
+
+    @section Scripts
+        {
+        @{
+            Html.RenderPartial("_ValidationScriptsPartial");
+        }
+    ;
+    }

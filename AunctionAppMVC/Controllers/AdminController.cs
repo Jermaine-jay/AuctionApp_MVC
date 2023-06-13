@@ -34,21 +34,11 @@ namespace AunctionAppMVC.Controllers
 
         }
 
-        /*  public IActionResult DeleteAunction(int ProductId)
-          {
-              return View(new AunctionVMForm { ProductId = ProductId });
-          }*/
-
         public async Task<IActionResult> AllAuctions()
         {
             var model = await _ProductService.GetAuctions();
             return View(model);
         }
-
-        /*public async Task<IActionResult> UpdateStatus(int productId)
-        {
-            return View(new AunctionVMForm { Id = productId });
-        }*/
 
         [HttpPost]
         public async Task<IActionResult> Save(AuctionVM model)
@@ -63,7 +53,7 @@ namespace AunctionAppMVC.Controllers
 
                     TempData["SuccessMsg"] = msg;
 
-                    return RedirectToAction("AllAuctionsWithBids");
+                    return RedirectToAction("Home", "Auction");
                 }
 
                 TempData["ErrMsg"] = msg;
@@ -99,7 +89,6 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var (success, msg) = await _AdminService.DeleteAuctionAsync(ProductId);
                 if (success)
                 {
@@ -132,6 +121,8 @@ namespace AunctionAppMVC.Controllers
             }
             return View("AllAuctions");
         }
+
+        
 
     }
 }
