@@ -56,23 +56,16 @@
                     <td>@item.value.PhoneNumber</td>
                     <td>@item.value.Address</td>
                     <td class="d-flex">
-
-                        @*<span class="px-1">
-                            <form action="@Url.Action("SaveStatus", "User", new { userId = @item.value.Id})" method="Get">
-                                <input type="submit" class="btn btn-success btn-sm" value="sell" placeholder="@item.value.Id" />
-                            </form>
-                        </span>*@
-
-                        <span class="px-1">
-                            <form action="@Url.Action("UpdateUser", "User", new { userId = @item.value.Id})" method="Get">
-                                <input type="submit" class="btn btn-secondary btn-sm" value="Edit" placeholder="@item.value.Id" />
-                            </form>
+                        <span class="px-2">
+                            <a asp-controller="User" asp-action="UpdateUser" asp-route-userId="@item.value.Id" title="Edit User">
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffd60a"></i>
+                            </a>
                         </span>
 
-                        <span class="px-1">
-                            <form action="@Url.Action("DeleteUser", "User", new { Id = @item.value.Id})" method="post">
-                                <input type="submit" class="btn btn-danger btn-sm" value="Delete" placeholder="@item.value.Id" />
-                            </form>
+                        <span class="px-2">
+                            <a asp-controller="User" asp-action="DeleteUser" asp-route-userId="@item.value.Id" title="Delete User">
+                                <i class="fa-solid fa-trash" style="color:red"></i>
+                            </a>
                         </span>
                     </td>
                 </tr>

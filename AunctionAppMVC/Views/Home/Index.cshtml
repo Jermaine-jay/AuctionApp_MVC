@@ -108,11 +108,8 @@
                                     </strong>
                                                    
                                     <div class="portfolio-links">
-                                        <a href="~/img/Auctions/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="bx bx-plus"></i></a>
-
-                                        <form method="post" action="@Url.Action("GetAuction", "Auction", new { ProductId = @item.value.Id })">
-                                            <input type="submit" class="btn btn-warning btn-rounded" value="Details" />
-                                        </form>
+                                        <a href="~/img/Auctions/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="bx bx-plus"></i></a>                                   
+                                        <a asp-controller="Auction" asp-action="GetAuction" asp-route-ProductId="@item.value.Id" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
                                         
                                     </div>
                                 </div>

@@ -52,22 +52,28 @@
            
             <td class="d-flex">
 
-                    <span class="px-1">
-                        <form action="@Url.Action("SaveStatus", "Admin", new { ProductId = @item.value.Id})" method="Get">
-                            <input type="submit" class="btn btn-success btn-sm" value="sell" placeholder="@item.value.Id" />
-                        </form>
+                    <span class="px-2">                  
+                        <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
+                            @if(item.value.Status == "Sold")
+                            {
+                                 <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
+                            }else{
+                                 <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
+                            }
+                        </a>
+
                     </span>
 
-                    <span class="px-1">
-                        <form action="@Url.Action("UpdateAuction", "Admin", new { ProductId = @item.value.Id})" method="Get">
-                            <input type="submit" class="btn btn-secondary btn-sm" value="Edit" placeholder="@item.value.Id" />
-                        </form>
+                    <span class="px-2">                      
+                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Edit Anction">
+                              <i class="fa-solid fa-pen-to-square fa-lg" style="color: #ffd60a"></i>
+                        </a>
                     </span>
 
-                    <span class="px-1">
-                        <form action="@Url.Action("Delete", "Admin", new { productId = @item.value.Id})" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Delete" placeholder="@item.value.Id" />
-                        </form>
+                    <span class="px-2">
+                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Delete Anction">
+                              <i class="fa-solid fa-trash fa-lg" style="color:red"></i>
+                        </a>
                     </span>
             </td>
         </tr>

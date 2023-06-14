@@ -76,7 +76,10 @@
                         @if (User.IsInRole("User"))
                         {
                             <span class="px-1">
-                                <a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="UserBids">Check all placed bids</a>
+                              
+                                    <a asp-controller="User" asp-action="UserBids" title="Check all placed bids">
+                                        <i class=" fa-sharp fa-solid fa-bars-sort fa-xl" style="color: black"></i>
+                                    </a>
                             </span>
                         }
                         </div>
