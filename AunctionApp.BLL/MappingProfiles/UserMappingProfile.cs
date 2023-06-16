@@ -1,11 +1,6 @@
 ﻿using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AunctionApp.BLL.MappingProfiles
 {
@@ -13,8 +8,8 @@ namespace AunctionApp.BLL.MappingProfiles
     {
         public UserMappingProfile()
         {
-            /*CreateMap<User, UserVM>();
-            CreateMap<UserVM, User>();*/
+            CreateMap<User, UserVM>();
+            CreateMap<UserVM, User>();
 
             CreateMap<User, RegisterVM>();
             CreateMap<RegisterVM, User>();

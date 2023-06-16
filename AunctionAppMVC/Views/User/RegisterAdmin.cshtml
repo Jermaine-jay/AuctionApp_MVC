@@ -5,15 +5,10 @@
 
 @model AunctionApp.BLL.Models.RegisterVM;
 
-
-<section class="breadcrumbs">
-    <div class="container">
-    </div>
-</section>
-
+<section class="mt-2">
 @if (@TempData["SuccessMsg"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show w-75" role="alert">
         <strong>Success!</strong> @TempData["SuccessMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -22,7 +17,7 @@
 
 @if (@TempData["ErrMsg"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
         <strong>Error!</strong> @TempData["ErrMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -44,7 +39,7 @@
                                     </div>
 
                                     <form class="row g-3" asp-controller="User" asp-action="SaveAdmin">
-                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.All"></div>
+                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
 
                                         <div class="col-12 m-2">                                         
                                             <label asp-for="@Model.FirstName" class="form-label"></label>
@@ -116,15 +111,15 @@
                         </div>
                     </div>
                     </div>
-
             </section>
-                </div>
+        </div>
     </main>
+</section>
 
     @section Scripts
         {
         @{
             Html.RenderPartial("_ValidationScriptsPartial");
         }
-    ;
+    
     }

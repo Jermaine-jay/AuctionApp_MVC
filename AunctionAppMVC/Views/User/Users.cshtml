@@ -5,14 +5,10 @@
 
 @model IEnumerable<AunctionApp.BLL.Models.UserVM>
 
-<div class="container">
-    <section class="breadcrumbs">
-        <div class="container">
-        </div>
-    </section>
+<section class="mt-5">
     @if (@TempData["SuccessMsg"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show w-75" role="alert">
             <strong>Success!</strong> @TempData["SuccessMsg"]
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -21,7 +17,7 @@
 
     @if (@TempData["ErrMsg"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
             <strong>Error!</strong> @TempData["ErrMsg"]
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -38,7 +34,6 @@
                 <th scope="col">Email</th>
                 <th scope="col">PhoneNumber</th>
                 <th scope="col">Address</th>
-                <th scope="col">Id</th>
             </tr>
         </thead>
 
@@ -56,18 +51,17 @@
                         <td>@item.value.Email</td>
                         <td>@item.value.PhoneNumber</td>
                         <td>@item.value.Address</td>
-                        <td>@item.value.Id</td>
                         <td class="d-flex">
-                            <span class="px-1">
-                                <form action="@Url.Action("UpdateUser", "User", new { userId = @item.value.Id})" method="Get">
-                                    <input type="submit" class="btn btn-success btn-sm" value="Edit" placeholder="@item.value.Id" />
-                                </form>
+                            <span class="px-2">
+                                <a asp-controller="User" asp-action="UpdateUser" asp-route-userId="@item.value.Id" title="Edit User">
+                                    <i class="fa-solid fa-pen-to-square" style="color: #ffd60a"></i>
+                                </a>
                             </span>
 
-                            <span class="px-1">
-                                <form action="@Url.Action("DeleteUser", "User", new { Id = @item.value.Id})" method="post">
-                                    <input type="submit" class="btn btn-danger btn-sm" value="Delete" placeholder="@item.value.Id" />
-                                </form>
+                            <span class="px-2">
+                                <a asp-controller="User" asp-action="DeleteUser" asp-route-userId="@item.value.Id" title="Delete User">
+                                    <i class="fa-solid fa-trash" style="color:red"></i>
+                                </a>
                             </span>
                         </td>
                     </tr>
@@ -76,8 +70,7 @@
             }
         }
     </table>
-
-</div>
+</section>
 
 @section Scripts
     {

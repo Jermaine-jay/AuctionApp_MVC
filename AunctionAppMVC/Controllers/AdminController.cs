@@ -1,9 +1,11 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionAppMVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("[controller]/[action]/{productid?}")]
     public class AdminController : Controller
     {
@@ -120,9 +122,7 @@ namespace AunctionAppMVC.Controllers
 
             }
             return View("AllAuctions");
-        }
-
-        
+        }      
 
     }
 }

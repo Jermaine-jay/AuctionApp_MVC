@@ -34,11 +34,13 @@ namespace AunctionAppMVC.Controllers
             return View(new RegisterVM());
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult RegisterAdmin()
         {
             return View(new RegisterVM());
         }
 
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -61,6 +63,7 @@ namespace AunctionAppMVC.Controllers
             return View(new SignInVM());
         }
 
+        [Authorize]
         public async Task<IActionResult> GetUser(string userId)
         {
             var model = await _userService.GetUser(userId);
@@ -72,6 +75,7 @@ namespace AunctionAppMVC.Controllers
             return View(new AddOrUpdateBidVM());
         }
 
+        [Authorize]
         public async Task<IActionResult> UpdateUser()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -83,6 +87,7 @@ namespace AunctionAppMVC.Controllers
             return View(user);
         }
 
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UserBids()
         {
             var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
@@ -112,6 +117,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -129,6 +135,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SaveAdmin(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -146,6 +153,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update(UserVM model)
         {
             if (ModelState.IsValid)
@@ -191,14 +199,15 @@ namespace AunctionAppMVC.Controllers
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("SignIn");
                 }
                 TempData["ErrMsg"] = msg;
-                return View("Index", "Home");
+                return View("SignIn");
             }
-            return View("Index", "Home");
+            return View("SignIn");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileImageVM model)
         {
@@ -221,6 +230,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string Id)
         {
             if (ModelState.IsValid)

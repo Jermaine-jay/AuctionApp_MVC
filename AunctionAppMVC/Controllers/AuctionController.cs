@@ -1,5 +1,6 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -25,12 +26,14 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> MakeBid(int productId)
         {
             var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
             return View(new AddOrUpdateBidVM { ProductId = productId, Bidder = bidder });
         }
 
+        [Authorize]
         public async Task<IActionResult> Home()
         {
             var model = await _ProductService.GetAuctionsWithBidsAsync();
@@ -38,6 +41,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
         {
             if (ModelState.IsValid)

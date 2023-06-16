@@ -5,35 +5,28 @@
 
 @model IEnumerable<AunctionApp.BLL.Models.AuctionVMForm>
 
-<div class="container">
-<section class="breadcrumbs">
-    <div class="container">
-    </div>
-</section><!-- End Breadcrumbs -->
-
+<section class="mt-5">
 @if (@TempData["SuccessMsg"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show w-75" role="alert">
         <strong>Success!</strong> @TempData["SuccessMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-
 @if (@TempData["ErrMsg"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
         <strong>Error!</strong> @TempData["ErrMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-
 <table class="table">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Aunction Name</th>
+            <th scope="col">Auction Name</th>
             <th scope="col">Price</th>
             <th scope="col">Status</th>
             <th scope="col">Actions</th> 
@@ -43,46 +36,40 @@
     @foreach (var item in Model.Select((value, i) => new { value, i }))
     {
     <tbody>
-
         <tr>
             <th scope="row">@(item.i + 1)</th>
             <td>@item.value.ProductName</td>
             <td>@item.value.ActualAmount</td>
-            <td>@item.value.Status</td>
-           
+            <td>@item.value.Status</td>      
             <td class="d-flex">
 
-                    <span class="px-2">                  
-                        <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
-                            @if(item.value.Status == "Sold")
-                            {
-                                 <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
-                            }else{
-                                 <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
-                            }
-                        </a>
+                <span class="px-2">                  
+                    <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
+                        @if(item.value.Status == "Sold")
+                        {
+                            <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
+                        }else{
+                            <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
+                        }
+                    </a>
+                </span>
+                <span class="px-2">                      
+                    <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Edit Anction">
+                        <i class="fa-solid fa-pen-to-square fa-lg" style="color: #fca311"></i>
+                    </a>
+                </span>
 
-                    </span>
-
-                    <span class="px-2">                      
-                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Edit Anction">
-                              <i class="fa-solid fa-pen-to-square fa-lg" style="color: #ffd60a"></i>
-                        </a>
-                    </span>
-
-                    <span class="px-2">
-                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Delete Anction">
-                              <i class="fa-solid fa-trash fa-lg" style="color:red"></i>
-                        </a>
-                    </span>
+                <span class="px-2">
+                    <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Delete Anction">
+                        <i class="fa-solid fa-trash fa-lg" style="color:red"></i>
+                    </a>
+                </span>
             </td>
-        </tr>
-       
+        </tr>     
     </tbody>
     }
 </table>
-
-</div>
+</section>
 
 @section Scripts
     {

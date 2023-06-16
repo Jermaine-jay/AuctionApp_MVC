@@ -6,84 +6,71 @@
 
 @model AunctionApp.BLL.Models.UserVM;
 
-
-<!-- ======= Breadcrumbs ======= -->
-<section class="breadcrumbs">
-    <div class="container">
-    </div>
-</section><!-- End Breadcrumbs -->
-
+<section class="mt-2">
 <main id="main">
+    <div class="container mt-4">
+        <section class="section register min-vh-80 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="card mb-3">
+                            <div class="card-body">
 
-    <main>
-        <div class="container mt-4">
-            <section class="section register min-vh-80 d-flex flex-column align-items-center justify-content-center py-4">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Update Details</h5>
+                                </div>
 
-                            <div class="card mb-3">
+                                <form class="row g-3 needs-validation" asp-controller="User" asp-action="UpdateUser">
 
-                                <div class="card-body">
+                                    <div class="col-12 m-2">
+                                        <label asp-for="@Model.FirstName" class="form-label"></label>
+                                        <input type="text" asp-for="@Model.FirstName" placeholder="First Name" class="form-control" required>
+                                        <span asp-validation-for="@Model.FirstName"></span>
 
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Update Details</h5>
                                     </div>
 
-                                   <form class="row g-3 needs-validation" asp-controller="User" asp-action="UpdateUser">
-
-                                        <div class="col-12 m-2">
-                                            <label asp-for="@Model.FirstName" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.FirstName" placeholder="First Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.FirstName"></span>
-
-                                        </div>
-
-                                        <div class="col-12 m-2">
-                                            <label asp-for="@Model.LastName" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.LastName" placeholder="Last Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.LastName"></span>
+                                    <div class="col-12 m-2">
+                                        <label asp-for="@Model.LastName" class="form-label"></label>
+                                        <input type="text" asp-for="@Model.LastName" placeholder="Last Name" class="form-control" required>
+                                        <span asp-validation-for="@Model.LastName"></span>
                                          
-                                        </div>
+                                    </div>
 
                                         
+                                    <div class="col-12 m-2">
+                                        <label asp-for="@Model.Address" class="form-label"></label>
+                                        <input type="text" asp-for="@Model.Address" placeholder=" Address" class="form-control" required>
+                                        <span asp-validation-for="@Model.Address"></span>
 
-                                        <div class="col-12 m-2">
-                                            <label asp-for="@Model.Address" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.Address" placeholder=" Address" class="form-control" required>
-                                            <span asp-validation-for="@Model.Address"></span>
+                                    </div>
 
-                                        </div>
+                                    <div class="col-12 m-2">
+                                        <label asp-for="@Model.Email" class="form-label"></label>
+                                        <input type="text" asp-for="@Model.Email" placeholder="Email" class="form-control" required>
+                                        <span asp-validation-for="@Model.Email"></span>
 
-                                        <div class="col-12 m-2">
-                                            <label asp-for="@Model.Email" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.Email" placeholder="Email" class="form-control" required>
-                                            <span asp-validation-for="@Model.Email"></span>
+                                    </div>
 
-                                        </div>
-
-                                        <div class="col-12 m-2">
-                                            <label asp-for="@Model.PhoneNumber" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.PhoneNumber" placeholder="Phonenumber" class="form-control" required>
-                                            <span asp-validation-for="@Model.PhoneNumber"></span>
-                                        </div>
-                                </form>
-                                        
-
-                                </div>
+                                    <div class="col-12 m-2">
+                                        <label asp-for="@Model.PhoneNumber" class="form-label"></label>
+                                        <input type="text" asp-for="@Model.PhoneNumber" placeholder="Phonenumber" class="form-control" required>
+                                        <span asp-validation-for="@Model.PhoneNumber"></span>
+                                    </div>
+                            </form>                                      
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-            </section>
-    </main>
+            </div>
+        </section>
+    </div>
+</main>
+</section>
 
     @section Scripts
         {
         @{
             Html.RenderPartial("_ValidationScriptsPartial");
         }
-    ;
+    
     }

@@ -6,23 +6,18 @@
 @model AunctionApp.BLL.Models.RegisterVM;
 
 
-<section class="breadcrumbs">
-    <div class="container">
-    </div>
-</section>
-
+<section class="mt-2">
 @if (@TempData["SuccessMsg"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show w-75" role="alert">
         <strong>Success!</strong> @TempData["SuccessMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-
 @if (@TempData["ErrMsg"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
         <strong>Error!</strong> @TempData["ErrMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -43,64 +38,63 @@
                                         <h5 class="card-title text-center pb-0 fs-4">Register</h5>
                                     </div>
 
-                                    <form class="row g-3" asp-controller="User" asp-action="SaveUser">
+                                    <form class="row g-3" asp-controller="User" asp-action="SaveUser" novalidate>
 
-                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
-
-                                       
+                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.All"></div>
+                                
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.FirstName" class="form-label"></label>
                                             <input type="text" asp-for="@Model.FirstName" placeholder="First Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.FirstName"></span>
+                                            <span asp-validation-for="@Model.FirstName" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.LastName" class="form-label"></label>
                                             <input type="text" asp-for="@Model.LastName" placeholder="Last Name" class="form-control" required>
-                                            <span asp-validation-for="@Model.LastName"></span>                                
+                                            <span asp-validation-for="@Model.LastName" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.Username" class="form-label"></label>
                                             <input type="text" asp-for="@Model.Username" placeholder="UserName" class="form-control" required>
-                                            <span asp-validation-for="@Model.Username"></span>
+                                            <span asp-validation-for="@Model.Username" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.Address" class="form-label"></label>
                                             <input type="text" asp-for="@Model.Address" placeholder=" Address" class="form-control" required>
-                                            <span asp-validation-for="@Model.Address"></span>
+                                            <span asp-validation-for="@Model.Address" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.Email" class="form-label"></label>
                                             <input type="text" asp-for="@Model.Email" placeholder="Email" class="form-control" required>
-                                            <span asp-validation-for="@Model.Email"></span>
+                                            <span asp-validation-for="@Model.Email" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.PhoneNumber" class="form-label"></label>
                                             <input type="text" asp-for="@Model.PhoneNumber" placeholder="Phonenumber" class="form-control" required>
-                                            <span asp-validation-for="@Model.PhoneNumber"></span>
+                                            <span asp-validation-for="@Model.PhoneNumber" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.Password" class="form-label"></label>
-                                            <input type="text" asp-for="@Model.Password" placeholder="Password" class="form-control" required>
-                                            <span asp-validation-for="@Model.Password"></span>
+                                            <input type="password" asp-for="@Model.Password" placeholder="Password" class="form-control" required>
+                                            <span asp-validation-for="@Model.Password" class="alert alert-danger"></span>
 
                                         </div>
 
                                         <div class="col-12 m-2">
                                             <label asp-for="@Model.ConfirmPassword" class="form-label"></i></label>
-                                            <input type="text" asp-for="@Model.ConfirmPassword" placeholder="confirm password" class="form-control" required />
-                                            <span asp-validation-for="@Model.ConfirmPassword"></span>
+                                            <input type="password" asp-for="@Model.ConfirmPassword" placeholder="confirm password" class="form-control" required />
+                                            <span asp-validation-for="@Model.ConfirmPassword" class="alert alert-danger"></span>
                                         </div>
 
                                         <div class="col-12">
@@ -119,13 +113,13 @@
                 </div>
 
             </section>
-                </div>
+        </div>
     </main>
+  </section>
 
-    @section Scripts
-        {
-        @{
-            Html.RenderPartial("_ValidationScriptsPartial");
-        }
-    ;
+@section Scripts
+    {
+    @{
+        Html.RenderPartial("_ValidationScriptsPartial");
     }
+}

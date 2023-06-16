@@ -3,7 +3,6 @@ using AunctionApp.BLL.Interfaces;
 using AunctionApp.DAL.Database;
 using AunctionApp.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection;
 using TodoList.DAL.Repository;
 
 namespace AunctionAppMVC.Extensions
@@ -46,29 +45,21 @@ namespace AunctionAppMVC.Extensions
 
         public static void Configure(IServiceProvider serviceProvider)
         {
-            // Other app configurations
-
-            // Create roles
             CreateRoles(serviceProvider).Wait();
-
-            // Other app configurations
         }
 
         private static async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            // Check if the roles exist
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
-                // Create Admin role
                 var role = new IdentityRole("Admin");
                 await roleManager.CreateAsync(role);
             }
 
             if (!await roleManager.RoleExistsAsync("User"))
             {
-                // Create User role
                 var role = new IdentityRole("User");
                 await roleManager.CreateAsync(role);
             }

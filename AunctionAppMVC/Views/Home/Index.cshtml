@@ -1,8 +1,4 @@
-﻿@*@{
-    ViewData["Title"] = "Home Page";
-}*@
-
-@{
+﻿@{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
@@ -16,9 +12,8 @@
 
         <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
             <div class="col-xl-6 col-lg-8">
-                    <h1>Premier destination for online auctions.<span>.</span></h1>
-                    <h2>Discover a thrilling world of bidding, buying, and winning with Germane Aunction.</h2>
-                  
+                <h1>Premier destination for online auctions.<span>.</span></h1>
+                <h2>Discover a thrilling world of bidding, buying, and winning with Germane Aunction.</h2>                
             </div>
         </div>
     </div>
@@ -108,9 +103,8 @@
                                     </strong>
                                                    
                                     <div class="portfolio-links">
-                                        <a href="~/img/Auctions/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="bx bx-plus"></i></a>                                   
-                                        <a asp-controller="Auction" asp-action="GetAuction" asp-route-ProductId="@item.value.Id" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
-                                        
+                                        <a href="~/img/Auctions/@item.value.ProductImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@item.value.ProductName"><i class="fa-solid fa-up-right-and-down-left-from-center mx-1"></i></a>
+                                        <a asp-controller="Auction" asp-action="GetAuction" asp-route-ProductId="@item.value.Id" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="fa-solid fa-camera mx-1"></i></a>                          
                                     </div>
                                 </div>
                             </div>

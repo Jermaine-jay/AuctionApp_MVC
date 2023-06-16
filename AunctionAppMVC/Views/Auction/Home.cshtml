@@ -12,36 +12,26 @@
 @model IEnumerable<AunctionApp.BLL.Models.AuctionWithBidVM>
 
 
-
+<section class="mt-3">
  @if (@TempData["SuccessMsg"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show w-75" role="alert">
         <strong>Success!</strong> @TempData["SuccessMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-
 @if (@TempData["ErrMsg"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
         <strong>Error!</strong> @TempData["ErrMsg"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<!-- ======= Breadcrumbs ======= -->
-<section class="breadcrumbs">
-    <div class="container">
 
-    </div>
-</section><!-- End Breadcrumbs -->
-
-
-<!-- ======= Features Section ======= -->
 @foreach (var item in Model.Select((value, i) => new { value, i }))
-{
-       
+{      
   <section id="features" class="features">
     <div class="container" data-aos="fade-up">
 
@@ -61,63 +51,71 @@
 
           <p class="fw-bold">
             STATUS: @item.value.Status
-          </p>
+          </p>        
 
             @if (User.IsInRole("User"))
             {
                 @if (item.value.Status != "Sold")
                 {
-                    <span>
-                        <form action="@Url.Action("MakeBid", "Auction", new { ProductId = @item.value.Id})" method="Get">
-                            <input type="submit" class="btn btn-success" value="Make Bid" placeholder="@item.value.Id" />
-                        </form>
+                    <div class="d-flex"> <strong> Time Left:
+                        <span id="countdown" data-ProductId="@item.value.Id"> </span>
+                    </strong></div>
+                     <br />
+
+                    <span class="px-2">
+                        <a asp-controller="Auction" asp-action="MakeBid" asp-route-ProductId="@item.value.Id" title="Make Bid" style="color:black">
+                            Make Bid: 
+                            <i class="fa-sharp fa-solid fa-plus fa-2xl" style="color:green"></i>
+                        </a>
                     </span>
                 }
-
+                else
+                {                      
+                    <div id="ClosedcountdownElement"></div>
+                    <p class="fw-bold">
+                        Sold To: @item.value.Bids.Max(u=> u.Bidder) for:  $@item.value.Bids.Max(u=> u.BidPrice)
+                    </p>
+                }
             }
 
-            <div class="column mw-100 mt-5">
-                <div class="col-lg-6 order-2 order-lg-2" data-aos="fade-right" data-aos-delay="100">
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Bidder</th>
-                                <th scope="col">Bid Time</th>
-                                <th scope="col">($)Bid Price</th>
-
-                            </tr>
-                        </thead>
-
-                        @foreach (var bid in item.value.Bids.Select((value, i) => new { value, i }))
-                        {
-                            <tbody>
+            @if (item.value.Status != "Sold")
+            {
+                <div class="column mw-100 mt-5">
+                    <div class="col-lg-6 order-2 order-lg-2" data-aos="fade-right" data-aos-delay="100">
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <th scope="row">@(bid.i + 1)</th>
-                                    <td>@bid.value.Bidder</td>
-                                    <td>@bid.value.BidTime</td>
-                                    <td>@bid.value.BidPrice</td>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Bidder</th>
+                                    <th scope="col">Bid Time</th>
+                                    <th scope="col">($)Bid Price</th>
+
                                 </tr>
+                            </thead>
 
-                            </tbody>
-                        }
-                    </table>
-                </div>     
+                            @foreach (var bid in item.value.Bids.Select((value, i) => new { value, i }))
+                            {
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">@(
+                                        bid.i + 1
+                                        )</th>
+                                        <td>@bid.value.Bidder</td>
+                                        <td>@bid.value.BidTime</td>
+                                        <td>@bid.value.BidPrice</td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>     
+                </div>
+            }
             </div>
-        </div>
       </div>
-
     </div>
-
-  </section><!-- End Features Section -->
-
+  </section>
+      
 <hr />
 
   }
-
-@section Scripts
-    {
-    @{
-        Html.RenderPartial("_ValidationScriptsPartial");
-    }
- }
+</section>
