@@ -87,19 +87,6 @@ namespace AunctionApp.BLL.Implementations
             return productDetails;
         }
 
-        public async Task<BidVM> GetHighestBidderAsync(int ProductId)
-        {
-            var actions = await _ProductRepo.GetSingleByAsync(t=> t.Id == ProductId);
-            var productDetails = actions.BidList.OrderByDescending(p => p.BidPrice).Max(t => new BidVM
-            {
-                Bidder = t.Bidder,
-                BidPrice = t.BidPrice,
-                BidTime = t.BidTime.ToString("d"),
-            });
-                                
-            return productDetails;
-        }
-
         public async Task<(bool successful, string msg)> AddOrUpdateAsync(AddOrUpdateBidVM model)
         {
 
