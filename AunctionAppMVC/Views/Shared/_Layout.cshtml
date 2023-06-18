@@ -29,7 +29,7 @@
     <header id="header" class="fixed-top ">
         <div class="container d-flex align-items-center justify-content-lg-between">
 
-            <h1 class="logo me-auto me-lg-0"><a href="index.html">GERMANE AUCTION<span>.</span></a></h1>
+            <h1 class="logo me-auto me-lg-0"><a href="index.html">Jermaine Auction<span>.</span></a></h1>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
 
@@ -41,10 +41,10 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
-                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="NewAuction">New Auction</a></li>
-                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="UpdateAuction">Update Auction</a></li>
-                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="AllAuctions">All Auction</a></li>
-                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Users">All Users</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="NewAuction">New</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="UpdateAuction">Update</a></li>
+                            <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="AllAuctions">All Auctions</a></li>
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Users">Users</a></li>
                             <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>                       
                         }
                         @if (User.IsInRole("User"))

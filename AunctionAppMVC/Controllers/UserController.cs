@@ -46,16 +46,14 @@ namespace AunctionAppMVC.Controllers
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userService.UserProfileAsync(userId);
 
-            var profile = new ProfileVM() 
-            { 
+            var profile = new ProfileVM()
+            {
                 User = user,
                 Image = new ProfileImageVM(),
             };
-            if (user != null)
-            {
-                return View(profile);
-            }
+
             return View(profile);
+
         }
 
         public IActionResult SignIn()
@@ -80,10 +78,6 @@ namespace AunctionAppMVC.Controllers
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userService.GetUser(userId);
-            if (user == null)
-            {
-                return View(new RegisterVM());
-            }
             return View(user);
         }
 
@@ -152,8 +146,7 @@ namespace AunctionAppMVC.Controllers
             return View("RegisterAdmin");
         }
 
-        [HttpPut]
-        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> Update(UserVM model)
         {
             if (ModelState.IsValid)
@@ -163,7 +156,7 @@ namespace AunctionAppMVC.Controllers
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("AllUsers");
+                    return RedirectToAction("Profile");
                 }
 
                 TempData["ErrMsg"] = msg;
@@ -207,14 +200,19 @@ namespace AunctionAppMVC.Controllers
             return View("SignIn");
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileImageVM model)
         {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ProfileImageVM newmodel = new ProfileImageVM
+            {
+                UserId = userId,
+                ProfileImagePath = model.ProfileImagePath,
+            };
             if (ModelState.IsValid)
             {
-                var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var (successful, msg) = await _userService.UpdateProfileImage(userId, model);
+                var (successful, msg) = await _userService.UpdateProfileImage(newmodel);
 
                 if (successful)
                 {

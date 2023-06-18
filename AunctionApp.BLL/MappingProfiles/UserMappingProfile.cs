@@ -13,6 +13,9 @@ namespace AunctionApp.BLL.MappingProfiles
 
             CreateMap<User, RegisterVM>();
             CreateMap<RegisterVM, User>();
+
+            CreateMap<User, ProfileImageVM>();
+            CreateMap<ProfileImageVM, User>();
         }
     }
 }

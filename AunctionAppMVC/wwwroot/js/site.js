@@ -34,4 +34,8 @@
 
     var timer = setInterval(updateCountdown, 1000); // Update countdown every second
                 });
-            });
+});
+
+
+document.getElementById('profileImageInput').addEventListener('change', function () {
+    document.getElementById('profileImageForm').submit();

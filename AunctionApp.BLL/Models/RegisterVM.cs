@@ -14,6 +14,7 @@ namespace AunctionApp.BLL.Models
         public string? Username { get; set; }
 
         [Required, DataType(DataType.EmailAddress)]
+        [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", ErrorMessage = "Please enter a valid email address.")]
         public string? Email { get; set; }
 
         public string? Address { get; set; }
@@ -22,9 +23,11 @@ namespace AunctionApp.BLL.Models
         public string? PhoneNumber { get; set; }
 
         [Required, DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$", ErrorMessage = "The password must be at least 6 characters long and contain at least one letter and one digit.")]
         public string Password { get; set; }
 
         [DataType(DataType.Password), Compare(nameof(Password))]
+        [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$", ErrorMessage = "The password must be at least 6 characters long and contain at least one letter and one digit.")]
         public string ConfirmPassword { get; set; }
 
     }

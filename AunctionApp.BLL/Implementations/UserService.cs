@@ -181,34 +181,32 @@ namespace AunctionApp.BLL.Implementations
             };
             return useres;
         }
-        public async Task<(bool successful, string msg)> UpdateProfileImage(string userId, ProfileImageVM model)
+        public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model)
         {
-            var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
-            var fileName = model?.ProfileImagePath?.FileName;
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
+            var user = await _userRepo.GetSingleByAsync(u => u.Id == model.UserId);
 
-            Console.WriteLine("filename:{0} image path: {1}", fileName, imagePath);
+            var fileName = model.ProfileImagePath.FileName;
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
 
             if (!Directory.Exists(imagePath))
             {
                 Directory.CreateDirectory(imagePath);
             }
-
             string picPath = Path.Combine(imagePath, fileName);
             using (var stream = new FileStream(picPath, FileMode.Create))
             {
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
+
             if (user != null)
             {
                 user.ProfileImagePath = fileName;
-                var row = _mapper.Map<User>(user);
-                var result = await _userRepo.UpdateAsync(user);
+                var userupdate = _mapper.Map(model, user);
+                var result = await _userRepo.UpdateAsync(userupdate);
                 return (true, "Profile picture updated!");
             }
 
-            return (false, "couldn't update profile picture!");
+            return (false, "Couldn't update the profile picture!");
         }
-
     }
 }
