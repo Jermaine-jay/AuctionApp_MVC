@@ -4,16 +4,16 @@ namespace AunctionApp.BLL.Models
 {
     public class UserVM
     {
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [Required, MaxLength(50)]
         public string? UserName { get; set; }
 
         [Required, MaxLength(50)]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Required, MaxLength(50)]
-        public string? LastName { get; set; }
+        public string LastName { get; set; }
 
         [Required, DataType(DataType.EmailAddress)]
         public string Email { get; set; }

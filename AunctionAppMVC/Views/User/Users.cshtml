@@ -5,7 +5,7 @@
 
 @model IEnumerable<AunctionApp.BLL.Models.UserVM>
 
-<section class="mt-5">
+<section class="mt-5 w-75 mx-auto d-block">
     @if (@TempData["SuccessMsg"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show w-75 mx-auto d-block" role="alert">
@@ -38,9 +38,8 @@
 
         @foreach (var item in Model.Select((value, i) => new { value, i }))
         {
-            @if (User.IsInRole("User"))
+            @if (User.IsInRole("Admin"))
             {
-
                 <tbody>
                     <tr>
                         <th scope="row">@(item.i + 1)</th>
@@ -64,7 +63,6 @@
                             </span>
                         </td>
                     </tr>
-
                 </tbody>
             }
         }

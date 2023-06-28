@@ -1,7 +1,9 @@
-﻿using AunctionApp.BLL.Interfaces;
+﻿using AunctionApp.BLL.Implementations;
+using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 
 namespace AunctionAppMVC.Controllers
@@ -12,11 +14,15 @@ namespace AunctionAppMVC.Controllers
         private readonly IUserService _userService;
         private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor)
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IRecoveryService _recoveryService;
+        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService )
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
+            _urlHelperFactory = urlHelperFactory;
+            _recoveryService = recoveryService;
         }
         public IActionResult Home()
         {
@@ -61,6 +67,21 @@ namespace AunctionAppMVC.Controllers
             return View(new SignInVM());
         }
 
+        public IActionResult ForgotPassword()
+        {
+            return View(new ForgotPasswordVM());
+        }
+
+        public IActionResult ResetPassword(string? code, string userId)
+        {
+            if (code == null)
+            {
+                return RedirectToAction("Error");
+            }
+            var model = new ResetPasswordVM { Code = code, UserId = userId };
+            return View(model);
+        }
+
         [Authorize]
         public async Task<IActionResult> GetUser(string userId)
         {
@@ -68,6 +89,7 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         public IActionResult AddBid()
         {
             return View(new AddOrUpdateBidVM());
@@ -116,11 +138,12 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.RegisterUser(model);
+                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
+                var (successful, msg) = await _userService.RegisterUser(urlHelper, model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("SignIn");
+                    return RedirectToAction("SiWaitingPagegnIn");
                 }
                 TempData["ErrMsg"] = msg;
                 return View("RegisterUser");
@@ -134,11 +157,12 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.RegisterAdmin(model);
+                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
+                var (successful, msg) = await _userService.RegisterAdmin(urlHelper,model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("SignIn");
+                    return RedirectToAction("WaitingPage");
                 }
                 TempData["ErrMsg"] = msg;
                 return View("RegisterAdmin");
@@ -200,7 +224,7 @@ namespace AunctionAppMVC.Controllers
             return View("SignIn");
         }
 
-        //[Authorize]
+
         [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileImageVM model)
         {
@@ -227,6 +251,7 @@ namespace AunctionAppMVC.Controllers
             return View("Profile");
         }
 
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string Id)
@@ -247,5 +272,46 @@ namespace AunctionAppMVC.Controllers
             return View("Users");
 
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetUserPassword(ResetPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _recoveryService.ResetPassword(model);
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("SignIn");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("ResetPassword");
+            }
+            return View("ResetPassword");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserForgotPassword(ForgotPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
+                var (successful, msg) = await _recoveryService.ForgotPassword(urlHelper, model);
+
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("WaitingPage");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("ForgotPassword");
+            }
+            return View("ForgotPassword");
+
+        }
+
     }
 }

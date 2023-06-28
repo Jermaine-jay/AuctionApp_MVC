@@ -4,7 +4,10 @@ using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
@@ -16,14 +19,13 @@ namespace AunctionApp.BLL.Implementations
         private readonly IRepository<User> _userRepo;
         private readonly IRepository<Bid> _BidRepo;
         private readonly IRepository<Product> _ProductRepo;
-
+        private readonly IAuthenticationService _authenticationService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        private RoleManager<IdentityRole> _roleManager { get; }
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IWebHostEnvironment webHostEnvironment)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IAuthenticationService authenticationService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -32,8 +34,8 @@ namespace AunctionApp.BLL.Implementations
             _ProductRepo = _unitOfWork.GetRepository<Product>();
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _webHostEnvironment = webHostEnvironment;
+            _authenticationService = authenticationService;
         }
 
         public async Task<(bool successful, string msg)> AddOrUpdateBidAsync(AddOrUpdateBidVM model)
@@ -61,25 +63,67 @@ namespace AunctionApp.BLL.Implementations
 
             return rowChanges > 0 ? (true, $"User: {model.Bidder} bid was successfully created!") : (false, "Failed To save changes!");
         }
-        public async Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register)
+
+
+        public async Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register)
         {
+            var (createUser, msg) = await CreateAUser(register);
+            if (createUser == null)
+            {
+                return (false, msg);
+            }
             var newUser = _mapper.Map<User>(register);
             IdentityResult result = await _userManager.CreateAsync(newUser, register.Password);
 
-            await _userManager.AddToRoleAsync(newUser, "Admin");
-            await _signInManager.SignInAsync(newUser, isPersistent: false);
+            if (result.Succeeded)
+            {
+                _ = _authenticationService.RegistrationMail(urlHelper, newUser);
 
-            return result.Succeeded ? (true, "Admin created successfully!") : (false, "Failed to create Admin");
+                await _userManager.AddToRoleAsync(newUser, "Admin");
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                return result.Succeeded ? (true, "Admin created successfully!, Verification Mail Sent") : (false, "Failed to create Admin, Couldn't Send Mail");
+            }
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    return (false, $"Failed to create Admin.{error.Description}");
+                }
+            }
+            return (false, $"Failed to create Admin");
         }
-        public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)
+
+
+        public async Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register)
         {
+            var (createUser, msg) = await CreateAUser(register);
+            if (createUser == null)
+            {
+                return (false, msg);
+            }
+
             var newUser = _mapper.Map<User>(register);
             IdentityResult result = await _userManager.CreateAsync(newUser, register.Password);
-            await _userManager.AddToRoleAsync(newUser, "User");
-            await _signInManager.SignInAsync(newUser, isPersistent: false);
 
-            return result.Succeeded ? (true, "User created successfully!") : (false, "Failed to create User");
+            if (result.Succeeded)
+            {
+                _ = _authenticationService.RegistrationMail(urlHelper, newUser);
+
+                await _userManager.AddToRoleAsync(newUser, "User");
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                return result.Succeeded ? (true, "User created successfully!, Verification Mail Sent") : (false, "Failed to create User, Couldn't Send Mail");
+            }
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    return (false, $"Failed to create User.{error.Description}");
+                }
+            }
+            return (false, $"Failed to create User");
         }
+
+
         public async Task<(bool successful, string msg)> SignIn(SignInVM signIn)
         {
             User user;
@@ -100,13 +144,22 @@ namespace AunctionApp.BLL.Implementations
             }
             return (false, "User does not exist");
         }
+
+
         public async Task<(bool successful, string msg)> SignOut()
         {
             await _signInManager.SignOutAsync();
             return (true, $"logged out successfully!");
         }
-        public async Task<User> CreateAUser(RegisterVM register)
+
+
+        public async Task<(User, string msg)> CreateAUser(RegisterVM register)
         {
+            var verify = await _authenticationService.VerifyEmail(register.Email);
+            if (verify == false)
+            {
+                return (null, "Invalid Email Address");
+            }
             User newUser = new User
             {
                 UserName = register.Username,
@@ -117,10 +170,17 @@ namespace AunctionApp.BLL.Implementations
                 PhoneNumber = register.PhoneNumber,
 
             };
-            return newUser;
+            return (newUser, "Valid Email");
         }
+
+
         public async Task<(bool successful, string msg)> Update(UserVM model)
         {
+            var verify = await _authenticationService.VerifyEmail(model.Email);
+            if (verify == false)
+            {
+                return (false, "Invalid Email Address");
+            }
             var user = await _userRepo.GetSingleByAsync(u => u.Id == model.Id);
             if (user == null)
             {
@@ -132,6 +192,8 @@ namespace AunctionApp.BLL.Implementations
 
             return rowChanges != null ? (true, $"User detail update was successful!") : (false, "Failed To save changes!");
         }
+
+
         public async Task<(bool successful, string msg)> Delete(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -142,6 +204,8 @@ namespace AunctionApp.BLL.Implementations
             await _userRepo.DeleteAsync(user);
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{user.FirstName} was deleted") : (false, $"Delete Failed");
         }
+
+
         public async Task<UserVM> GetUser(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -149,6 +213,8 @@ namespace AunctionApp.BLL.Implementations
 
             return Auser;
         }
+
+
         public async Task<IEnumerable<UserVM>> GetUsers()
         {
             var users = await _userRepo.GetAllAsync();
@@ -165,6 +231,8 @@ namespace AunctionApp.BLL.Implementations
             });
             return userViewModels;
         }
+
+
         public async Task<UserVM> UserProfileAsync(string userId)
         {
             var u = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -181,6 +249,8 @@ namespace AunctionApp.BLL.Implementations
             };
             return useres;
         }
+
+
         public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == model.UserId);
@@ -208,5 +278,6 @@ namespace AunctionApp.BLL.Implementations
 
             return (false, "Couldn't update the profile picture!");
         }
+
     }
 }

@@ -15,7 +15,11 @@ namespace AunctionAppMVC.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IGenerateEmailVerificationPage, GenerateEmailVerificationPage>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IRecoveryService, RecoveryService>();
             services.AddHttpContextAccessor();
+
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)

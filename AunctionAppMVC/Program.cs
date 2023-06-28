@@ -1,3 +1,4 @@
+using AunctionApp.BLL.Extensions;
 using AunctionApp.DAL.Database;
 using AunctionAppMVC.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<AunctionAppDbContext>(opts =>
     var defaultConn = builder.Configuration.GetSection("ConnectionString")["DefaultConn"];
     opts.UseSqlServer(defaultConn);
 });
+
+builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSenderOptions"));
 
 builder.Services.RegisterServices();
 builder.Services.ConfigureIdentity();

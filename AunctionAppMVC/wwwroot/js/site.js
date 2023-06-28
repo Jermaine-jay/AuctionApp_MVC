@@ -30,12 +30,7 @@
             }
         }
 
-    updateCountdown(); // Initial call to display the countdown immediately
+    updateCountdown();
 
-    var timer = setInterval(updateCountdown, 1000); // Update countdown every second
-                });
+    var timer = setInterval(updateCountdown, 1000);});
 });
-
-
-document.getElementById('profileImageInput').addEventListener('change', function () {
-    document.getElementById('profileImageForm').submit();

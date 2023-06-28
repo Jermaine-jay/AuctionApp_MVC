@@ -26,7 +26,7 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> MakeBid(int productId)
         {
             var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
@@ -41,7 +41,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
         {
             if (ModelState.IsValid)
