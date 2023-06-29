@@ -1,6 +1,5 @@
 ﻿using AunctionApp.BLL.Extensions;
 using AunctionApp.BLL.Interfaces;
-using AunctionApp.DAL.Entities;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Newtonsoft.Json;
+using User = AunctionApp.DAL.Entities.User;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -64,7 +64,7 @@ namespace AunctionApp.BLL.Implementations
         public async Task<bool> Execute(string email, string subject, string htmlMessage)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Image App", _emailSenderOptions.Username));
+            message.From.Add(new MailboxAddress("Jermaine Auction", _emailSenderOptions.Username));
             message.To.Add(new MailboxAddress(email, email));
             message.Subject = subject;
 
@@ -116,7 +116,7 @@ namespace AunctionApp.BLL.Implementations
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
             var callbackUrl = urlHelper.Action("ConfirmEmail", "User", new { userId = newUser.Id, code }, protocol: "https");
-            _ = await SendEmailAsync(newUser.Email, "Confirm your email",
+            await SendEmailAsync(newUser.Email, "Confirm your email",
                 _generateEmailVerificationPage.EmailVerificationPage(newUser.UserName, callbackUrl));
 
             return true;

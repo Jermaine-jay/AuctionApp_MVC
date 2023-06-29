@@ -64,7 +64,7 @@ namespace AunctionApp.BLL.Implementations
                 <body>
                   <div class=""container"">
                      <h1>Email Verification</h1>
-                        <p>Hi {name},Thanks for getting started with our Image App!</p>
+                        <p>Hi {name},Thanks for getting started with our Jermaine Auction!</p>
                         <p>We need a little more information to complete your registration, including a confirmation of your email address.</p>
 	                    <p>Click below to confirm your email address:.</p>
                         <div>

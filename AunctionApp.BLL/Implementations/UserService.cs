@@ -67,20 +67,20 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register)
         {
-            var (createUser, msg) = await CreateAUser(register);
-            if (createUser == null)
+            var verify = await _authenticationService.VerifyEmail(register.Email);
+            if (verify == false)
             {
-                return (false, msg);
+                return (false, "Invalid Email Address");
             }
+
             var newUser = _mapper.Map<User>(register);
             IdentityResult result = await _userManager.CreateAsync(newUser, register.Password);
 
             if (result.Succeeded)
             {
-                _ = _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(urlHelper, newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "Admin");
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return result.Succeeded ? (true, "Admin created successfully!, Verification Mail Sent") : (false, "Failed to create Admin, Couldn't Send Mail");
             }
             if (!result.Succeeded)
@@ -96,10 +96,10 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register)
         {
-            var (createUser, msg) = await CreateAUser(register);
-            if (createUser == null)
+            var verify = await _authenticationService.VerifyEmail(register.Email);
+            if (verify == false)
             {
-                return (false, msg);
+                return (false, "Invalid Email Address");
             }
 
             var newUser = _mapper.Map<User>(register);
@@ -107,10 +107,9 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                _ = _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(urlHelper, newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "User");
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return result.Succeeded ? (true, "User created successfully!, Verification Mail Sent") : (false, "Failed to create User, Couldn't Send Mail");
             }
             if (!result.Succeeded)
@@ -136,13 +135,12 @@ namespace AunctionApp.BLL.Implementations
                 user = await _userManager.FindByNameAsync(signIn.UsernameOrEmail);
             }
 
-            if (user != null)
+            if (user != null && user.EmailConfirmed == true)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, signIn.Password, signIn.RememberMe, true);
-
-                return result.Succeeded ? (true, $"{user.UserName} logged in successfully!") : (false, "Failed to login");
+                return result.Succeeded ? (true, $"{user.UserName} logged in successfully!") : (false, "UserName or password is incorrect");
             }
-            return (false, "User does not exist");
+            return (false, "Unconfirmed Email Address");
         }
 
 
@@ -151,28 +149,6 @@ namespace AunctionApp.BLL.Implementations
             await _signInManager.SignOutAsync();
             return (true, $"logged out successfully!");
         }
-
-
-        public async Task<(User, string msg)> CreateAUser(RegisterVM register)
-        {
-            var verify = await _authenticationService.VerifyEmail(register.Email);
-            if (verify == false)
-            {
-                return (null, "Invalid Email Address");
-            }
-            User newUser = new User
-            {
-                UserName = register.Username,
-                FirstName = register.FirstName,
-                LastName = register.LastName,
-                Email = register.Email,
-                Address = register.Address,
-                PhoneNumber = register.PhoneNumber,
-
-            };
-            return (newUser, "Valid Email");
-        }
-
 
         public async Task<(bool successful, string msg)> Update(UserVM model)
         {
@@ -218,7 +194,7 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<UserVM>> GetUsers()
         {
             var users = await _userRepo.GetAllAsync();
-            var userViewModels = users.Select(model => new UserVM
+            var userViewModels = users.OrderByDescending(u=> u.UserName).Select(model => new UserVM
             {
                 Id = model.Id,
                 FirstName = model.FirstName,

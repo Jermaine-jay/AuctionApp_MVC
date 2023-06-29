@@ -16,15 +16,22 @@ namespace AunctionAppMVC.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IRecoveryService _recoveryService;
-        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService )
+        private readonly IAuthenticationService _authenticationService;
+        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService, IAuthenticationService authenticationService )
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
             _urlHelperFactory = urlHelperFactory;
             _recoveryService = recoveryService;
+            _authenticationService = authenticationService;
         }
         public IActionResult Home()
+        {
+            return View();
+        }
+
+        public IActionResult WaitingPage()
         {
             return View();
         }
@@ -82,6 +89,19 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            var (successful, msg) = await _authenticationService.ConfirmEmail(userId, code);
+            if (successful)
+            {
+                TempData["SuccessMsg"] = msg;
+                return RedirectToAction("SignIn");
+            }
+            TempData["ErrMsg"] = msg;
+            return View("SignIn");
+        }
+
         [Authorize]
         public async Task<IActionResult> GetUser(string userId)
         {
@@ -133,7 +153,7 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -143,7 +163,7 @@ namespace AunctionAppMVC.Controllers
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
-                    return RedirectToAction("SiWaitingPagegnIn");
+                    return RedirectToAction("WaitingPage");
                 }
                 TempData["ErrMsg"] = msg;
                 return View("RegisterUser");
@@ -252,13 +272,12 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(string Id)
+        public async Task<IActionResult> DeleteUser(string userId)
         {
             if (ModelState.IsValid)
             {
-                var (success, msg) = await _userService.Delete(Id);
+                var (success, msg) = await _userService.Delete(userId);
                 if (success)
                 {
                     TempData["SuccessMsg"] = msg;
