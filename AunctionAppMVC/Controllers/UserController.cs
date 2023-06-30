@@ -1,5 +1,4 @@
-﻿using AunctionApp.BLL.Implementations;
-using AunctionApp.BLL.Interfaces;
+﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,7 @@ namespace AunctionAppMVC.Controllers
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IRecoveryService _recoveryService;
         private readonly IAuthenticationService _authenticationService;
-        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService, IAuthenticationService authenticationService )
+        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService, IAuthenticationService authenticationService)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
@@ -177,7 +176,7 @@ namespace AunctionAppMVC.Controllers
             if (ModelState.IsValid)
             {
                 var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
-                var (successful, msg) = await _userService.RegisterAdmin(urlHelper,model);
+                var (successful, msg) = await _userService.RegisterAdmin(urlHelper, model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -248,7 +247,7 @@ namespace AunctionAppMVC.Controllers
         public async Task<IActionResult> UpdateProfileImage(ProfileVM model)
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-           
+
             if (!ModelState.IsValid)
             {
                 var (successful, msg) = await _userService.UpdateProfileImage(model.Image, userId);
