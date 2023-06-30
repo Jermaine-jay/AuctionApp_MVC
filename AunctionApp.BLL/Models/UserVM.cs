@@ -22,6 +22,6 @@ namespace AunctionApp.BLL.Models
 
         [Required, DataType(DataType.PhoneNumber), MaxLength(12)]
         public string PhoneNumber { get; set; }
-        public string? ProfilePicturePath { get; set; }
+        public string? ProfileImagePath { get; set; }
     }
 }

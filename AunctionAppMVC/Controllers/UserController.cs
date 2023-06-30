@@ -153,7 +153,6 @@ namespace AunctionAppMVC.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -246,18 +245,13 @@ namespace AunctionAppMVC.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfileImage(ProfileImageVM model)
+        public async Task<IActionResult> UpdateProfileImage(ProfileVM model)
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ProfileImageVM newmodel = new ProfileImageVM
+           
+            if (!ModelState.IsValid)
             {
-                UserId = userId,
-                ProfileImagePath = model.ProfileImagePath,
-            };
-            if (ModelState.IsValid)
-            {
-                var (successful, msg) = await _userService.UpdateProfileImage(newmodel);
-
+                var (successful, msg) = await _userService.UpdateProfileImage(model.Image, userId);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -266,7 +260,6 @@ namespace AunctionAppMVC.Controllers
 
                 TempData["ErrMsg"] = msg;
                 return View("Profile");
-
             }
             return View("Profile");
         }

@@ -22,6 +22,7 @@ namespace AunctionApp.BLL.Implementations
             _ProductRepo = _unitOfWork.GetRepository<Product>();
             _webHostEnvironment = webHostEnvironment;
         }
+
         public async Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model)
         {
 

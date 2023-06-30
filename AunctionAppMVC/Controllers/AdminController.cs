@@ -9,13 +9,11 @@ namespace AunctionAppMVC.Controllers
     [Route("[controller]/[action]/{productid?}")]
     public class AdminController : Controller
     {
-        private readonly IUserService _userService;
         private readonly IProductService _ProductService;
         private readonly IAdminService _AdminService;
 
-        public AdminController(IUserService userService, IProductService productService, IAdminService adminService)
+        public AdminController( IProductService productService, IAdminService adminService)
         {
-            _userService = userService;
             _ProductService = productService;
             _AdminService = adminService;
         }

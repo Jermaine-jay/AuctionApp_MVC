@@ -5,9 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
 using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
@@ -194,7 +192,7 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<UserVM>> GetUsers()
         {
             var users = await _userRepo.GetAllAsync();
-            var userViewModels = users.OrderByDescending(u=> u.UserName).Select(model => new UserVM
+            var userViewModels = users.OrderByDescending(u => u.UserName).Select(model => new UserVM
             {
                 Id = model.Id,
                 FirstName = model.FirstName,
@@ -221,15 +219,15 @@ namespace AunctionApp.BLL.Implementations
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
                 Address = u.Address,
-                ProfilePicturePath = u.ProfileImagePath
+                ProfileImagePath = u.ProfileImagePath
             };
             return useres;
         }
 
 
-        public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model)
+        public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId)
         {
-            var user = await _userRepo.GetSingleByAsync(u => u.Id == model.UserId);
+            var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
 
             var fileName = model.ProfileImagePath.FileName;
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
@@ -246,9 +244,9 @@ namespace AunctionApp.BLL.Implementations
 
             if (user != null)
             {
-                user.ProfileImagePath = fileName;
-                var userupdate = _mapper.Map(model, user);
-                var result = await _userRepo.UpdateAsync(userupdate);
+            
+                user.ProfileImagePath = model.ProfileImagePath.FileName;
+                var result = await _userRepo.UpdateAsync(user);
                 return (true, "Profile picture updated!");
             }
 

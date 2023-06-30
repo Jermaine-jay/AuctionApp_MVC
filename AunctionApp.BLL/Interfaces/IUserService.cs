@@ -15,7 +15,7 @@ namespace AunctionApp.BLL.Interfaces
         Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register);
         Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register);
         Task<UserVM> UserProfileAsync(string userId);
-        Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model);
+        Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId);
 
     }
 }
