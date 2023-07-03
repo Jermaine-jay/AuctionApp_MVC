@@ -12,7 +12,7 @@ namespace AunctionApp.BLL.Implementations
                 <head>
                   <meta charset='UTF-8'>
                   <title>Email Verification</title>
-                  <link rel='stylesheet' type='text/css' href='styles.css'>
+                  <link rel='stylesheet' type='text/css'>
                     <style>
                         body {{
                           font-family: Arial, sans-serif;
@@ -28,6 +28,7 @@ namespace AunctionApp.BLL.Implementations
                           border: 1px solid #ccc;
                           padding: 30px;
                           height: auto;
+                          text-align: center;
                         }}
 
                         h1 {{
@@ -49,7 +50,7 @@ namespace AunctionApp.BLL.Implementations
                             padding: 10px 20px;
                             font-size: 14px;
                             position: relative;
-                            border: 1px solid;
+                            border: 1px solid #4CAF50;
                             transition: transform 0.2s ease-in;
                             cursor: pointer;
   
@@ -86,7 +87,7 @@ namespace AunctionApp.BLL.Implementations
                 <head>
                   <meta charset='UTF-8'>
                   <title>Email Verification</title>
-                  <link rel='stylesheet' type='text/css' href='styles.css'>
+                  <link rel='stylesheet' type='text/css'>
                     <style>
                         body {{
                           font-family: Arial, sans-serif;
@@ -102,6 +103,7 @@ namespace AunctionApp.BLL.Implementations
                           border: 1px solid #ccc;
                           padding: 30px;
                           height: auto;
+                          text-align: center;
                         }}
 
                         h1 {{
@@ -123,7 +125,7 @@ namespace AunctionApp.BLL.Implementations
                             padding: 10px 20px;
                             font-size: 14px;
                             position: relative;
-                            border: 1px solid;
+                            border: 1px solid #4CAF50;
                             transition: transform 0.2s ease-in;
                             cursor: pointer;
   

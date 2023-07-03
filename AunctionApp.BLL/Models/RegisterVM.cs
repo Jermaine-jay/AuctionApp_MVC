@@ -14,7 +14,7 @@ namespace AunctionApp.BLL.Models
         public string? Username { get; set; }
 
         [Required, DataType(DataType.EmailAddress)]
-        [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", ErrorMessage = "Please enter a valid email address.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         public string? Email { get; set; }
 
         public string? Address { get; set; }

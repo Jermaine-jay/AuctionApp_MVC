@@ -28,8 +28,12 @@
 <body>
     <header id="header" class="fixed-top ">
         <div class="container d-flex align-items-center justify-content-lg-between">
-
-            <h1 class="logo me-auto me-lg-0"><a href="index.html">Jermaine Auction<span>.</span></a></h1>
+            <div class="d-flex">
+                <h1 class="logo me-auto me-lg-0">
+                    <img src="~/img/car-logo20.jpg" class="" style="width: ">
+                    <a asp-controller="Auction" asp-action="Home">Jermaine Auction<span>.</span></a>
+                </h1>
+            </div>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
 
@@ -73,7 +77,7 @@
 
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-info">
-                            <h3>Germaine Aunctions<span>.</span></h3>
+                            <h3>Jermaine Auctions<span>.</span></h3>
                             <p>
                                 A108 Adam Street <br>
                                 NY 535022, USA<br><br>
@@ -93,13 +97,14 @@
                     <div class="col-lg-2 col-md-6 footer-links">
                         <h4>Useful Links</h4>
                         <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Aunctions</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Register</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Login</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Logout</a></li>
-
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Auction" asp-action="Home">Auctions</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="RegisterUser"></a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="SignIn">Login</a></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="SignOut">Logout</a></li>
+                            }
                         </ul>
                     </div>
 
@@ -117,7 +122,7 @@
 
         <div class="container">
             <div class="copyright">
-                &copy; Copyright <strong><span>Germaine Aunctions</span></strong>. All Rights Reserved
+                &copy; Copyright <strong><span>Jermaine Auctions</span></strong>. All Rights Reserved
             </div>
         </div>
     </footer>

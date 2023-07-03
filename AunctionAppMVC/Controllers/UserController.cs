@@ -52,6 +52,7 @@ namespace AunctionAppMVC.Controllers
             return View(new RegisterVM());
         }
 
+
         [Authorize]
         public async Task<IActionResult> Profile()
         {
@@ -73,10 +74,12 @@ namespace AunctionAppMVC.Controllers
             return View(new SignInVM());
         }
 
+
         public IActionResult ForgotPassword()
         {
             return View(new ForgotPasswordVM());
         }
+
 
         public IActionResult ResetPassword(string? code, string userId)
         {
@@ -101,6 +104,7 @@ namespace AunctionAppMVC.Controllers
             return View("SignIn");
         }
 
+
         [Authorize]
         public async Task<IActionResult> GetUser(string userId)
         {
@@ -108,11 +112,13 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
+
         [Authorize]
         public IActionResult AddBid()
         {
             return View(new AddOrUpdateBidVM());
         }
+
 
         [Authorize]
         public async Task<IActionResult> UpdateUser()
@@ -122,14 +128,15 @@ namespace AunctionAppMVC.Controllers
             return View(user);
         }
 
+
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UserBids()
         {
             var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
             var model = await _productService.GetUserBidsAsync(bidder);
             return View(model);
-
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
@@ -151,6 +158,7 @@ namespace AunctionAppMVC.Controllers
             return View("New");
         }
 
+
         [HttpPost]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
@@ -168,6 +176,7 @@ namespace AunctionAppMVC.Controllers
             }
             return View("RegisterUser");
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -187,6 +196,7 @@ namespace AunctionAppMVC.Controllers
             }
             return View("RegisterAdmin");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Update(UserVM model)
@@ -208,6 +218,7 @@ namespace AunctionAppMVC.Controllers
             return View("UpdateUser");
         }
 
+
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInVM model)
         {
@@ -225,6 +236,7 @@ namespace AunctionAppMVC.Controllers
             }
             return View("SignIn");
         }
+
 
         public async Task<IActionResult> SignOut()
         {
@@ -302,6 +314,7 @@ namespace AunctionAppMVC.Controllers
             }
             return View("ResetPassword");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
