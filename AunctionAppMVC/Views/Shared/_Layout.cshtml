@@ -56,6 +56,8 @@
                             <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="UserBids">bids</a></li>
                         }                 
                         <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a></li>
+                        <li><a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserChangePassword">change password</a></li>
+
                     }
                     @if(!User.Identity.IsAuthenticated)
                     {              

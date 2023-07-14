@@ -1,8 +1,10 @@
 ﻿using AunctionApp.BLL.Extensions;
 using AunctionApp.BLL.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -17,17 +19,21 @@ namespace AunctionApp.BLL.Implementations
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IGenerateEmailVerificationPage _generateEmailVerificationPage;
+        private readonly LinkGenerator _linkGenerator;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private string? _ApiKey;
         private string? _Url;
 
-        public AuthenticationService(IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor, IGenerateEmailVerificationPage Page)
+        public AuthenticationService(LinkGenerator linkGenerator,IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor, IGenerateEmailVerificationPage Page)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _linkGenerator = linkGenerator;
+            _httpContextAccessor = httpContextAccessor;
             _emailSenderOptions = optionsAccessor.Value;
-            _ApiKey = _configuration.GetSection("ZeroBook").GetSection("ApiKey")?.Value;
-            _Url = _configuration.GetSection("ZeroBook").GetSection("Url")?.Value;
+            _ApiKey = _configuration["ZeroBook:ApiKey"];
+            _Url = _configuration["ZeroBook:Url"];
             _generateEmailVerificationPage = Page;
         }
 
@@ -112,10 +118,10 @@ namespace AunctionApp.BLL.Implementations
             }
         }
 
-        public async Task<bool> RegistrationMail(IUrlHelper urlHelper, User newUser)
+        public async Task<bool> RegistrationMail(User newUser)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = urlHelper.Action("ConfirmEmail", "User", new { userId = newUser.Id, code }, protocol: "https");
+            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext,"ConfirmEmail", "User", new { userId = newUser.Id, code });
             await SendEmailAsync(newUser.Email, "Confirm your email",
                 _generateEmailVerificationPage.EmailVerificationPage(newUser.UserName, callbackUrl));
 

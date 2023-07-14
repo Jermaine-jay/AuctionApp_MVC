@@ -4,7 +4,6 @@ using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoList.DAL.Repository;
 
@@ -63,7 +62,7 @@ namespace AunctionApp.BLL.Implementations
         }
 
 
-        public async Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register)
+        public async Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register)
         {
             var verify = await _authenticationService.VerifyEmail(register.Email);
             if (verify == false)
@@ -76,7 +75,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                await _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "Admin");
                 return result.Succeeded ? (true, "Admin created successfully!, Verification Mail Sent") : (false, "Failed to create Admin, Couldn't Send Mail");
@@ -92,7 +91,7 @@ namespace AunctionApp.BLL.Implementations
         }
 
 
-        public async Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register)
+        public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)
         {
             var verify = await _authenticationService.VerifyEmail(register.Email);
             if (verify == false)
@@ -105,7 +104,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                await _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "User");
                 return result.Succeeded ? (true, "User created successfully!, Verification Mail Sent") : (false, "Failed to create User, Couldn't Send Mail");
@@ -200,7 +199,7 @@ namespace AunctionApp.BLL.Implementations
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
                 UserName = model.UserName,
-                Address = model.Address
+                Address = model.Address,
 
             });
             return userViewModels;
@@ -228,29 +227,40 @@ namespace AunctionApp.BLL.Implementations
         public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return (true, "User Does not exist!");
+            }
+
 
             var fileName = model.ProfileImagePath.FileName;
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
+
 
             if (!Directory.Exists(imagePath))
             {
                 Directory.CreateDirectory(imagePath);
             }
+
+            //string existingImage = Path.Combine(imagePath, user.ProfileImagePath);
             string picPath = Path.Combine(imagePath, fileName);
+
             using (var stream = new FileStream(picPath, FileMode.Create))
             {
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
 
-            if (user != null)
+            /*if (existingImage != null || File.Exists(existingImage))
             {
-            
-                user.ProfileImagePath = model.ProfileImagePath.FileName;
-                var result = await _userRepo.UpdateAsync(user);
-                return (true, "Profile picture updated!");
-            }
+            }*/
+            //File.Delete(existingImage);
 
-            return (false, "Couldn't update the profile picture!");
+
+            user.ProfileImagePath = model.ProfileImagePath.FileName;
+            var result = await _userRepo.UpdateAsync(user);
+            return (true, "Profile picture updated!");
+
+            //return (false, "Couldn't update the profile picture!");
         }
 
     }

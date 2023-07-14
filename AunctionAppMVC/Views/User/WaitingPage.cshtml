@@ -4,7 +4,6 @@
 }
 
 
-
 <section class="container text-center " style="display: flex; justify-content: center; margin: 150px auto;">
 	<div>
 		<img src="~/img/car-logo20.jpg" class="my-3" style="width: 50px; height: 50px; position:center; ">
@@ -22,17 +21,18 @@
 				</div>
 			}
 
-		@if (@TempData["ErrMsg"] != null)
-		{
-			<div class="card-body">
+			@if (@TempData["ErrMsg"] != null)
+			{
+				<div class="card-body">
 
-				<h2>Failed!!</h2>
-				<p>@TempData["ErrMsg"]</p>
-				<p>Failed to send verification mail</p>
-				<p></p>
+					<h2>Failed!!</h2>
+					<p>@TempData["ErrMsg"]</p>
+					<p>Failed to send verification mail</p>
+					<p></p>
 
-			</div>		
-		}
+				</div>		
+			}
+
 		</div>
 		<a asp-controller="User" asp-action="SignIn" tabindex="-1" role="button" aria-disabled="true" style="color:green">Back to Login</a>
 	</div>

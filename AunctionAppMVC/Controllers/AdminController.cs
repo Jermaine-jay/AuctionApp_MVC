@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionAppMVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [Route("[controller]/[action]/{productid?}")]
     public class AdminController : Controller
     {
@@ -17,15 +17,21 @@ namespace AunctionAppMVC.Controllers
             _ProductService = productService;
             _AdminService = adminService;
         }
+
+
         public IActionResult Index()
         {
             return View();
         }
 
+
+
         public IActionResult NewAuction()
         {
             return View(new AuctionVM());
         }
+
+
 
         public async Task<IActionResult> UpdateAuction(int productId)
         {
@@ -34,16 +40,19 @@ namespace AunctionAppMVC.Controllers
 
         }
 
+
+
         public async Task<IActionResult> AllAuctions()
         {
             var model = await _ProductService.GetAuctions();
             return View(model);
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> Save(AuctionVM model)
         {
-
             if (ModelState.IsValid)
             {
                 var (successful, msg) = await _AdminService.CreateAuctionAsync(model);
@@ -62,6 +71,8 @@ namespace AunctionAppMVC.Controllers
             }
             return View("NewAuction");
         }
+
+
 
         [HttpPut]
         public async Task<IActionResult> Update(AuctionVM model)
@@ -84,6 +95,8 @@ namespace AunctionAppMVC.Controllers
             return View("UpdateAuction");
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> Delete(int ProductId)
         {
@@ -103,6 +116,8 @@ namespace AunctionAppMVC.Controllers
             return View("AllAuctions");
 
         }
+
+
 
         public async Task<IActionResult> SaveStatus(int ProductId)
         {

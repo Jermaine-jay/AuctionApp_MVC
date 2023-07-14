@@ -79,6 +79,18 @@
                 }
             }
 
+            else
+            {
+                @if (item.value.Status == "Sold")
+                {
+                    <div id="ClosedcountdownElement"></div>
+                    <p class="fw-bold">
+                        Sold To: @item.value.Bids.Max(u=> u.Bidder) for:  $@item.value.Bids.Max(u=> u.BidPrice)
+                    </p>
+                }
+               
+            }
+
             @if (item.value.Status != "Sold")
             {
                 <div class="column mw-100 mt-5">

@@ -1,4 +1,5 @@
-﻿using AunctionApp.BLL.Implementations;
+﻿using AunctionApp.BLL.Extensions;
+using AunctionApp.BLL.Implementations;
 using AunctionApp.BLL.Interfaces;
 using AunctionApp.DAL.Database;
 using AunctionApp.DAL.Entities;
@@ -18,16 +19,21 @@ namespace AunctionAppMVC.Extensions
             services.AddScoped<IGenerateEmailVerificationPage, GenerateEmailVerificationPage>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRecoveryService, RecoveryService>();
-            services.AddHttpContextAccessor();
+			services.AddScoped<IServiceFactory, ServiceFactory>();
+			services.AddHttpContextAccessor();
+			services.Configure<DataProtectionTokenProviderOptions>(x => x.TokenLifespan = TimeSpan.FromMinutes(10));
 
-        }
+		}
+
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AunctionAppDbContext>()
                 .AddRoles<IdentityRole>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddPasswordlessLoginTotpTokenProvider();
+
 
             services.Configure<IdentityOptions>(opt =>
             {
@@ -47,6 +53,7 @@ namespace AunctionAppMVC.Extensions
             });
         }
 
+
         public static void Configure(IServiceProvider serviceProvider)
         {
             CreateRoles(serviceProvider).Wait();
@@ -55,6 +62,12 @@ namespace AunctionAppMVC.Extensions
         private static async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            if (!await roleManager.RoleExistsAsync("SuperAdmin"))
+            {
+                var role = new IdentityRole("SuperAdmin");
+                await roleManager.CreateAsync(role);
+            }
 
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
