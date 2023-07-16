@@ -19,13 +19,15 @@ namespace AunctionApp.BLL.Implementations
         private readonly IAuthenticationService _authenticationService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IServiceFactory _serviceFactory;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IAuthenticationService authenticationService)
+        public UserService(IServiceFactory serviceFactory, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IAuthenticationService authenticationService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _serviceFactory = serviceFactory;
             _userRepo = _unitOfWork.GetRepository<User>();
             _BidRepo = _unitOfWork.GetRepository<Bid>();
             _ProductRepo = _unitOfWork.GetRepository<Product>();
@@ -34,6 +36,8 @@ namespace AunctionApp.BLL.Implementations
             _webHostEnvironment = webHostEnvironment;
             _authenticationService = authenticationService;
         }
+
+
 
         public async Task<(bool successful, string msg)> AddOrUpdateBidAsync(AddOrUpdateBidVM model)
         {
@@ -75,6 +79,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
+                _ = await _serviceFactory.GetService<IAuthenticationService>.RegistrationMail(newUser);
                 await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "Admin");
@@ -147,6 +152,8 @@ namespace AunctionApp.BLL.Implementations
             return (true, $"logged out successfully!");
         }
 
+
+
         public async Task<(bool successful, string msg)> Update(UserVM model)
         {
             var verify = await _authenticationService.VerifyEmail(model.Email);
@@ -167,6 +174,7 @@ namespace AunctionApp.BLL.Implementations
         }
 
 
+
         public async Task<(bool successful, string msg)> Delete(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -179,6 +187,7 @@ namespace AunctionApp.BLL.Implementations
         }
 
 
+
         public async Task<UserVM> GetUser(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -186,6 +195,7 @@ namespace AunctionApp.BLL.Implementations
 
             return Auser;
         }
+
 
 
         public async Task<IEnumerable<UserVM>> GetUsers()
@@ -224,6 +234,7 @@ namespace AunctionApp.BLL.Implementations
         }
 
 
+
         public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -242,25 +253,22 @@ namespace AunctionApp.BLL.Implementations
                 Directory.CreateDirectory(imagePath);
             }
 
-            //string existingImage = Path.Combine(imagePath, user.ProfileImagePath);
-            string picPath = Path.Combine(imagePath, fileName);
+            var existing = Path.Combine(imagePath, user.ProfileImagePath);
+            if (user.ProfileImagePath != null || user.ProfileImagePath != "Blank-Pfp.jpg")
+            {
+                File.Delete(existing);
+            }
 
+            string picPath = Path.Combine(imagePath, fileName);
             using (var stream = new FileStream(picPath, FileMode.Create))
             {
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
 
-            /*if (existingImage != null || File.Exists(existingImage))
-            {
-            }*/
-            //File.Delete(existingImage);
-
-
+            
             user.ProfileImagePath = model.ProfileImagePath.FileName;
             var result = await _userRepo.UpdateAsync(user);
             return (true, "Profile picture updated!");
-
-            //return (false, "Couldn't update the profile picture!");
         }
 
     }

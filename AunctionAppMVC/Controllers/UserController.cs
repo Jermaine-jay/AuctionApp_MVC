@@ -218,7 +218,6 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-
 		public async Task<IActionResult> ConfirmEmail(string userId, string code)
 		{
 			var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(userId, code);
@@ -312,7 +311,6 @@ namespace AunctionAppMVC.Controllers
             return View("Users");
 
         }
-
 
 
         [HttpPost]

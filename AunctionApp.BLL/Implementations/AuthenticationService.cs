@@ -19,22 +19,20 @@ namespace AunctionApp.BLL.Implementations
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IGenerateEmailVerificationPage _generateEmailVerificationPage;
-        private readonly LinkGenerator _linkGenerator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IServiceFactory _serviceFactory;
+
 
         private string? _ApiKey;
         private string? _Url;
 
-        public AuthenticationService(LinkGenerator linkGenerator,IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor, IGenerateEmailVerificationPage Page)
+        public AuthenticationService(IServiceFactory serviceFactory, IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor)
         {
             _userManager = userManager;
+            _serviceFactory = serviceFactory;
             _configuration = configuration;
-            _linkGenerator = linkGenerator;
-            _httpContextAccessor = httpContextAccessor;
             _emailSenderOptions = optionsAccessor.Value;
             _ApiKey = _configuration["ZeroBook:ApiKey"];
             _Url = _configuration["ZeroBook:Url"];
-            _generateEmailVerificationPage = Page;
         }
 
 
@@ -120,11 +118,14 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<bool> RegistrationMail(User newUser)
         {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext,"ConfirmEmail", "User", new { userId = newUser.Id, code });
-            await SendEmailAsync(newUser.Email, "Confirm your email",
-                _generateEmailVerificationPage.EmailVerificationPage(newUser.UserName, callbackUrl));
+            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().EmailVerificationPage;
+            var context = _serviceFactory.GetService<IHttpContextAccessor>().HttpContext;
+            var link = _serviceFactory.GetService<LinkGenerator>();
 
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            var callbackUrl = link.GetUriByAction(context,"ConfirmEmail", "User", new { userId = newUser.Id, code });
+            await SendEmailAsync(newUser.Email, "Confirm your email", page(newUser.UserName, callbackUrl));
+             
             return true;
         }
 

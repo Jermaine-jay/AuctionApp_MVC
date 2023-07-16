@@ -51,6 +51,8 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Auction created successfully!") : (false, "Failed to create Auction");
         }
 
+
+
         public async Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model)
         {
             var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.Id);
@@ -86,6 +88,8 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
         }
 
+
+
         public async Task<(bool successful, string msg)> DeleteAuctionAsync(int productId)
         {
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
@@ -103,6 +107,8 @@ namespace AunctionApp.BLL.Implementations
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
 
         }
+
+
 
         public async Task<(bool Done, string msg)> ToggleProductStatus(int productId)
         {

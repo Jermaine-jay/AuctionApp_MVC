@@ -34,6 +34,7 @@
                         <div class="col-lg-4 portfolio-container " data-aos="fade-up" data-aos-delay="200">
                             <div class="portfolio-item filter-app">
                                 <div class="portfolio-wrap rounded-circle mt-5">
+
                                     @if (@Model.User.ProfileImagePath == "Blank-Pfp.jpg")
                                     {
                                         <img src="~/img/ProfileImages/Blank-Pfp.jpg" class="img-fluid rounded-circle mx-auto" alt="">
@@ -98,7 +99,7 @@
                                             {
                                                 <span class="px-1">
                                                     <a asp-controller="User" asp-action="UpdateUser" asp-route-Id="@Model.User.Id" title="Update User">
-                                                        <i class="fa-sharp fa-solid fa-file-pen fa-2xl" style="color: black"></i>
+                                                        <i class="fa-sharp fa-solid fa-pen fa-xl" style="color: black"></i>
                                                     </a>
                                                     : Edit User
                                                 </span>

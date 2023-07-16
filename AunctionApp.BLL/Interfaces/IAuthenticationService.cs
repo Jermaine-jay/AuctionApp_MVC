@@ -1,5 +1,4 @@
 ﻿using AunctionApp.DAL.Entities;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionApp.BLL.Interfaces
 {
