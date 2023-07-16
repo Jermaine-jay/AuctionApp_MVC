@@ -20,8 +20,6 @@ namespace AunctionApp.BLL.Implementations
         private readonly IConfiguration _configuration;
         private readonly IGenerateEmailVerificationPage _generateEmailVerificationPage;
         private readonly IServiceFactory _serviceFactory;
-
-
         private string? _ApiKey;
         private string? _Url;
 

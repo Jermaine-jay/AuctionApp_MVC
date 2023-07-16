@@ -10,6 +10,8 @@ namespace AunctionApp.BLL.Implementations
 		{
 			_serviceProvider = serviceProvider;
 		}
+
+
 		public T GetService<T>() where T : class
 		{
 			if (_serviceProvider.GetService(typeof(T)) is not T service)

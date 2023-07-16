@@ -1,5 +1,4 @@
 ﻿using AunctionApp.BLL.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionApp.BLL.Interfaces
 {

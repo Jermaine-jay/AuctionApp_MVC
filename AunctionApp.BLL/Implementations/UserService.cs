@@ -1,11 +1,11 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
+using AunctionApp.DAL.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -79,7 +79,6 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                _ = await _serviceFactory.GetService<IAuthenticationService>.RegistrationMail(newUser);
                 await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "Admin");
@@ -265,7 +264,7 @@ namespace AunctionApp.BLL.Implementations
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
 
-            
+
             user.ProfileImagePath = model.ProfileImagePath.FileName;
             var result = await _userRepo.UpdateAsync(user);
             return (true, "Profile picture updated!");

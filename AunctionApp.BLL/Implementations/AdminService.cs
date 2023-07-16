@@ -3,7 +3,7 @@ using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using TodoList.DAL.Repository;
+using AunctionApp.DAL.Repository;
 
 
 namespace AunctionApp.BLL.Implementations
