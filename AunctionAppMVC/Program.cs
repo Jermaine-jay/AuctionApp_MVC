@@ -3,7 +3,7 @@ using AunctionApp.DAL.Database;
 using AunctionAppMVC.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using TodoList.DAL.Repository;
+using AunctionApp.DAL.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 

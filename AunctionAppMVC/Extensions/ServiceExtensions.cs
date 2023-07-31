@@ -4,7 +4,7 @@ using AunctionApp.BLL.Interfaces;
 using AunctionApp.DAL.Database;
 using AunctionApp.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
-using TodoList.DAL.Repository;
+using AunctionApp.DAL.Repository;
 
 namespace AunctionAppMVC.Extensions
 {

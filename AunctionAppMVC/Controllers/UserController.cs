@@ -1,12 +1,8 @@
-﻿using AunctionApp.BLL.Implementations;
-using AunctionApp.BLL.Interfaces;
+﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
-using AunctionApp.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace AunctionAppMVC.Controllers
 {
@@ -16,16 +12,15 @@ namespace AunctionAppMVC.Controllers
         private readonly IUserService _userService;
         private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IServiceFactory _serviceFactory;
 
-		public UserController(IUserService userService, IProductService productService,IServiceFactory serviceFactory, IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserService userService, IProductService productService, IServiceFactory serviceFactory, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
             _serviceFactory = serviceFactory;
-       
+
         }
         public IActionResult Home()
         {
@@ -161,10 +156,10 @@ namespace AunctionAppMVC.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SaveUser(RegisterVM model)
-		{
-			if (ModelState.IsValid)
-			{
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterUser(model);
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterUser(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -184,7 +179,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterAdmin(model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterAdmin(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -203,7 +198,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().Update(model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().Update(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -218,26 +213,26 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-		public async Task<IActionResult> ConfirmEmail(string userId, string code)
-		{
-			var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(userId, code);
-			if (successful)
-			{
-				TempData["SuccessMsg"] = msg;
-				return RedirectToAction("SignIn");
-			}
-			TempData["ErrMsg"] = msg;
-			return View("SignIn");
-		}
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(userId, code);
+            if (successful)
+            {
+                TempData["SuccessMsg"] = msg;
+                return RedirectToAction("SignIn");
+            }
+            TempData["ErrMsg"] = msg;
+            return View("SignIn");
+        }
 
 
 
-		[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> SignIn(SignInVM model)
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignIn(model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignIn(model);
                 if (successful)
                 {
 
@@ -256,7 +251,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignOut();
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignOut();
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -277,7 +272,7 @@ namespace AunctionAppMVC.Controllers
 
             if (!ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IUserService>().UpdateProfileImage(model.Image, userId);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().UpdateProfileImage(model.Image, userId);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -297,7 +292,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var(success, msg) = await _serviceFactory.GetService<IUserService>().Delete(userId);
+                var (success, msg) = await _serviceFactory.GetService<IUserService>().Delete(userId);
                 if (success)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -319,7 +314,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ResetPassword(model);
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ResetPassword(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -339,7 +334,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-				var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ForgotPassword(model);
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ForgotPassword(model);
 
                 if (successful)
                 {
@@ -355,78 +350,78 @@ namespace AunctionAppMVC.Controllers
 
 
 
-		public async Task<ActionResult> ChangePassword()
-		{
-			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-			return View(new ChangePasswordVM { UserId = userId });
-		}
+        public async Task<ActionResult> ChangePassword()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(new ChangePasswordVM { UserId = userId });
+        }
 
 
 
-		public async Task<IActionResult> ConfirmToken()
-		{
-			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-			return View(new ConfirmTokenVM { UserId = userId });
-		}
+        public async Task<IActionResult> ConfirmToken()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(new ConfirmTokenVM { UserId = userId });
+        }
 
 
 
-		[Authorize]
-		public async Task<IActionResult> UserChangePassword()
-		{
-			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-			var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangeDetailToken(userId);
-			if (successful)
-			{
-				TempData["SuccessMsg"] = msg;
-				return RedirectToAction("ConfirmToken");
-			}
-			TempData["ErrMsg"] = msg;
-			return View("WaitingPage");
-		}
+        [Authorize]
+        public async Task<IActionResult> UserChangePassword()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangeDetailToken(userId);
+            if (successful)
+            {
+                TempData["SuccessMsg"] = msg;
+                return RedirectToAction("ConfirmToken");
+            }
+            TempData["ErrMsg"] = msg;
+            return View("WaitingPage");
+        }
 
 
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> ConfirmUserToken(ConfirmTokenVM model)
-		{
-			if (ModelState.IsValid)
-			{
-				var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().VerifyChangeDetailToken(model);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmUserToken(ConfirmTokenVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().VerifyChangeDetailToken(model);
 
-				if (successful)
-				{
-					TempData["SuccessMsg"] = msg;
-					return RedirectToAction("ChangePassword");
-				}
-				TempData["ErrMsg"] = msg;
-				return View("ConfirmToken");
-			}
-			return View("ConfirmToken");
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("ChangePassword");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("ConfirmToken");
+            }
+            return View("ConfirmToken");
 
-		}
+        }
 
 
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> ChangeUserPassword(ChangePasswordVM model)
-		{
-			if (ModelState.IsValid)
-			{
-				var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangePassword(model);
-				if (successful)
-				{
-					TempData["SuccessMsg"] = msg;
-					return RedirectToAction("Profile");
-				}
-				TempData["ErrMsg"] = msg;
-				return View("Confirm");
-			}
-			return View("WaitingPage");
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserPassword(ChangePasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangePassword(model);
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("Profile");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("Confirm");
+            }
+            return View("WaitingPage");
 
-		}
+        }
 
-	}
+    }
 }

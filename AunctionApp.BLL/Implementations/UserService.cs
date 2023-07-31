@@ -19,15 +19,13 @@ namespace AunctionApp.BLL.Implementations
         private readonly IAuthenticationService _authenticationService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IServiceFactory _serviceFactory;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public UserService(IServiceFactory serviceFactory, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IAuthenticationService authenticationService)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IAuthenticationService authenticationService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _serviceFactory = serviceFactory;
             _userRepo = _unitOfWork.GetRepository<User>();
             _BidRepo = _unitOfWork.GetRepository<Bid>();
             _ProductRepo = _unitOfWork.GetRepository<Product>();
