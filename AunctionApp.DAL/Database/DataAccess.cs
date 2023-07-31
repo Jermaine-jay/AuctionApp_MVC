@@ -111,38 +111,5 @@ namespace AunctionApp.DAL.Database
                 }
             };
         }
-
-        private static IEnumerable<User> Users()
-        {
-            return new List<User>()
-            {
-                new User()
-                {
-                    UserName = "Jota10",
-                    FirstName = "Jota",
-                    LastName = "Diogo",
-                    Email = "jermaine.jay00@gmail.com",
-                    PhoneNumber = "1234567890",
-                    Address = "Centenery City Enugu Nigeria",
-                    PasswordHash = "12345qwert",
-                    EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
-                },
-
-                 new User()
-                {
-                    UserName = "Jermaine10",
-                    FirstName = "Roberto",
-                    LastName = "Firmino",
-                    Email = "jsonosii097@gmail.com",
-                    PhoneNumber = "1234447890",
-                    Address = "Centenery City Enugu Nigeria",
-                    PasswordHash = "12345qwert",
-                    EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
-                }
-            };
-
-        }
     }
 }
