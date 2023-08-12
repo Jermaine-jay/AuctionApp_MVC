@@ -40,7 +40,6 @@ namespace AunctionApp.BLL.Implementations
         public async Task<(bool successful, string msg)> AddOrUpdateBidAsync(AddOrUpdateBidVM model)
         {
             var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
-
             if (product == null)
             {
                 return (false, $"User with id:{model.ProductId} wasn't found");
@@ -91,6 +90,7 @@ namespace AunctionApp.BLL.Implementations
             }
             return (false, $"Failed to create Admin");
         }
+
 
 
         public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)

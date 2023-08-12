@@ -50,7 +50,9 @@ namespace AunctionApp.BLL.Implementations
 			}
 
 			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-			var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, action: "ResetPassword", controller: "User", values: new { UserId = user.Id, code });
+			var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, 
+				action: "ResetPassword", controller: "User", values: new { UserId = user.Id,code });
+
 			var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().PasswordResetPage(callbackUrl);
 
 			await _serviceFactory.GetService<IAuthenticationService>().SendEmailAsync(model.Email, "Reset Password", page);

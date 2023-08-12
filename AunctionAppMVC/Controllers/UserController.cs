@@ -32,7 +32,8 @@ namespace AunctionAppMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Users()
+        [Authorize(Roles ="Admin, SuperAdmin")]
+        public async Task<IActionResult> AllUsers()
         {
             var model = await _userService.GetUsers();
             return View(model);
@@ -287,7 +288,7 @@ namespace AunctionAppMVC.Controllers
 
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             if (ModelState.IsValid)
@@ -366,7 +367,6 @@ namespace AunctionAppMVC.Controllers
 
 
 
-        [Authorize]
         public async Task<IActionResult> UserChangePassword()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -405,6 +405,7 @@ namespace AunctionAppMVC.Controllers
 
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserPassword(ChangePasswordVM model)
         {

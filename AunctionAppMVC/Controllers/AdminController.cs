@@ -11,11 +11,13 @@ namespace AunctionAppMVC.Controllers
     {
         private readonly IProductService _ProductService;
         private readonly IAdminService _AdminService;
+        private readonly IUserService _userService;
 
-        public AdminController( IProductService productService, IAdminService adminService)
+        public AdminController(IProductService productService, IAdminService adminService, IUserService userService)
         {
             _ProductService = productService;
             _AdminService = adminService;
+            _userService = userService;
         }
 
 
@@ -32,6 +34,18 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+       /* public async Task<IActionResult> AllUsers()
+        {
+            var model = await _userService.GetUsers();
+            return View(model);
+        }*/
+
+
+        public async Task<IActionResult> UpdateUser(string userId)
+        {
+            var user = await _userService.GetUser(userId);
+            return View(user);
+        }
 
         public async Task<IActionResult> UpdateAuction(int productId)
         {
@@ -135,7 +149,7 @@ namespace AunctionAppMVC.Controllers
 
             }
             return View("AllAuctions");
-        }      
+        }
 
     }
 }

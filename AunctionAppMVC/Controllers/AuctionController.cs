@@ -20,11 +20,13 @@ namespace AunctionAppMVC.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+
         public async Task<IActionResult> GetAuction(int productId)
         {
             var model = await _ProductService.GetAuction(productId);
             return View(model);
         }
+
 
         [Authorize(Roles = "User")]
         public async Task<IActionResult> MakeBid(int productId)
@@ -33,12 +35,14 @@ namespace AunctionAppMVC.Controllers
             return View(new AddOrUpdateBidVM { ProductId = productId, Bidder = bidder });
         }
 
+
         [Authorize]
         public async Task<IActionResult> Home()
         {
             var model = await _ProductService.GetAuctionsWithBidsAsync();
             return View(model);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "User")]

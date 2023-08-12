@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Admin\AllUsers.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -20,6 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\AunctionApp.BLL\AunctionApp.BLL.csproj" />
     <ProjectReference Include="..\AunctionApp.DAL\AunctionApp.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\User\AllUsers.cshtml" />
   </ItemGroup>
 
 </Project>

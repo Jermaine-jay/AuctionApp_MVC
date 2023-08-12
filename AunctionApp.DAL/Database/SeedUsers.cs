@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
+
 
 namespace AunctionApp.DAL.Database
 {
@@ -40,10 +40,11 @@ namespace AunctionApp.DAL.Database
 
                 if (user3 != null)
                 {
-                    await userManager.AddToRolesAsync(user2, new[] { "Admin"});
+                    await userManager.AddToRolesAsync(user3, new[] { "Admin" });
                 }
             }
         }
+
 
         private static IEnumerable<User> GetUsers()
         {
@@ -89,8 +90,6 @@ namespace AunctionApp.DAL.Database
                 }
             };
         }
-
-        
     }
 }
 

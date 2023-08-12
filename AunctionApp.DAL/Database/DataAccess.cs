@@ -19,6 +19,7 @@ namespace AunctionApp.DAL.Database
             } 
         }
 
+
         private static IEnumerable<Product> ProductsWithBids()
         {
             return new List<Product>()
@@ -106,7 +107,6 @@ namespace AunctionApp.DAL.Database
                             BidPrice = "2700",
                             Bidder = "alexis sanchez",
                         }
-
                     }
                 }
             };

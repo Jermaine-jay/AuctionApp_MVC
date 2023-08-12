@@ -41,13 +41,17 @@
                         <li><a class="nav-link scrollto " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Profile">Profile</a></li>
 
-                        @if (User.IsInRole("Admin"))
+                        if (User.IsInRole("SuperAdmin"))
+                        {
+                            
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>                       
+                        }
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
                         {
                             <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
                             <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="NewAuction">New</a></li>
                             <li><a class="nav-link scrollto" asp-area="" asp-controller="Admin" asp-action="AllAuctions">All Auctions</a></li>
-                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Users">Users</a></li>
-                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>                       
+                            <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="AllUsers">Users</a></li>
                         }
                         @if (User.IsInRole("User"))
                         {
