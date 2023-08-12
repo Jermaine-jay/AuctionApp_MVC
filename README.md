@@ -37,8 +37,6 @@ ____
 _____
 * Clone the repository: git clone https://github.com/Germaine-jay/AunctionApp_MVC.git
 
-* Navigate to the project directory: cd car-auction-app
-
 * Install required packages: dotnet restore
 
 * Update the database connection string in the appsettings.json file to point to your SQL Server instance.
@@ -47,7 +45,7 @@ _____
 
 * Run the application: dotnet run
 
-* Access the application in your web browser at http://localhost:5000
+* Access the application in your web browser at http://localhost:7121
 
 
 ## Contributing
