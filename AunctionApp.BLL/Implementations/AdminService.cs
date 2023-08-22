@@ -23,6 +23,7 @@ namespace AunctionApp.BLL.Implementations
             _webHostEnvironment = webHostEnvironment;
         }
 
+
         public async Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model)
         {
 
