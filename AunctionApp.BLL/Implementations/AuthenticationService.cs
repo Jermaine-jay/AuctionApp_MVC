@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Newtonsoft.Json;
+using System.Text;
 using User = AunctionApp.DAL.Entities.User;
 
 namespace AunctionApp.BLL.Implementations
@@ -36,7 +37,10 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> ConfirmEmail(string userId, string code)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var convert = Convert.FromBase64String(userId);
+            string encodeduserId = Encoding.UTF8.GetString(convert);
+
+            var user = await _userManager.FindByIdAsync(encodeduserId);
             if (user == null)
             {
                 return (false, "Error");
@@ -56,7 +60,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (string.IsNullOrEmpty(_emailSenderOptions.Password))
             {
-                return (false, "Null SendGridKey");
+                return (false, "Couldn't complete operation");
             }
             await Execute(email, subject, message);
             return (true, "Verification Mail sent to your Email Address");
@@ -118,10 +122,12 @@ namespace AunctionApp.BLL.Implementations
         {
             var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().EmailVerificationPage;
             var context = _serviceFactory.GetService<IHttpContextAccessor>().HttpContext;
+
             var link = _serviceFactory.GetService<LinkGenerator>();
+            var appcode = Convert.ToBase64String(Encoding.UTF8.GetBytes(newUser.Id));
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = link.GetUriByAction(context,"ConfirmEmail", "User", new { userId = newUser.Id, code });
+            var callbackUrl = link.GetUriByAction(context,"ConfirmEmail", "User", new { appcode, code });
             await SendEmailAsync(newUser.Email, "Confirm your email", page(newUser.UserName, callbackUrl));
              
             return true;

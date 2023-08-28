@@ -214,9 +214,9 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmEmail(string appcode,string code)
         {
-            var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(userId, code);
+            var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(appcode, code);
             if (successful)
             {
                 TempData["SuccessMsg"] = msg;
@@ -309,6 +309,7 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetUserPassword(ResetPasswordVM model)
@@ -326,7 +327,6 @@ namespace AunctionAppMVC.Controllers
             }
             return View("ResetPassword");
         }
-
 
 
         [HttpPost]
@@ -350,7 +350,6 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-
         public async Task<ActionResult> ChangePassword()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -358,13 +357,11 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-
         public async Task<IActionResult> ConfirmToken()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View(new ConfirmTokenVM { UserId = userId });
         }
-
 
 
         public async Task<IActionResult> UserChangePassword()

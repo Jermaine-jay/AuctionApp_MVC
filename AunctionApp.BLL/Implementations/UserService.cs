@@ -111,6 +111,7 @@ namespace AunctionApp.BLL.Implementations
                 await _userManager.AddToRoleAsync(newUser, "User");
                 return result.Succeeded ? (true, "User created successfully!, Verification Mail Sent") : (false, "Failed to create User, Couldn't Send Mail");
             }
+
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
