@@ -10,6 +10,5 @@ namespace AunctionApp.BLL.Interfaces
         public Task<AuctionVMForm> GetAuction(int Id);
         Task<(bool successful, string msg)> AddOrUpdateAsync(AddOrUpdateBidVM model);
         Task<IEnumerable<UserBidsVM>> GetUserBidsAsync(string bidder);
-
     }
 }

@@ -1116,3 +1116,38 @@ section {
         font-size: 13px;
         color: #fff;
     }
+
+    /*Pagination*/
+
+.pagination {
+    position:relative;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+}
+
+    .pagination a,
+    .pagination button {
+        padding: 10px 15px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        background-color: #f4f4f4;
+        color: #333;
+        border-radius: 0px;
+        cursor: pointer;
+    }
+
+        .pagination a:hover,
+        .pagination button:hover {
+            background-color: #ddd;
+        }
+
+    .pagination .active{
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .pagination ul{
+        list-style: none;
+        display: flex;
+    }

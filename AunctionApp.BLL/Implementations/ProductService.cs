@@ -1,9 +1,9 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
+using AunctionApp.DAL.Repository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using AunctionApp.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -83,7 +83,7 @@ namespace AunctionApp.BLL.Implementations
                                     ActualAmount = p.ActualAmount,
                                     BidPrice = p.BidList.First(b => b.Bidder == bidder).BidPrice,
                                     BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString()
-                                });                           
+                                });
             return productDetails;
         }
 
@@ -105,7 +105,7 @@ namespace AunctionApp.BLL.Implementations
                 return (true, "Update Successful!");
             }
 
-            if(int.Parse(model.BidPrice) >= int.Parse(product.ActualAmount))
+            if (int.Parse(model.BidPrice) >= int.Parse(product.ActualAmount))
             {
                 return (false, "Bid amount should be more than initial price");
             }

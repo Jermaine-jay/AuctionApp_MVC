@@ -1,5 +1,6 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using AunctionApp.BLL.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -37,10 +38,21 @@ namespace AunctionAppMVC.Controllers
 
 
         [Authorize]
-        public async Task<IActionResult> Home()
+        public async Task<IActionResult> Home(int pg=1)
         {
             var model = await _ProductService.GetAuctionsWithBidsAsync();
-            return View(model);
+            var count = model.Count();
+            int pagesize = 3;
+            if(pg < 1)
+                pg= 1;
+
+            var pager = new Pagination(count, pg, pagesize);
+            var rescip = (pg - 1) * pagesize;
+            var data= model.Skip(rescip).Take(pager.PageSize).ToList();   
+            
+            this.ViewBag.Pagination = pager;
+
+            return View(data);
         }
 
 
