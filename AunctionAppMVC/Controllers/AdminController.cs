@@ -1,5 +1,6 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using AunctionApp.BLL.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,10 +57,20 @@ namespace AunctionAppMVC.Controllers
 
 
 
-        public async Task<IActionResult> AllAuctions()
+        public async Task<IActionResult> AllAuctions(int pg=1)
         {
             var model = await _ProductService.GetAuctions();
-            return View(model);
+            var count = model.Count();
+            int pagesize = 10;
+            if (pg < 1)
+                pg = 1;
+
+            var pager = new Pagination(count, pg, pagesize);
+            var rescip = (pg - 1) * pagesize;
+            var data = model.Skip(rescip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.AuctionsPagination = pager;
+            return View(data);
         }
 
 

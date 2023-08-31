@@ -1,8 +1,18 @@
 ﻿@{
     ViewBag.Title = "title";
     Layout = "_Layout";
+
+    Pagination pager = new Pagination();
+    int pageNo = 0;
+
+    if (ViewBag.Pagination != null)
+    {
+        pager = ViewBag.Pagination;
+        pageNo = pager.CurrentPage;
+    }
 }
 
+@using AunctionApp.BLL.Pagination;
 @model IEnumerable<AunctionApp.BLL.Models.UserVM>
 
 <section class="my-5 w-75 mx-auto d-block">
@@ -23,7 +33,7 @@
         </div>
     }
 
-
+<div class="my-4">
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -69,6 +79,54 @@
             </tbody>
         }
     </table>
+ </div>
+
+    <div class="my-4 container" style="position:absolute">
+        @if (pager.TotalPages > 0)
+        {
+            <ul class="pagination">
+
+                @if (pager.CurrentPage > 1)
+                {
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="1" style="color:green">
+                            First
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                            Previous
+                        </a>
+                    </li>
+                }
+
+                @for (var pge = pager.StartingPage; pge <= pager.EndingPage; pge++)
+                {
+                    <li>
+                        <a class="@(pge == pager.CurrentPage? "active":"")" asp-controller="User" asp-action="AllUsers" asp-route-pg="@pge">
+                            @pge
+                        </a>
+                    </li>
+                }
+
+                @if (pager.CurrentPage < pager.TotalPages)
+                {
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage + 1)" style="color:green">
+                            Next
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                            Last
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 </section>
 
 @section Scripts
