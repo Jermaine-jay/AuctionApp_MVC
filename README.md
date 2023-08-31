@@ -20,7 +20,7 @@ ____
 ## Features
 ____
 * User Authentication and Authorization: Secure user registration and login system, ensuring that only authorized users can access and participate in auctions,
-  Ensure only admins can make changes to the system. Note, you cannot register with an invalid email address.
+  Ensure only admins can make changes to the system. Note, that you cannot register with an invalid email address.
 
 * User Update: Only confirmed users will be able to log in, place bids and change details. An Email with a token will be sent when a change of password is initiated.
 
@@ -32,6 +32,13 @@ ____
 
 * Admin Profile: Admin can easily view vehicles for auction, set starting bids, track the progress of their auctions and change the status of an auction.
 
+## How it works
+_____
+* Registration: The app uses an email system to confirm a user's email when they register, an email system when they request to change their password, and an email system that sends a link to their mail for password reset. The application also has well-secured authentication and authorization mechanisms.
+  
+* Email system: The email system uses a token-based approach to confirm a user's email address. When a user registers, a token is generated and sent to their email address. The user must then click on the link in the email to confirm their email address. This helps to prevent unauthorized users from creating accounts.
+  
+* Authentication and authorization: The application uses a combination of username and password authentication, as well as role-based authorization. This ensures that only authorized users can access the application.
 
 ## Getting Started
 _____
