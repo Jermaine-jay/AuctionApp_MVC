@@ -44,7 +44,7 @@ namespace AunctionAppMVC.Controllers
 
             var pager = new Pagination(count, pg, pagesize);
             var rescip = (pg - 1) * pagesize;
-            var data = model.Skip(rescip).Take(pager.PageSize).ToList();
+            var data = model.OrderBy(u=>u.FirstName).Skip(rescip).Take(pager.PageSize).ToList();
 
             this.ViewBag.Pagination = pager;
             return View(data);

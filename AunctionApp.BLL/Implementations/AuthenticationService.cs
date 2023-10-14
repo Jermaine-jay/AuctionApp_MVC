@@ -101,7 +101,7 @@ namespace AunctionApp.BLL.Implementations
                     var parameters = $"api_key={_ApiKey}&email={emailAddress}";
                     var response = await httpClient.GetAsync($"{_Url}?{parameters}");
                     response.EnsureSuccessStatusCode();
-
+                    
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var getResponse = JsonConvert.DeserializeObject<dynamic>(responseContent).status;
                     if (getResponse == "valid")

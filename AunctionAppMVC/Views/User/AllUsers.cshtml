@@ -89,13 +89,13 @@
                 @if (pager.CurrentPage > 1)
                 {
                     <li>
-                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="1" style="color:green">
+                        <a class="" asp-controller="User" asp-action="AllUsers" asp-route-pg="1" style="color:green">
                             First
                         </a>
                     </li>
 
                     <li>
-                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                        <a class="" asp-controller="User" asp-action="AllUsers" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
                             Previous
                         </a>
                     </li>
@@ -113,13 +113,13 @@
                 @if (pager.CurrentPage < pager.TotalPages)
                 {
                     <li>
-                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage + 1)" style="color:green">
+                        <a class="" asp-controller="User" asp-action="AllUsers" asp-route-pg="@(pager.CurrentPage + 1)" style="color:green">
                             Next
                         </a>
                     </li>
 
                     <li>
-                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                        <a class="" asp-controller="User" asp-action="AllUsers" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
                             Last
                         </a>
                     </li>
