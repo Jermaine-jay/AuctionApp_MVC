@@ -553,7 +553,7 @@ section {
         .features .icon-box h4 {
             font-size: 20px;
             font-weight: 700;
-            margin: 5px 0 10px 60px;
+            margin: 5px 0 10px 40px;
         }
 
         .features .icon-box i {
@@ -571,8 +571,8 @@ section {
     .features .image {
         background-position: center center;
         background-repeat: no-repeat;
-        background-size: cover;
-        min-height: 400px;
+        background-size: contain;
+        min-height: 450px;
     }
 
 /*--------------------------------------------------------------

@@ -96,6 +96,10 @@ namespace AunctionApp.BLL.Implementations
                 return (false, $"User with id:{model.ProductId} wasn't found");
             }
 
+            if (int.Parse(model.BidPrice) <= int.Parse(product.ActualAmount))
+            {
+                return (false, "Bid amount should be more than initial price");
+            }
 
             Bid? bid = product.BidList?.SingleOrDefault(t => t.Bidder == model.Bidder);
             if (bid != null)
@@ -105,10 +109,6 @@ namespace AunctionApp.BLL.Implementations
                 return (true, "Update Successful!");
             }
 
-            if (int.Parse(model.BidPrice) >= int.Parse(product.ActualAmount))
-            {
-                return (false, "Bid amount should be more than initial price");
-            }
 
             var newBid = _mapper.Map<Bid>(model);
             product.BidList.Add(newBid);

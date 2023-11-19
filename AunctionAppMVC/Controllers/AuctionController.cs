@@ -70,7 +70,7 @@ namespace AunctionAppMVC.Controllers
                     return RedirectToAction("Home");
                 }
                 TempData["ErrMsg"] = msg;
-                return View("Home");
+                return View("MakeBid");
             }
             return View("Home");
         }
