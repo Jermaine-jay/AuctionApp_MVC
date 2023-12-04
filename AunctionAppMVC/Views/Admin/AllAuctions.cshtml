@@ -35,6 +35,8 @@
     </div>
 }
 
+<div class="table-list"> 
+
 <div class="my-5">
     <table class="table">
         <thead class="thead-dark">
@@ -61,9 +63,9 @@
                         <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
                             @if(item.value.Status == "Sold")
                             {
-                                <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
-                            }else{
                                 <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
+                            }else{
+                                <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
                             }
                         </a>
                     </span>
@@ -122,6 +124,7 @@
             </ul>
         }
     </div>
+</div>
 </section>
 
 @section Scripts

@@ -68,7 +68,7 @@ namespace AunctionApp.BLL.Implementations
                 {
                     Bidder = t.Bidder,
                     BidPrice = t.BidPrice,
-                    BidTime = t.BidTime.ToString("d"),
+                    BidTime = t.BidTime.ToString("dd MMMM yyyy HH:mm:ss"),
                 })
             });
         }
@@ -82,7 +82,7 @@ namespace AunctionApp.BLL.Implementations
                                     ProductName = p.ProductName,
                                     ActualAmount = p.ActualAmount,
                                     BidPrice = p.BidList.First(b => b.Bidder == bidder).BidPrice,
-                                    BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString()
+                                    BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString("dd MMMM yyyy HH:mm:ss")
                                 });
             return productDetails;
         }

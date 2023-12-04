@@ -174,48 +174,49 @@ h6 {
 /**
 * Desktop Navigation 
 */
+
 .navbar {
     padding: 0;
 }
 
-    .navbar ul {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        list-style: none;
-        align-items: center;
-    }
+.navbar ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
 
-    .navbar li {
-        position: relative;
-    }
+.navbar li {
+    position: relative;
+}
 
-    .navbar a,
-    .navbar a:focus {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 0 10px 30px;
-        font-size: 15px;
-        font-weight: 600;
-        color: #fff;
-        white-space: nowrap;
-        transition: 0.3s;
-    }
+.navbar a,
+.navbar a:focus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 10px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    transition: 0.3s;
+}
 
-        .navbar a i,
-        .navbar a:focus i {
-            font-size: 12px;
-            line-height: 0;
-            margin-left: 5px;
-        }
+.navbar a i,
+.navbar a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+}
 
-        .navbar a:hover,
-        .navbar .active,
-        .navbar .active:focus,
-        .navbar li:hover > a {
-            color: #ffc451;
-        }
+.navbar a:hover,
+.navbar .active,
+.navbar .active:focus,
+.navbar li:hover > a {
+    color: #ffc451;
+}
 
     .navbar .dropdown ul {
         display: block;
@@ -367,24 +368,24 @@ h6 {
         box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
     }
 
-        .navbar-mobile .dropdown ul li {
-            min-width: 200px;
-        }
+    .navbar-mobile .dropdown ul li {
+        min-width: 200px;
+    }
 
-        .navbar-mobile .dropdown ul a {
-            padding: 10px 20px;
-            color: #151515;
-        }
+    .navbar-mobile .dropdown ul a {
+        padding: 10px 20px;
+        color: #151515;
+    }
 
-            .navbar-mobile .dropdown ul a i {
-                font-size: 12px;
-            }
+    .navbar-mobile .dropdown ul a i {
+        font-size: 12px;
+    }
 
-            .navbar-mobile .dropdown ul a:hover,
-            .navbar-mobile .dropdown ul .active:hover,
-            .navbar-mobile .dropdown ul li:hover > a {
-                background-color: #ffc451;
-            }
+    .navbar-mobile .dropdown ul a:hover,
+    .navbar-mobile .dropdown ul .active:hover,
+    .navbar-mobile .dropdown ul li:hover > a {
+        background-color: #ffc451;
+    }
 
     .navbar-mobile .dropdown > .dropdown-active {
         display: block;
@@ -546,34 +547,38 @@ section {
     padding-top: 20px;
 }
 
-    .features .icon-box {
-        padding-left: 15px;
-    }
+.features .icon-box {
+    padding-left: 15px;
+}
 
-        .features .icon-box h4 {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 5px 0 10px 40px;
-        }
+.features .icon-box h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 5px 0 10px 40px;
+}
 
-        .features .icon-box i {
-            font-size: 48px;
-            float: left;
-            color: #ffc451;
-        }
+.features .icon-box i {
+    font-size: 48px;
+    float: left;
+    color: #ffc451;
+}
 
-        .features .icon-box p {
-            font-size: 15px;
-            color: #848484;
-            margin-left: 60px;
-        }
+.features .icon-box p {
+    font-size: 15px;
+    color: #848484;
+    margin-left: 60px;
+}
 
-    .features .image {
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: contain;
-        min-height: 450px;
-    }
+.features .image {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    min-height: 450px;
+}
+
+.features .table{
+    white-space:nowrap
+}
 
 /*--------------------------------------------------------------
 # Services
@@ -1020,90 +1025,90 @@ section {
             transition: 0.3s;
         }
 
-            #footer .footer-top .social-links a:hover {
-                background: #ffc451;
-                color: #151515;
-                text-decoration: none;
-            }
+    #footer .footer-top .social-links a:hover {
+        background: #ffc451;
+        color: #151515;
+        text-decoration: none;
+    }
 
-        #footer .footer-top h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            position: relative;
-            padding-bottom: 12px;
+    #footer .footer-top h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    #footer .footer-top .footer-links {
+        margin-bottom: 30px;
+    }
+
+    #footer .footer-top .footer-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #footer .footer-top .footer-links ul i {
+        padding-right: 2px;
+        color: #ffc451;
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    #footer .footer-top .footer-links ul li {
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+    }
+
+        #footer .footer-top .footer-links ul li:first-child {
+            padding-top: 0;
         }
 
-        #footer .footer-top .footer-links {
-            margin-bottom: 30px;
-        }
+    #footer .footer-top .footer-links ul a {
+        color: #fff;
+        transition: 0.3s;
+        display: inline-block;
+        line-height: 1;
+    }
 
-            #footer .footer-top .footer-links ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
+    #footer .footer-top .footer-links ul a:hover {
+        color: #ffc451;
+    }
 
-                #footer .footer-top .footer-links ul i {
-                    padding-right: 2px;
-                    color: #ffc451;
-                    font-size: 18px;
-                    line-height: 1;
-                }
+    #footer .footer-top .footer-newsletter form {
+        margin-top: 30px;
+        background: #fff;
+        padding: 6px 10px;
+        position: relative;
+        border-radius: 4px;
+    }
 
-                #footer .footer-top .footer-links ul li {
-                    padding: 10px 0;
-                    display: flex;
-                    align-items: center;
-                }
+    #footer .footer-top .footer-newsletter form input[type=email] {
+        border: 0;
+        padding: 4px;
+        width: calc(100% - 110px);
+    }
 
-                    #footer .footer-top .footer-links ul li:first-child {
-                        padding-top: 0;
-                    }
+    #footer .footer-top .footer-newsletter form input[type=submit] {
+        position: absolute;
+        top: 0;
+        right: -2px;
+        bottom: 0;
+        border: 0;
+        background: none;
+        font-size: 16px;
+        padding: 0 20px;
+        background: #ffc451;
+        color: #151515;
+        transition: 0.3s;
+        border-radius: 0 4px 4px 0;
+    }
 
-                #footer .footer-top .footer-links ul a {
-                    color: #fff;
-                    transition: 0.3s;
-                    display: inline-block;
-                    line-height: 1;
-                }
-
-                    #footer .footer-top .footer-links ul a:hover {
-                        color: #ffc451;
-                    }
-
-        #footer .footer-top .footer-newsletter form {
-            margin-top: 30px;
-            background: #fff;
-            padding: 6px 10px;
-            position: relative;
-            border-radius: 4px;
-        }
-
-            #footer .footer-top .footer-newsletter form input[type=email] {
-                border: 0;
-                padding: 4px;
-                width: calc(100% - 110px);
-            }
-
-            #footer .footer-top .footer-newsletter form input[type=submit] {
-                position: absolute;
-                top: 0;
-                right: -2px;
-                bottom: 0;
-                border: 0;
-                background: none;
-                font-size: 16px;
-                padding: 0 20px;
-                background: #ffc451;
-                color: #151515;
-                transition: 0.3s;
-                border-radius: 0 4px 4px 0;
-            }
-
-                #footer .footer-top .footer-newsletter form input[type=submit]:hover {
-                    background: #ffcd6b;
-                }
+    #footer .footer-top .footer-newsletter form input[type=submit]:hover {
+        background: #ffcd6b;
+    }
 
     #footer .copyright {
         text-align: center;
@@ -1118,7 +1123,6 @@ section {
     }
 
     /*Pagination*/
-
 .pagination {
     position:relative;
     bottom: 20px;
@@ -1126,28 +1130,70 @@ section {
     display: flex;
 }
 
+.pagination a,
+.pagination button {
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+    color: #333;
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+.pagination a:hover,
+.pagination button:hover {
+    background-color: #ddd;
+}
+
+.pagination .active{
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination ul{
+    list-style: none;
+    display: flex;
+}
+
+/*profile*/
+
+
+@media (min-width: 850px) {
+    .table-list {
+        font-size: 13px;
+    }
+
     .pagination a,
     .pagination button {
-        padding: 10px 15px;
-        text-decoration: none;
-        border: 1px solid #ccc;
-        background-color: #f4f4f4;
-        color: #333;
-        border-radius: 0px;
-        cursor: pointer;
+       padding: 7px, 11px;
+       font-size: 13px
+    }
+}
+
+@media (max-width: 768px) { 
+   .table-list {
+          font-size: 10px;
+   }
+
+    .pagination a,
+    .pagination button {
+        padding: 6px, 10px;
+        font-size: 10px
+    }
+}
+
+@media (max-width: 400px) {
+    .table-list {
+        font-size: 6px;
     }
 
-        .pagination a:hover,
-        .pagination button:hover {
-            background-color: #ddd;
-        }
-
-    .pagination .active{
-        background-color: #007bff;
-        color: #fff;
+    .pagination a,
+    .pagination button {
+        padding: 6px, 10px
     }
+}
 
-    .pagination ul{
-        list-style: none;
-        display: flex;
-    }
+.section-title {
+    white-space: nowrap
+}
