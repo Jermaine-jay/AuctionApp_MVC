@@ -4,6 +4,7 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,8 @@
     <link href="~/vendor/remixicon/remixicon.css" rel="stylesheet" asp-append-version="true">
     <link href="~/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" asp-append-version="true">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Aunction.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AunctionAppMVC.styles.css" asp-append-version="true" />
@@ -41,11 +43,10 @@
                         <li><a class="nav-link scrollto " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="Profile">Profile</a></li>
 
-                        if (User.IsInRole("SuperAdmin"))
-                        {
-                            
+                      @*   if (User.IsInRole("SuperAdmin"))
+                        {                          
                             <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a></li>                       
-                        }
+                        } *@
                         @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
                         {
                             <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
@@ -58,8 +59,7 @@
                             <li><a class="nav-link scrollto " asp-area="" asp-controller="Auction" asp-action="Home">Auctions</a></li>
                             <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="UserBids">bids</a></li>
                         }                 
-                        <li><a class="nav-link scrollto" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a></li>
-                        <li><a class="nav-link scrollto" asp-area="" asp-controller="User" asp-action="UserChangePassword">change password</a></li>
+                    
 
                     }
                     @if(!User.Identity.IsAuthenticated)
@@ -104,7 +104,7 @@
                         <ul>
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="Home" asp-action="Index">Home</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="Auction" asp-action="Home">Auctions</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="RegisterUser"></a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="RegisterUser">Register</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="User" asp-action="SignIn">Login</a></li>
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -141,10 +141,16 @@
     <script src="~/vendor/swiper/swiper-bundle.min.js" asp-append-version="true"></script>
     <script src="~/vendor/php-email-form/validate.js" asp-append-version="true"></script>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+
     <script src="~/js/main.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* <script src="https://code.jquery.com/jquery-3.6.4.min.js" asp-append-version="true"></script> *@
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -34,3 +34,36 @@
 
     var timer = setInterval(updateCountdown, 1000);});
 });
+
+
+function toggleAnchorLinks() {
+    const anchorLinks = document.querySelector('.anchor-links');
+    const displayStyle = anchorLinks.style.display;
+    if (displayStyle === 'none') {
+        anchorLinks.style.display = 'block';
+    } else {
+        anchorLinks.style.display = 'none';
+    }
+}
+
+
+const imageToChange = document.getElementById('imageToChange');
+const fileInput = document.getElementById('fileInput');
+const form = document.getElementById('form-file');
+
+imageToChange.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            // Preview the selected image
+            //imageToChange.src = reader.result;
+            imageToChange.src = event.target.result;
+        form.append(fileInput.files[0])
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+});

@@ -121,7 +121,7 @@ h6 {
     }
 
     #header .logo {
-        font-size: 32px;
+        font-size: 30px;
         margin: 0;
         padding: 0;
         line-height: 1;
@@ -1164,6 +1164,10 @@ section {
         font-size: 13px;
     }
 
+    #header .logo{
+        font-size: 20px;
+    }
+
     .pagination a,
     .pagination button {
        padding: 7px, 11px;
@@ -1181,6 +1185,10 @@ section {
         padding: 6px, 10px;
         font-size: 10px
     }
+
+    #header .logo{
+        font-size: 20px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -1192,8 +1200,147 @@ section {
     .pagination button {
         padding: 6px, 10px
     }
+
+    #header .logo{
+        font-size: 20px;
+    }
 }
 
 .section-title {
     white-space: nowrap
 }
+
+/*--------------------------------------------------------------
+# Profile
+--------------------------------------------------------------*/
+
+.profile h5{
+    font-size:13px;
+    font-weight:600;
+}
+
+.profile bi{
+    color: black;
+
+}
+
+.profile .main {
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    height: auto;
+    justify-content:center
+}
+
+.profile .topbar {
+    background-color: teal;
+    overflow: hidden;
+}
+
+.profile .topbar a {
+    float: right;
+    color: whitesmoke;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.profile .sidebar {
+    background-color: rgba(31, 90, 163, 0.8);
+    color: white;
+    height: auto;
+}
+
+.profile .sidebar a {
+    margin-left: 10px;
+    display: block;
+    color: white;
+    padding-bottom: 10px;
+    text-decoration: none;
+}
+
+.profile .card_img {
+    object-fit: cover;
+    width: 20vw;
+}
+
+.profile .card {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+
+.profile .content {
+    background-color: whitesmoke;
+}
+
+.profile-form > form{
+    width: 100%;
+    display: inline-block;
+    font-size: 11px;
+}
+
+@media (max-width: 1000px) {
+    .profile-form > form {
+        font-size: 7px;
+        text-decoration: none;
+        text-emphasis:unset;
+    }
+
+    .profile-details, .profile-detail-head {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-form > form {
+        font-size: 7px;
+        text-decoration: none;
+        text-emphasis: unset;
+    }
+
+    .profile-details, .profile-detail-head {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-form > form {
+        font-size: 7px;
+        text-decoration: none;
+        text-emphasis: unset;
+    }
+
+    .profile-details, .profile-detail-head {
+        font-size: 10px;
+    }
+}
+
+.profile .container{
+    width: 55%;
+}
+
+#navbarLinks a {
+    display: inline-block;
+    margin-right: 10px;
+}
+.anchor-links {
+    display: none;
+}
+
+/* Mobile view styles */
+/*@media (max-width: 767px) {
+    #navbarLinks a {
+        display: none;
+    }
+
+    #navbarLinks.open a {
+        display: inline-block;
+    }
+}
+
+@media (max-width: 767px) {
+    .anchor-links {
+        display: none;
+    }
+}*/
