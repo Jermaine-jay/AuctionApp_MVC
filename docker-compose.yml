@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+
+    app_database:
+        image: postgres:latest
+        container_name: app_db
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=#Alexissanchez31
+          - POSTGRES_DB=AuctionappDb
+        ports:
+          - 5432:5433
+
+        restart: always
+ 
+    aunctionappmvc:
+        image: ${DOCKER_REGISTRY-}aunctionappmvc
+        build:
+          context: .
+          dockerfile: AunctionAppMVC/Dockerfile
+
+        depends_on:
+            - "app_database"
+        environment: 
+             - ConnectionStrings:DefaultConnection="Host=app_database;Database=AuctionappDb;Username=postgres;Password=#Alexissanchez31;Port=5432;"
+             - ASPNETCORE_URLS=http://+80;

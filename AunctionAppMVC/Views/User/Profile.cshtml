@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
@@ -16,109 +16,143 @@
 
 
 <section class="mt-5">
-@if (@TempData["SuccessMsg"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show w-75 mx-auto d-block" role="alert">
-        <strong>Success!</strong> @TempData["SuccessMsg"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-    <section id="about" class="about">
-       <div class="container shadow-lg p-3 mb-5 bg-white rounded w-50" style="align-items:center" data-aos="fade-up">
-            <div class="section-title">
-                <h2>Profie</h2>
-                <p></p>
-                <div class="row">               
-                    <div id="portfolio" class="portfolio d-flex">
-                        <div class="col-lg-4 portfolio-container " data-aos="fade-up" data-aos-delay="200">
-                            <div class="portfolio-item filter-app">
-                                <div class="portfolio-wrap rounded-circle mt-5">
+    @if (@TempData["SuccessMsg"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show w-75 mx-auto d-block" role="alert">
+            <strong>Success!</strong> @TempData["SuccessMsg"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <section id="profile" class="profile">
+        <div class="container shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="profile main">
+                <div class="row">
+                    <div class="col-md-4 mt-1">
+                        <div class="card text-center sidebar">
+                            <div class="card-body mt-3">
+                                    <h5>@Model.User.UserName's' Profie</h5>
                                     @if (@Model.User.ProfileImagePath == "Blank-Pfp.jpg")
                                     {
-                                        <img src="~/img/ProfileImages/Blank-Pfp.jpg" class="img-fluid rounded-circle mx-auto" alt="">
+                                        <a href="~/img/@Model.User.ProfileImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@Model.User.UserName">               
+                                            <img src="~/img/ProfileImages/Blank-Pfp.jpg" class="img-fluid rounded-circle mx-auto" alt="">
+                                        </a>
                                     }
                                     else
                                     {
-                                        <img src="~/img/ProfileImages/@Model.User.ProfileImagePath" class="img-fluid rounded-circle mx-auto" alt="">
+                                        <a href="~/img/ProfileImages/@Model.User.ProfileImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@Model.User.UserName">
+                                            <img src="~/img/ProfileImages/@Model.User.ProfileImagePath" class="img-fluid rounded-circle mx-auto" alt="">
+                                        </a>
                                     }
+                               
+                                    <div class="profile-form m-2 mb-3">
+                                        <form asp-controller="User" asp-action="UpdateProfileImage" enctype="multipart/form-data" id="form-file" style="display:block;">
+                                            <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
+                                      
+                                                <input asp-for="@Model.Image.ProfileImagePath" type="file" accept=".png, .jpg, .jpeg" style="display:block;" required>
+                                                <span asp-validation-for="@Model.Image.ProfileImagePath"></span>
 
-                                    <div class="portfolio-info">
-                                        @*<h4>@Model.User.UserName</h4>*@
-                                        <div class="portfolio-links mx-auto">                                         
-                                            <a href="~/img/ProfileImages/@Model.User.ProfileImagePath" data-gallery="portfolioGallery" class="portfolio-lightbox" title="@Model.User.UserName"><i class="fa-solid fa-up-right-and-down-left-from-center fa-sm"></i></a>
-                                        </div>
+
+                                            <div class="col-12">
+                                                <button class="btn btn-success btn-sm" type="submit">update</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <hr></hr>
+
+                                    <div class="anchor-links" style="display:block;">
+
+                                       <div class="profile-detail-head mt-2">
+                                            @if (User.IsInRole("SuperAdmin"))
+                                            {
+                                                <a class="" asp-area=" " asp-controller="User" asp-action="RegisterAdmin">Register Admin</a>
+                                            }
+                                            @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                                            {
+                                                <a asp-controller="User" asp-action="UpdateUser" asp-route-Id="@Model.User.Id">Edit Profile</a>
+                                                <a class="" asp-area="" asp-controller="User" asp-action="UserChangePassword">change password</a>
+                                                <a class="" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a>
+                                            }
+                                             @if (User.IsInRole("User"))
+                                            {
+                                                <a asp-controller="User" asp-action="UpdateUser" asp-route-Id="@Model.User.Id">Edit Profile</a>                               
+                                                <a class="" asp-area="" asp-controller="User" asp-action="UserChangePassword">change password</a>
+                                                <a class="" asp-area=" " asp-controller="User" asp-action="SignOut">LogOut</a>
+                                            }
+                                       </div>
+
+                                    </div>
+                                    <i class="fa-solid fa-list fa-xl" onclick="toggleAnchorLinks()"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 mt-1">
+                        <div class="profile-details card mb-3 content">
+                            <div class="card-body">
+                                <div class="row">
+                             
+                                    <div class="col-md-3">
+                                        <h5>UserName</h5>
+                                    </div>
+                                    <div class="col-md-9 text-secondary">
+                                            @Model.User.UserName
                                     </div>
                                 </div>
-                                <div class="d-flex">
-                                    <form asp-controller="User" asp-action="UpdateProfileImage"  class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details" enctype="multipart/form-data">
-                                        <div class="alert-danger" asp-validation-summary="@ValidationSummary.ModelOnly"></div>
-                                       
-                                        <div class="col-12">
-                                            <div class="custom-file form-control">                                      
-                                                <input asp-for="@Model.Image.ProfileImagePath" type="file" accept=".png, .jpg, .jpeg" required>
-                                                <span asp-validation-for="@Model.Image.ProfileImagePath"></span>
-                                            </div>
-                                        </div>
+                                <hr>
+                                <div class="row">
+                              
+                                    <div class="col-md-3">
+                                        <h5>Full Name</h5>
+                                    </div>
+                                    <div class="col-md-9 text-secondary">
+                                          @Model.User.FirstName  @Model.User.LastName
+                                    </div>
+                                </div>
+                                <hr>
 
-                                        <div class="col-12">
-                                            <button class="btn btn-success btn-sm" type="submit">update</button>
-                                        </div>
-                                    </form>
-
+                                <div class="row">
+                         
+                                    <div class="col-md-3">
+                                        <h5>Email</h5>
+                                    </div>
+                                    <div class="col-md-9 text-secondary">
+                                            @Model.User.Email
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                
+                                        <h5>Phone</h5>
+                                    </div>
+                                    <div class="col-md-9 text-secondary">
+                                            @Model.User.PhoneNumber
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                               
+                                        <h5>Address</h5>
+                                    </div>
+                                    <div class="col-md-9 text-secondary">
+                                            @Model.User.Address
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="col-lg-12 pt-4 pt-lg-0 content mx-2 mt-5">                         
-                            <div class="row">
-                                <div class="col-lg-6 m-2">
-                                    <ul class="list-unstyled">
-                                        <li class="m-3">
-                                            <i class="bi bi-person-fill me-2"></i> <strong>UserName:</strong> @Model.User.UserName<hr>
-                                        </li>
-                                        <li class="m-3">
-                                            <i class="bi bi-person-fill me-2"></i> <strong>First Name:</strong> @Model.User.FirstName<hr>
-                                        </li>
-                                        <li class="m-3">
-                                            <i class="bi bi-person-fill me-2"></i> <strong>Last Name:</strong> @Model.User.LastName<hr>
-                                        </li>
-                                        <li class="m-3">
-                                            <i class="bi bi-phone-fill me-2"></i> <strong>Phone:</strong> @Model.User.PhoneNumber<hr>
-                                        </li>
-                                        <li class="m-3">
-                                            <i class="bi bi-envelope-fill me-2"></i> <strong>Email:</strong> @Model.User.Email<hr>
-                                        </li>
-                                        <li class="m-3">
-                                            <i class="bi bi-geo-alt-fill me-2"></i> <strong>Address:</strong> @Model.User.Address<hr>
-                                        </li>
-                                        <li>
-                                            @if (User.IsInRole("User"))
-                                            {
-                                                <span class="px-1">
-                                                    <a asp-controller="User" asp-action="UpdateUser" asp-route-Id="@Model.User.Id"  title="Update User">
-                                                        <i class="fa-sharp fa-solid fa-file-pen fa-2xl" style="color: black"></i>
-                                                    </a>
-                                                        : Edit User
-                                                </span>
-                                            } 
-                                        </li>
-                                    </ul>                                  
-                                </div>
-                       
-                           </div>                         
-                       </div>
-
-                    </div>   
-                </div>             
-            </div>   
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
 </section>
 
+
 @section Scripts
-{
+    {
     @{
         Html.RenderPartial("_ValidationScriptsPartial");
     }

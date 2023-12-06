@@ -3,14 +3,14 @@ using AunctionApp.DAL.Database;
 using AunctionAppMVC.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using TodoList.DAL.Repository;
+using AunctionApp.DAL.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AunctionAppDbContext>(opts =>
 {
-    var defaultConn = builder.Configuration.GetSection("ConnectionString")["DefaultConn"];
-    opts.UseSqlServer(defaultConn);
+    var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection");
+    opts.UseNpgsql(defaultConn);
 });
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSenderOptions"));
@@ -49,11 +49,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    ServiceExtensions.Configure(services);
-}
-await DataAccess.EnsurePopulatedAsync(app);
+/*await app.SeedRole();
+await app.EnsurePopulatedUsersAsync();
+await app.EnsurePopulatedAsync();*/
 
 app.Run();

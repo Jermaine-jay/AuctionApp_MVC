@@ -1,5 +1,6 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using AunctionApp.BLL.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -20,25 +21,40 @@ namespace AunctionAppMVC.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> GetAuction(int productId)
+
+        public async Task<IActionResult> GetAuction(string productId)
         {
             var model = await _ProductService.GetAuction(productId);
             return View(model);
         }
 
+
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> MakeBid(int productId)
+        public async Task<IActionResult> MakeBid(string productId)
         {
             var bidder = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
             return View(new AddOrUpdateBidVM { ProductId = productId, Bidder = bidder });
         }
 
+
         [Authorize]
-        public async Task<IActionResult> Home()
+        public async Task<IActionResult> Home(int pg=1)
         {
             var model = await _ProductService.GetAuctionsWithBidsAsync();
-            return View(model);
+            var count = model.Count();
+            int pagesize = 3;
+            if(pg < 1)
+                pg= 1;
+
+            var pager = new Pagination(count, pg, pagesize);
+            var rescip = (pg - 1) * pagesize;
+            var data= model.Skip(rescip).Take(pager.PageSize).ToList();   
+            
+            this.ViewBag.Pagination = pager;
+
+            return View(data);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "User")]
@@ -54,7 +70,7 @@ namespace AunctionAppMVC.Controllers
                     return RedirectToAction("Home");
                 }
                 TempData["ErrMsg"] = msg;
-                return View("Home");
+                return View("MakeBid");
             }
             return View("Home");
         }

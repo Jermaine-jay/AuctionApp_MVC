@@ -4,6 +4,18 @@
 }
 
 @model IEnumerable<AunctionApp.BLL.Models.AuctionVMForm>
+@using AunctionApp.BLL.Pagination;
+
+
+@{
+    Pagination pager = new Pagination();
+    int pageNo = 0;
+    if (ViewBag.AuctionsPagination != null)
+    {
+        pager = ViewBag.AuctionsPagination;
+        pageNo = pager.CurrentPage;
+    }
+}
 
 <section class="mt-5 w-75 mx-auto d-block">
 @if (@TempData["SuccessMsg"] != null)
@@ -23,53 +35,96 @@
     </div>
 }
 
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Auction Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th> 
-        </tr>
-    </thead>
+<div class="table-list"> 
+
+<div class="my-5">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Auction Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th> 
+            </tr>
+        </thead>
     
-    @foreach (var item in Model.Select((value, i) => new { value, i }))
-    {
-    <tbody>
-        <tr>
-            <th scope="row">@(item.i + 1)</th>
-            <td>@item.value.ProductName</td>
-            <td>@item.value.ActualAmount</td>
-            <td>@item.value.Status</td>      
-            <td class="d-flex">
+        @foreach (var item in Model.Select((value, i) => new { value, i }))
+        {
+        <tbody>
+            <tr>
+                <th scope="row">@(item.i + 1)</th>
+                <td>@item.value.ProductName</td>
+                <td>@item.value.ActualAmount</td>
+                <td>@item.value.Status</td>      
+                <td class="d-flex">
 
-                <span class="px-2">                  
-                    <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
-                        @if(item.value.Status == "Sold")
-                        {
-                            <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
-                        }else{
-                            <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
-                        }
-                    </a>
-                </span>
-                <span class="px-2">                      
-                    <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Edit Anction">
-                        <i class="fa-solid fa-pen-to-square fa-lg" style="color: #fca311"></i>
-                    </a>
-                </span>
+                    <span class="px-2">                  
+                        <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
+                            @if(item.value.Status != "Sold")
+                            {
+                                <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
+                            }else{
+                                <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
+                            }
+                        </a>
+                    </span>
+                    <span class="px-2">                      
+                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Edit Anction">
+                            <i class="fa-solid fa-pen-to-square fa-lg" style="color: #fca311"></i>
+                        </a>
+                    </span>
 
-                <span class="px-2">
-                    <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Delete Anction">
-                        <i class="fa-solid fa-trash fa-lg" style="color:red"></i>
-                    </a>
-                </span>
-            </td>
-        </tr>     
-    </tbody>
-    }
-</table>
+                    <span class="px-2">
+                        <a asp-controller="Admin" asp-action="UpdateAuction" asp-route-ProductId="@item.value.Id" title="Delete Anction">
+                            <i class="fa-solid fa-trash fa-lg" style="color:red"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>     
+        </tbody>
+        }
+    </table>
+
+</div>
+
+    <div class="my-4 container" style="position:">
+        @if (pager.TotalPages > 0)
+        {
+            <ul class="pagination">
+
+                @if (pager.CurrentPage > 1)
+                {
+                    <li>
+                        <a class="" asp-controller="Admin" asp-action="AllAuctions" asp-route-pg="1" style="color:green">First</a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Admin" asp-action="AllAuctions" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">Previous</a>
+                    </li>
+                }
+
+                @for (var pge = pager.StartingPage; pge <= pager.EndingPage; pge++)
+                {
+                    <li>
+                        <a class="@(pge == pageNo? "active":"")" asp-controller="Admin" asp-action="AllAuctions" asp-route-pg="@pge">@pge</a>
+                    </li>
+                }
+
+                @if (pager.CurrentPage < pager.TotalPages)
+                {
+                    <li>
+                        <a class="" asp-controller="Admin" asp-action="AllAuctions" asp-route-pg="@(pager.CurrentPage + 1)" style="color:green">Next</a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Admin" asp-action="AllAuctions" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">Last</a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
 </section>
 
 @section Scripts

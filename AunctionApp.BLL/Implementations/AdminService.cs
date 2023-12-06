@@ -3,7 +3,7 @@ using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using TodoList.DAL.Repository;
+using AunctionApp.DAL.Repository;
 
 
 namespace AunctionApp.BLL.Implementations
@@ -22,6 +22,7 @@ namespace AunctionApp.BLL.Implementations
             _ProductRepo = _unitOfWork.GetRepository<Product>();
             _webHostEnvironment = webHostEnvironment;
         }
+
 
         public async Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model)
         {
@@ -53,7 +54,7 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model)
         {
-            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.Id);
+            var product = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == model.Id);
             if (product == null)
             {
                 return (false, $"Product with ID:{model.Id} wasn't found");
@@ -86,7 +87,7 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
         }
 
-        public async Task<(bool successful, string msg)> DeleteAuctionAsync(int productId)
+        public async Task<(bool successful, string msg)> DeleteAuctionAsync(Guid productId)
         {
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
 
@@ -104,15 +105,15 @@ namespace AunctionApp.BLL.Implementations
 
         }
 
-        public async Task<(bool Done, string msg)> ToggleProductStatus(int productId)
+
+        public async Task<(bool Done, string msg)> ToggleProductStatus(Guid productId)
         {
             var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId, tracking: true);
 
             if (aunction != null)
             {
                 aunction.IsSold = !aunction.IsSold;
-                var row = _mapper.Map<Product>(aunction);
-                var rowChanges = await _ProductRepo.UpdateAsync(row);
+                var rowChanges = await _ProductRepo.UpdateAsync(aunction);
                 return rowChanges != null ? (true, "Status updated") : (false, "Failed to update status");
             }
             return (false, "");

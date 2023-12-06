@@ -33,8 +33,6 @@ namespace AunctionApp.DAL.Database
 
             modelBuilder.Entity<Bid>(p =>
             {
-                p.Property(p => p.BidTime)
-                    .HasDefaultValueSql("getdate()");
 
                 p.Property(p => p.Bidder)
                     .HasMaxLength(50)

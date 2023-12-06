@@ -1,5 +1,4 @@
 ﻿using AunctionApp.BLL.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AunctionApp.BLL.Interfaces
 {
@@ -12,8 +11,8 @@ namespace AunctionApp.BLL.Interfaces
         Task<(bool successful, string msg)> SignOut();
         Task<UserVM> GetUser(string userId);
         Task<IEnumerable<UserVM>> GetUsers();
-        Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register);
-        Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register);
+        Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register);
+        Task<(bool successful, string msg)> RegisterUser(RegisterVM register);
         Task<UserVM> UserProfileAsync(string userId);
         Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId);
 

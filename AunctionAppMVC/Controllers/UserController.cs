@@ -1,8 +1,8 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
+using AunctionApp.BLL.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 
 namespace AunctionAppMVC.Controllers
@@ -13,17 +13,15 @@ namespace AunctionAppMVC.Controllers
         private readonly IUserService _userService;
         private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IRecoveryService _recoveryService;
-        private readonly IAuthenticationService _authenticationService;
-        public UserController(IUserService userService, IProductService productService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IRecoveryService recoveryService, IAuthenticationService authenticationService)
+        private readonly IServiceFactory _serviceFactory;
+
+        public UserController(IUserService userService, IProductService productService, IServiceFactory serviceFactory, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
-            _urlHelperFactory = urlHelperFactory;
-            _recoveryService = recoveryService;
-            _authenticationService = authenticationService;
+            _serviceFactory = serviceFactory;
+
         }
         public IActionResult Home()
         {
@@ -35,22 +33,37 @@ namespace AunctionAppMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Users()
+        [Authorize(Roles ="Admin, SuperAdmin")]
+        public async Task<IActionResult> AllUsers(int pg=1)
         {
             var model = await _userService.GetUsers();
-            return View(model);
+            var count = model.Count();
+            int pagesize = 5;
+            if (pg < 1)
+                pg = 1;
+
+            var pager = new Pagination(count, pg, pagesize);
+            var rescip = (pg - 1) * pagesize;
+            var data = model.OrderBy(u=>u.FirstName).Skip(rescip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pagination = pager;
+            return View(data);
         }
+
 
         public IActionResult RegisterUser()
         {
             return View(new RegisterVM());
         }
 
-        [Authorize(Roles = "Admin")]
+
+
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult RegisterAdmin()
         {
             return View(new RegisterVM());
         }
+
 
 
         [Authorize]
@@ -81,6 +94,7 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         public IActionResult ResetPassword(string? code, string userId)
         {
             if (code == null)
@@ -92,18 +106,6 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
-        {
-            var (successful, msg) = await _authenticationService.ConfirmEmail(userId, code);
-            if (successful)
-            {
-                TempData["SuccessMsg"] = msg;
-                return RedirectToAction("SignIn");
-            }
-            TempData["ErrMsg"] = msg;
-            return View("SignIn");
-        }
-
 
         [Authorize]
         public async Task<IActionResult> GetUser(string userId)
@@ -113,11 +115,13 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [Authorize]
         public IActionResult AddBid()
         {
             return View(new AddOrUpdateBidVM());
         }
+
 
 
         [Authorize]
@@ -129,6 +133,7 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UserBids()
         {
@@ -136,6 +141,7 @@ namespace AunctionAppMVC.Controllers
             var model = await _productService.GetUserBidsAsync(bidder);
             return View(model);
         }
+
 
 
         [HttpPost]
@@ -159,13 +165,13 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
             if (ModelState.IsValid)
             {
-                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
-                var (successful, msg) = await _userService.RegisterUser(urlHelper, model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterUser(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -178,14 +184,14 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> SaveAdmin(RegisterVM model)
         {
             if (ModelState.IsValid)
             {
-                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
-                var (successful, msg) = await _userService.RegisterAdmin(urlHelper, model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().RegisterAdmin(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -198,13 +204,13 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
         public async Task<IActionResult> Update(UserVM model)
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.Update(model);
-
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().Update(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -219,12 +225,26 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+        public async Task<IActionResult> ConfirmEmail(string appcode,string code)
+        {
+            var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(appcode, code);
+            if (successful)
+            {
+                TempData["SuccessMsg"] = msg;
+                return RedirectToAction("SignIn");
+            }
+            TempData["ErrMsg"] = msg;
+            return View("SignIn");
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInVM model)
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.SignIn(model);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignIn(model);
                 if (successful)
                 {
 
@@ -238,11 +258,12 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         public async Task<IActionResult> SignOut()
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.SignOut();
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().SignOut();
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -255,6 +276,7 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileVM model)
         {
@@ -262,7 +284,7 @@ namespace AunctionAppMVC.Controllers
 
             if (!ModelState.IsValid)
             {
-                var (successful, msg) = await _userService.UpdateProfileImage(model.Image, userId);
+                var (successful, msg) = await _serviceFactory.GetService<IUserService>().UpdateProfileImage(model.Image, userId);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -276,12 +298,13 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             if (ModelState.IsValid)
             {
-                var (success, msg) = await _userService.Delete(userId);
+                var (success, msg) = await _serviceFactory.GetService<IUserService>().Delete(userId);
                 if (success)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -297,13 +320,14 @@ namespace AunctionAppMVC.Controllers
         }
 
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetUserPassword(ResetPasswordVM model)
         {
             if (ModelState.IsValid)
             {
-                var (successful, msg) = await _recoveryService.ResetPassword(model);
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ResetPassword(model);
                 if (successful)
                 {
                     TempData["SuccessMsg"] = msg;
@@ -322,8 +346,7 @@ namespace AunctionAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
-                var (successful, msg) = await _recoveryService.ForgotPassword(urlHelper, model);
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ForgotPassword(model);
 
                 if (successful)
                 {
@@ -334,6 +357,78 @@ namespace AunctionAppMVC.Controllers
                 return View("ForgotPassword");
             }
             return View("ForgotPassword");
+
+        }
+
+
+        public async Task<ActionResult> ChangePassword()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(new ChangePasswordVM { UserId = userId });
+        }
+
+
+        public async Task<IActionResult> ConfirmToken()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(new ConfirmTokenVM { UserId = userId });
+        }
+
+
+        public async Task<IActionResult> UserChangePassword()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangeDetailToken(userId);
+            if (successful)
+            {
+                TempData["SuccessMsg"] = msg;
+                return RedirectToAction("ConfirmToken");
+            }
+            TempData["ErrMsg"] = msg;
+            return View("WaitingPage");
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmUserToken(ConfirmTokenVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().VerifyChangeDetailToken(model);
+
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("ChangePassword");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("ConfirmToken");
+            }
+            return View("ConfirmToken");
+
+        }
+
+
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserPassword(ChangePasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var (successful, msg) = await _serviceFactory.GetService<IRecoveryService>().ChangePassword(model);
+                if (successful)
+                {
+                    TempData["SuccessMsg"] = msg;
+                    return RedirectToAction("Profile");
+                }
+                TempData["ErrMsg"] = msg;
+                return View("Confirm");
+            }
+            return View("WaitingPage");
 
         }
 

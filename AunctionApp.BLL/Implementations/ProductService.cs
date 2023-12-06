@@ -1,9 +1,9 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
+using AunctionApp.DAL.Repository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -26,9 +26,9 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<AuctionVMForm>> GetAuctions()
         {
             var aunction = await _ProductRepo.GetAllAsync();
-            var aunctionViewModels = aunction.Select(model => new AuctionVMForm
+            var aunctionViewModels = aunction.OrderBy(x=>x.CreatedAt).Select(model => new AuctionVMForm
             {
-                Id = model.Id,
+                Id = model.Id.ToString(),
                 ProductImagePath = model.ProductImagePath,
                 ProductName = model.ProductName,
                 Description = model.Description,
@@ -38,12 +38,12 @@ namespace AunctionApp.BLL.Implementations
             return aunctionViewModels;
         }
 
-        public async Task<AuctionVMForm> GetAuction(int productId)
+        public async Task<AuctionVMForm> GetAuction(string productId)
         {
-            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
+            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == productId);
             var res = new AuctionVMForm
             {
-                Id = aunction.Id,
+                Id = aunction.Id.ToString(),
                 ProductName = aunction.ProductName,
                 ActualAmount = aunction.ActualAmount,
                 Description = aunction.Description,
@@ -56,9 +56,9 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<AuctionWithBidVM>> GetAuctionsWithBidsAsync()
         {
             var actions = await _ProductRepo.GetAllAsync(include: u => u.Include(t => t.BidList));
-            return actions.Select(u => new AuctionWithBidVM
+            return actions.OrderBy(x=>x.CreatedAt).Select(u => new AuctionWithBidVM
             {
-                Id = u.Id,
+                Id = u.Id.ToString(),
                 ProductName = u.ProductName,
                 ActualAmount = u.ActualAmount,
                 Description = u.Description,
@@ -68,8 +68,8 @@ namespace AunctionApp.BLL.Implementations
                 {
                     Bidder = t.Bidder,
                     BidPrice = t.BidPrice,
-                    BidTime = t.BidTime.ToString("d"),
-                })
+                    BidTime = t.BidTime.ToString("dd MMMM yyyy HH:mm:ss"),
+                }).ToList()
             });
         }
 
@@ -82,18 +82,23 @@ namespace AunctionApp.BLL.Implementations
                                     ProductName = p.ProductName,
                                     ActualAmount = p.ActualAmount,
                                     BidPrice = p.BidList.First(b => b.Bidder == bidder).BidPrice,
-                                    BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString()
-                                });                           
+                                    BidTime = p.BidList.First(b => b.Bidder == bidder).BidTime.ToString("dd MMMM yyyy HH:mm:ss")
+                                });
             return productDetails;
         }
 
         public async Task<(bool successful, string msg)> AddOrUpdateAsync(AddOrUpdateBidVM model)
         {
 
-            Product product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
+            Product product = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
             if (product == null)
             {
                 return (false, $"User with id:{model.ProductId} wasn't found");
+            }
+
+            if (int.Parse(model.BidPrice) <= int.Parse(product.ActualAmount))
+            {
+                return (false, "Bid amount should be more than initial price");
             }
 
             Bid? bid = product.BidList?.SingleOrDefault(t => t.Bidder == model.Bidder);
@@ -103,6 +108,7 @@ namespace AunctionApp.BLL.Implementations
                 await _BidRepo.UpdateAsync(update);
                 return (true, "Update Successful!");
             }
+
 
             var newBid = _mapper.Map<Bid>(model);
             product.BidList.Add(newBid);

@@ -1,12 +1,15 @@
 ﻿using AunctionApp.BLL.Extensions;
 using AunctionApp.BLL.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Newtonsoft.Json;
+using System.Text;
 using User = AunctionApp.DAL.Entities.User;
 
 namespace AunctionApp.BLL.Implementations
@@ -17,24 +20,27 @@ namespace AunctionApp.BLL.Implementations
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IGenerateEmailVerificationPage _generateEmailVerificationPage;
-
+        private readonly IServiceFactory _serviceFactory;
         private string? _ApiKey;
         private string? _Url;
 
-        public AuthenticationService(IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor, IGenerateEmailVerificationPage Page)
+        public AuthenticationService(IServiceFactory serviceFactory, IConfiguration configuration, UserManager<User> userManager, IOptions<EmailSenderOptions> optionsAccessor)
         {
             _userManager = userManager;
+            _serviceFactory = serviceFactory;
             _configuration = configuration;
             _emailSenderOptions = optionsAccessor.Value;
-            _ApiKey = _configuration.GetSection("ZeroBook").GetSection("ApiKey")?.Value;
-            _Url = _configuration.GetSection("ZeroBook").GetSection("Url")?.Value;
-            _generateEmailVerificationPage = Page;
+            _ApiKey = _configuration["ZeroBook:ApiKey"];
+            _Url = _configuration["ZeroBook:Url"];
         }
 
 
         public async Task<(bool successful, string msg)> ConfirmEmail(string userId, string code)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var convert = Convert.FromBase64String(userId);
+            string encodeduserId = Encoding.UTF8.GetString(convert);
+
+            var user = await _userManager.FindByIdAsync(encodeduserId);
             if (user == null)
             {
                 return (false, "Error");
@@ -54,7 +60,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (string.IsNullOrEmpty(_emailSenderOptions.Password))
             {
-                return (false, "Null SendGridKey");
+                return (false, "Couldn't complete operation");
             }
             await Execute(email, subject, message);
             return (true, "Verification Mail sent to your Email Address");
@@ -95,7 +101,7 @@ namespace AunctionApp.BLL.Implementations
                     var parameters = $"api_key={_ApiKey}&email={emailAddress}";
                     var response = await httpClient.GetAsync($"{_Url}?{parameters}");
                     response.EnsureSuccessStatusCode();
-
+                    
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var getResponse = JsonConvert.DeserializeObject<dynamic>(responseContent).status;
                     if (getResponse == "valid")
@@ -112,13 +118,18 @@ namespace AunctionApp.BLL.Implementations
             }
         }
 
-        public async Task<bool> RegistrationMail(IUrlHelper urlHelper, User newUser)
+        public async Task<bool> RegistrationMail(User newUser)
         {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = urlHelper.Action("ConfirmEmail", "User", new { userId = newUser.Id, code }, protocol: "https");
-            await SendEmailAsync(newUser.Email, "Confirm your email",
-                _generateEmailVerificationPage.EmailVerificationPage(newUser.UserName, callbackUrl));
+            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().EmailVerificationPage;
+            var context = _serviceFactory.GetService<IHttpContextAccessor>().HttpContext;
 
+            var link = _serviceFactory.GetService<LinkGenerator>();
+            var appcode = Convert.ToBase64String(Encoding.UTF8.GetBytes(newUser.Id));
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            var callbackUrl = link.GetUriByAction(context,"ConfirmEmail", "User", new { appcode, code });
+            await SendEmailAsync(newUser.Email, "Confirm your email", page(newUser.UserName, callbackUrl));
+             
             return true;
         }
 

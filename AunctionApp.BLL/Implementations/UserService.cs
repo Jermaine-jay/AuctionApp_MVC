@@ -1,12 +1,11 @@
 ﻿using AunctionApp.BLL.Interfaces;
 using AunctionApp.BLL.Models;
 using AunctionApp.DAL.Entities;
+using AunctionApp.DAL.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoList.DAL.Repository;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -38,8 +37,7 @@ namespace AunctionApp.BLL.Implementations
 
         public async Task<(bool successful, string msg)> AddOrUpdateBidAsync(AddOrUpdateBidVM model)
         {
-            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
-
+            var product = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
             if (product == null)
             {
                 return (false, $"User with id:{model.ProductId} wasn't found");
@@ -62,8 +60,7 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges > 0 ? (true, $"User: {model.Bidder} bid was successfully created!") : (false, "Failed To save changes!");
         }
 
-
-        public async Task<(bool successful, string msg)> RegisterAdmin(IUrlHelper urlHelper, RegisterVM register)
+        public async Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register)
         {
             var verify = await _authenticationService.VerifyEmail(register.Email);
             if (verify == false)
@@ -76,7 +73,7 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                await _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "Admin");
                 return result.Succeeded ? (true, "Admin created successfully!, Verification Mail Sent") : (false, "Failed to create Admin, Couldn't Send Mail");
@@ -91,8 +88,7 @@ namespace AunctionApp.BLL.Implementations
             return (false, $"Failed to create Admin");
         }
 
-
-        public async Task<(bool successful, string msg)> RegisterUser(IUrlHelper urlHelper, RegisterVM register)
+        public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)
         {
             var verify = await _authenticationService.VerifyEmail(register.Email);
             if (verify == false)
@@ -105,11 +101,12 @@ namespace AunctionApp.BLL.Implementations
 
             if (result.Succeeded)
             {
-                await _authenticationService.RegistrationMail(urlHelper, newUser);
+                await _authenticationService.RegistrationMail(newUser);
 
                 await _userManager.AddToRoleAsync(newUser, "User");
                 return result.Succeeded ? (true, "User created successfully!, Verification Mail Sent") : (false, "Failed to create User, Couldn't Send Mail");
             }
+
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -119,7 +116,6 @@ namespace AunctionApp.BLL.Implementations
             }
             return (false, $"Failed to create User");
         }
-
 
         public async Task<(bool successful, string msg)> SignIn(SignInVM signIn)
         {
@@ -140,7 +136,6 @@ namespace AunctionApp.BLL.Implementations
             }
             return (false, "Unconfirmed Email Address");
         }
-
 
         public async Task<(bool successful, string msg)> SignOut()
         {
@@ -167,7 +162,6 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, $"User detail update was successful!") : (false, "Failed To save changes!");
         }
 
-
         public async Task<(bool successful, string msg)> Delete(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -179,7 +173,6 @@ namespace AunctionApp.BLL.Implementations
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{user.FirstName} was deleted") : (false, $"Delete Failed");
         }
 
-
         public async Task<UserVM> GetUser(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -187,7 +180,6 @@ namespace AunctionApp.BLL.Implementations
 
             return Auser;
         }
-
 
         public async Task<IEnumerable<UserVM>> GetUsers()
         {
@@ -200,12 +192,11 @@ namespace AunctionApp.BLL.Implementations
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
                 UserName = model.UserName,
-                Address = model.Address
+                Address = model.Address,
 
             });
             return userViewModels;
         }
-
 
         public async Task<UserVM> UserProfileAsync(string userId)
         {
@@ -224,33 +215,40 @@ namespace AunctionApp.BLL.Implementations
             return useres;
         }
 
-
         public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return (true, "User Does not exist!");
+            }
+
 
             var fileName = model.ProfileImagePath.FileName;
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
+
 
             if (!Directory.Exists(imagePath))
             {
                 Directory.CreateDirectory(imagePath);
             }
+
+            var existing = Path.Combine(imagePath, user.ProfileImagePath);
+            if (user.ProfileImagePath != null || user.ProfileImagePath != "Blank-Pfp.jpg")
+            {
+                File.Delete(existing);
+            }
+
             string picPath = Path.Combine(imagePath, fileName);
             using (var stream = new FileStream(picPath, FileMode.Create))
             {
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
 
-            if (user != null)
-            {
-            
-                user.ProfileImagePath = model.ProfileImagePath.FileName;
-                var result = await _userRepo.UpdateAsync(user);
-                return (true, "Profile picture updated!");
-            }
 
-            return (false, "Couldn't update the profile picture!");
+            user.ProfileImagePath = model.ProfileImagePath.FileName;
+            var result = await _userRepo.UpdateAsync(user);
+            return (true, "Profile picture updated!");
         }
 
     }

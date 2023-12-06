@@ -1,13 +1,23 @@
 ﻿@{
     ViewBag.Title = "title";
     Layout = "_Layout";
+
+    Pagination pager = new Pagination();
+    int pageNo = 0;
+    if (ViewBag.Pagination != null)
+    {
+        pager = ViewBag.Pagination;
+        pageNo = pager.CurrentPage;
+    }
 }
  
+@using AunctionApp.BLL.Pagination;
 @using AunctionApp.DAL.Entities;
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc;
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+
 
 @model IEnumerable<AunctionApp.BLL.Models.AuctionWithBidVM>
 
@@ -33,11 +43,11 @@
 
 @foreach (var item in Model.Select((value, i) => new { value, i }))
 {      
-  <section id="features" class="features">
-      <div class="container shadow-lg p-3 mb-5 bg-white rounded w-85" data-aos="fade-up">
+  <section id="features" class="mt-4 features">
+      <div class="container shadow-lg p-3 mb-4 bg-white rounded w-95" data-aos="fade-up">
 
       <div class="row">
-                <div class="image col-lg-6" style='background-image: url("../img/Auctions/@item.value.ProductImagePath");' data-aos="fade-right"></div>
+          <div class="image col-lg-6" style='background-image: url("../img/Auctions/@item.value.ProductImagePath");' data-aos="fade-right"></div>
         
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right" data-aos-delay="100">
           <h3>@item.value.ProductName</h3>
@@ -74,15 +84,27 @@
                 {                      
                     <div id="ClosedcountdownElement"></div>
                     <p class="fw-bold">
-                        Sold To: @item.value.Bids.Max(u=> u.Bidder) for:  $@item.value.Bids.Max(u=> u.BidPrice)
+                        Sold To: @item?.value?.Bids?.Max(u=> u.Bidder) for:  $@item?.value?.Bids?.Max(u=> u.BidPrice)
                     </p>
                 }
             }
 
-            @if (item.value.Status != "Sold")
+            else
             {
-                <div class="column mw-100 mt-5">
-                    <div class="col-lg-6 order-2 order-lg-2" data-aos="fade-right" data-aos-delay="100">
+                @if (item.value.Status == "Sold")
+                {
+                    <div id="ClosedcountdownElement"></div>
+                    <p class="fw-bold">
+                        Sold To: @item?.value?.Bids?.Max(u=> u.Bidder) for:  $@item?.value?.Bids?.Max(u=> u.BidPrice)
+                    </p>
+                }
+               
+            }
+
+            @if (item?.value.Status != "Sold")
+            {
+                <div class="mx-5 mt-4">
+                    <div class="col-lg-6 order-2 order-lg-3" >
                         <table class="table">
                             <thead class="thead-dark">
                                 <tr>
@@ -94,19 +116,19 @@
                                 </tr>
                             </thead>
 
+                            <tbody>
                             @foreach (var bid in item.value.Bids.Select((value, i) => new { value, i }))
                             {
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">@(
-                                        bid.i + 1
-                                        )</th>
-                                        <td>@bid.value.Bidder</td>
-                                        <td>@bid.value.BidTime</td>
-                                        <td>@bid.value.BidPrice</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th scope="row">@(
+                                    bid.i + 1
+                                    )</th>
+                                    <td>@bid.value.Bidder</td>
+                                    <td>@bid.value.BidTime </td>
+                                    <td>@bid.value.BidPrice</td>
+                                </tr>
                             }
+                            </tbody>
                         </table>
                     </div>     
                 </div>
@@ -114,9 +136,60 @@
             </div>
       </div>
     </div>
+
   </section>
-      
-
-
   }
+    <div class=" container data-aos-delay=" 100"">
+        @if(pager.TotalPages > 0)
+        {
+            <ul class="pagination">
+
+                @if (pager.CurrentPage > 1)
+                {
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="1" style="color:green">
+                            First
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                            Previous
+                        </a>
+                    </li>
+                }
+
+                @for(var pge = pager.StartingPage; pge <= pager.EndingPage; pge++)
+                {
+                    <li>
+                        <a class="@(pge == pager.CurrentPage? "active":"")" asp-controller="Auction" asp-action="Home" asp-route-pg="@pge">
+                            @pge
+                        </a>
+                    </li>
+                }
+                
+                @if(pager.CurrentPage < pager.TotalPages)
+                {
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage + 1)" style="color:green">
+                        Next
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="" asp-controller="Auction" asp-action="Home" asp-route-pg="@(pager.CurrentPage - 1)" style="color:red">
+                        Last
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 </section>
+
+@section Scripts
+    {
+    @{
+        Html.RenderPartial("_ValidationScriptsPartial");
+    }
+ }
