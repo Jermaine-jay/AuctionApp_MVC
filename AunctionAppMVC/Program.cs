@@ -47,8 +47,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-/*await app.SeedRole();
+await app.SeedRole();
 await app.EnsurePopulatedUsersAsync();
-await app.EnsurePopulatedAsync();*/
+await app.EnsurePopulatedAsync();
 
 app.Run();
