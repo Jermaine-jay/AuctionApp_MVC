@@ -22,7 +22,6 @@ namespace AunctionApp.BLL.Implementations
             _ProductRepo = _unitOfWork.GetRepository<Product>();
         }
 
-
         public async Task<IEnumerable<AuctionVMForm>> GetAuctions()
         {
             var aunction = await _ProductRepo.GetAllAsync();
