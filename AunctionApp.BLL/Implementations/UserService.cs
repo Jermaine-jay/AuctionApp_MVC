@@ -35,11 +35,9 @@ namespace AunctionApp.BLL.Implementations
             _authenticationService = authenticationService;
         }
 
-
-
         public async Task<(bool successful, string msg)> AddOrUpdateBidAsync(AddOrUpdateBidVM model)
         {
-            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
+            var product = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == model.ProductId, include: u => u.Include(x => x.BidList), tracking: true);
             if (product == null)
             {
                 return (false, $"User with id:{model.ProductId} wasn't found");
@@ -61,7 +59,6 @@ namespace AunctionApp.BLL.Implementations
 
             return rowChanges > 0 ? (true, $"User: {model.Bidder} bid was successfully created!") : (false, "Failed To save changes!");
         }
-
 
         public async Task<(bool successful, string msg)> RegisterAdmin(RegisterVM register)
         {
@@ -90,8 +87,6 @@ namespace AunctionApp.BLL.Implementations
             }
             return (false, $"Failed to create Admin");
         }
-
-
 
         public async Task<(bool successful, string msg)> RegisterUser(RegisterVM register)
         {
@@ -122,7 +117,6 @@ namespace AunctionApp.BLL.Implementations
             return (false, $"Failed to create User");
         }
 
-
         public async Task<(bool successful, string msg)> SignIn(SignInVM signIn)
         {
             User user;
@@ -143,14 +137,11 @@ namespace AunctionApp.BLL.Implementations
             return (false, "Unconfirmed Email Address");
         }
 
-
         public async Task<(bool successful, string msg)> SignOut()
         {
             await _signInManager.SignOutAsync();
             return (true, $"logged out successfully!");
         }
-
-
 
         public async Task<(bool successful, string msg)> Update(UserVM model)
         {
@@ -171,8 +162,6 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, $"User detail update was successful!") : (false, "Failed To save changes!");
         }
 
-
-
         public async Task<(bool successful, string msg)> Delete(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -184,8 +173,6 @@ namespace AunctionApp.BLL.Implementations
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{user.FirstName} was deleted") : (false, $"Delete Failed");
         }
 
-
-
         public async Task<UserVM> GetUser(string userId)
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -193,8 +180,6 @@ namespace AunctionApp.BLL.Implementations
 
             return Auser;
         }
-
-
 
         public async Task<IEnumerable<UserVM>> GetUsers()
         {
@@ -213,7 +198,6 @@ namespace AunctionApp.BLL.Implementations
             return userViewModels;
         }
 
-
         public async Task<UserVM> UserProfileAsync(string userId)
         {
             var u = await _userRepo.GetSingleByAsync(u => u.Id == userId);
@@ -230,8 +214,6 @@ namespace AunctionApp.BLL.Implementations
             };
             return useres;
         }
-
-
 
         public async Task<(bool successful, string msg)> UpdateProfileImage(ProfileImageVM model, string userId)
         {

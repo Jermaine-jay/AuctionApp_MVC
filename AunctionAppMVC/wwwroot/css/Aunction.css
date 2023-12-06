@@ -990,7 +990,7 @@ section {
         }
 
             #footer .footer-top .footer-info h3 {
-                font-size: 28px;
+                font-size: 20px;
                 margin: 0 0 20px 0;
                 padding: 2px 0 2px 0;
                 line-height: 1;
@@ -1173,6 +1173,10 @@ section {
        padding: 7px, 11px;
        font-size: 13px
     }
+
+    #footer .footer-top .footer-info h3 {
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 768px) { 
@@ -1189,6 +1193,10 @@ section {
     #header .logo{
         font-size: 20px;
     }
+
+    #footer .footer-top .footer-info h3 {
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -1203,6 +1211,10 @@ section {
 
     #header .logo{
         font-size: 20px;
+    }
+
+    #footer .footer-top .footer-info h3 {
+        font-size: 13px;
     }
 }
 

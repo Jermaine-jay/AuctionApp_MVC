@@ -4,15 +4,15 @@ namespace AunctionApp.BLL.Models
 {
 	public class ChangePasswordVM
 	{
-		public string UserId { get; set; }
+		public string? UserId { get; set; }
 
 		[Required, DataType(DataType.Password)]
-		public string OldPassword { get; set; }
+		public string? OldPassword { get; set; }
 
 		[Required, DataType(DataType.Password)]
-		public string NewPassword { get; set; }
+		public string? NewPassword { get; set; }
 
 		[DataType(DataType.Password), Compare(nameof(NewPassword))]
-		public string ConfirmNewPassword { get; set; }
+		public string? ConfirmNewPassword { get; set; }
 	}
 }

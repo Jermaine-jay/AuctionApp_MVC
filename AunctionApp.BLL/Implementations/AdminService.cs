@@ -52,11 +52,9 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Auction created successfully!") : (false, "Failed to create Auction");
         }
 
-
-
         public async Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model)
         {
-            var product = await _ProductRepo.GetSingleByAsync(u => u.Id == model.Id);
+            var product = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == model.Id);
             if (product == null)
             {
                 return (false, $"Product with ID:{model.Id} wasn't found");
@@ -89,11 +87,9 @@ namespace AunctionApp.BLL.Implementations
             return rowChanges != null ? (true, "Aunction created successfully!") : (false, "Failed to create Aunction");
         }
 
-
-
-        public async Task<(bool successful, string msg)> DeleteAuctionAsync(int productId)
+        public async Task<(bool successful, string msg)> DeleteAuctionAsync(string productId)
         {
-            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId);
+            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == productId);
 
             var fileName = aunction.ProductImagePath;
             var filePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, "img", "Auctions");
@@ -109,11 +105,9 @@ namespace AunctionApp.BLL.Implementations
 
         }
 
-
-
-        public async Task<(bool Done, string msg)> ToggleProductStatus(int productId)
+        public async Task<(bool Done, string msg)> ToggleProductStatus(string productId)
         {
-            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id == productId, tracking: true);
+            var aunction = await _ProductRepo.GetSingleByAsync(u => u.Id.ToString() == productId, tracking: true);
 
             if (aunction != null)
             {

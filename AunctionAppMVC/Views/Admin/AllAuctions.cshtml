@@ -61,11 +61,11 @@
 
                     <span class="px-2">                  
                         <a asp-controller="Admin" asp-action="SaveStatus" asp-route-ProductId="@item.value.Id" title="Sell Auction">
-                            @if(item.value.Status == "Sold")
+                            @if(item.value.Status != "Sold")
                             {
-                                <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
-                            }else{
                                 <i class="fa-solid fa-thumbs-down fa-lg" style="color:black"></i>
+                            }else{
+                                <i class="fa-solid fa-thumbs-up fa-lg" style="color:green"></i>
                             }
                         </a>
                     </span>

@@ -48,7 +48,7 @@ namespace AunctionAppMVC.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> UpdateAuction(int productId)
+        public async Task<IActionResult> UpdateAuction(string productId)
         {
             var model = await _ProductService.GetAuction(productId);
             return View(model);
@@ -123,7 +123,7 @@ namespace AunctionAppMVC.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int ProductId)
+        public async Task<IActionResult> Delete(string ProductId)
         {
             if (ModelState.IsValid)
             {
@@ -144,7 +144,7 @@ namespace AunctionAppMVC.Controllers
 
 
 
-        public async Task<IActionResult> SaveStatus(int ProductId)
+        public async Task<IActionResult> SaveStatus(string ProductId)
         {
             if (ModelState.IsValid)
             {

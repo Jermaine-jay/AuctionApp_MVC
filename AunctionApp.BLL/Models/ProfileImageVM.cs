@@ -5,9 +5,7 @@ namespace AunctionApp.BLL.Models
 {
     public class ProfileImageVM
     {
-        [Required(ErrorMessage = "Please select a profile image.")]
-        [DataType(DataType.ImageUrl)]
-        //[RegularExpression(@"^.*\.(jpeg|jpg|png|JPG)$", ErrorMessage = "Only .jpeg, .jpg, and .png files are allowed.")]
+        [DataType(DataType.ImageUrl),Required(ErrorMessage = "Please select a profile image.")]
         public IFormFile ProfileImagePath { get; set; }
     }
 }

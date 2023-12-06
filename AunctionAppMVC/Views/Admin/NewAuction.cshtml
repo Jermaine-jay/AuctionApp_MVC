@@ -5,7 +5,7 @@
 
 @model AunctionApp.BLL.Models.AuctionVM;
 
-<section class="mt-1">
+<section class="">
 @if (@TempData["SuccessMsg"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show w-75 mx-auto d-block" role="alert">
@@ -25,7 +25,6 @@
 
     <main id="main">
         <div class="container">
-
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -60,8 +59,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="custom-file form-control">
-                                                <label asp-for="@Model.ProductImagePath"></label>
+                                            <div class="">
                                                 <input asp-for="@Model.ProductImagePath" type="file" class="form-control-file" accept=".png, .jpg, .jpeg">
                                                 <span asp-validation-for="@Model.ProductImagePath"></span>
                                             </div>
