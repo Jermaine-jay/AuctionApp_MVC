@@ -6,8 +6,8 @@ namespace AunctionApp.BLL.Interfaces
     {
         Task<(bool successful, string msg)> CreateAuctionAsync(AuctionVM model);
         Task<(bool successful, string msg)> UpdateAuctionAsync(AuctionVM model);
-        Task<(bool successful, string msg)> DeleteAuctionAsync(string productId);
-        Task<(bool Done, string msg)> ToggleProductStatus(string productId);
+        Task<(bool successful, string msg)> DeleteAuctionAsync(Guid productId);
+        Task<(bool Done, string msg)> ToggleProductStatus(Guid productId);
 
     }
 }

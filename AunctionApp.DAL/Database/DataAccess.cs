@@ -5,22 +5,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AunctionApp.DAL.Database
 {
-    public class DataAccess
+    public static class DataAccess
     {
-        public static async Task EnsurePopulatedAsync(IApplicationBuilder app)
+        public static async Task EnsurePopulatedAsync(this IApplicationBuilder app)
         {
             AunctionAppDbContext context = app.ApplicationServices.CreateScope().ServiceProvider
                 .GetRequiredService<AunctionAppDbContext>();
 
-            if (!await context.Products.AnyAsync())
+            context.Database.EnsureCreated();
+            var productExist = await context.Products.AnyAsync();
+
+            if (!productExist)
             {
-                await context.Products.AddRangeAsync(ProductsWithBids());
+                await context.Products.AddRangeAsync(await ProductsWithBids());
                 await context.SaveChangesAsync();
             }
         }
 
 
-        private static IEnumerable<Product> ProductsWithBids()
+        private static async Task<IEnumerable<Product>> ProductsWithBids()
         {
             return new List<Product>()
             {

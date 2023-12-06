@@ -48,14 +48,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    ServiceExtensions.Configure(services);
-}
 
-await DataAccess.EnsurePopulatedAsync(app);
-await SeedUsers.EnsurePopulatedAsync(app);
-
+/*await app.SeedRole();
+await app.EnsurePopulatedUsersAsync();
+await app.EnsurePopulatedAsync();*/
 
 app.Run();

@@ -52,34 +52,5 @@ namespace AunctionAppMVC.Extensions
                 options.LoginPath = "/User/SignIn";
             });
         }
-
-
-        public static void Configure(IServiceProvider serviceProvider)
-        {
-            CreateRoles(serviceProvider).Wait();
-        }
-
-        private static async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            if (!await roleManager.RoleExistsAsync("SuperAdmin"))
-            {
-                var role = new IdentityRole("SuperAdmin");
-                await roleManager.CreateAsync(role);
-            }
-
-            if (!await roleManager.RoleExistsAsync("Admin"))
-            {
-                var role = new IdentityRole("Admin");
-                await roleManager.CreateAsync(role);
-            }
-
-            if (!await roleManager.RoleExistsAsync("User"))
-            {
-                var role = new IdentityRole("User");
-                await roleManager.CreateAsync(role);
-            }
-        }
     }
 }

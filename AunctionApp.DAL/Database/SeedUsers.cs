@@ -7,14 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AunctionApp.DAL.Database
 {
-    public class SeedUsers
+    public static class SeedUsers
     {
-        public static async Task EnsurePopulatedAsync(IApplicationBuilder app)
+        public static async Task EnsurePopulatedUsersAsync(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 UserManager<User> userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
 
                 if (!await userManager.Users.AnyAsync())
                 {

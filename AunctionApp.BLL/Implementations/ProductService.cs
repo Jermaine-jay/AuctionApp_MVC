@@ -26,7 +26,7 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<AuctionVMForm>> GetAuctions()
         {
             var aunction = await _ProductRepo.GetAllAsync();
-            var aunctionViewModels = aunction.Select(model => new AuctionVMForm
+            var aunctionViewModels = aunction.OrderBy(x=>x.CreatedAt).Select(model => new AuctionVMForm
             {
                 Id = model.Id.ToString(),
                 ProductImagePath = model.ProductImagePath,
@@ -56,7 +56,7 @@ namespace AunctionApp.BLL.Implementations
         public async Task<IEnumerable<AuctionWithBidVM>> GetAuctionsWithBidsAsync()
         {
             var actions = await _ProductRepo.GetAllAsync(include: u => u.Include(t => t.BidList));
-            return actions.Select(u => new AuctionWithBidVM
+            return actions.OrderBy(x=>x.CreatedAt).Select(u => new AuctionWithBidVM
             {
                 Id = u.Id.ToString(),
                 ProductName = u.ProductName,
