@@ -81,6 +81,7 @@ namespace AunctionApp.BLL.Implementations
                 ActualAmount = model.ActualAmount,
             };
 
+            product.UpdatedAt = DateTime.UtcNow;
             var updateproduct = _mapper.Map(form, product);
             var rowChanges = await _ProductRepo.UpdateAsync(updateproduct);
 
@@ -104,7 +105,6 @@ namespace AunctionApp.BLL.Implementations
             return await _unitOfWork.SaveChangesAsync() >= 0 ? (true, $"{aunction.ProductName} was deleted") : (false, $"Delete Failed");
 
         }
-
 
         public async Task<(bool Done, string msg)> ToggleProductStatus(Guid productId)
         {
