@@ -19,7 +19,7 @@ namespace AunctionApp.DAL.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Product>()
+            /*modelBuilder.Entity<Product>()
                 .Property(t => t.Description)
                 .HasMaxLength(3000);
 
@@ -37,7 +37,7 @@ namespace AunctionApp.DAL.Database
                 p.Property(p => p.Bidder)
                     .HasMaxLength(50)
                     .IsRequired();
-            });
+            });*/
 
 
             modelBuilder.Entity<Comment>(e =>
