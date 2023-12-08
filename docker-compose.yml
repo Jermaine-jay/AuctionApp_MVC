@@ -24,4 +24,4 @@ services:
             - "app_database"
         environment: 
              - ConnectionStrings:DefaultConnection="Host=dpg-clo79veqc21c73e3uf20-a;Database=auctionappdb;Username=auctionappdb_user;Password=kBLrfdrkDiFVt6KjYxoUT5QonZVgedsj;Port=5432;"
-             
+             - ASPNETCORE_URLS=http://+80
