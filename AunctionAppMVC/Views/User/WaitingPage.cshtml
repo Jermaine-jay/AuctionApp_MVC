@@ -10,14 +10,12 @@
 		<div class="card shadow p-3 mb-5 bg-body-tertiary rounded" style="width: 500px;">
 			@if (@TempData["SuccessMsg"] != null)
 			{
-
 				<div class="card-body">
 
 					<h2>Success!!</h2>
 					<p>@TempData["SuccessMsg"]</p>
 					<p>Check your Email and click the link to confirm your email</p>
-					<p></p>
-					
+					<p></p>				
 				</div>
 			}
 
@@ -29,7 +27,6 @@
 					<p>@TempData["ErrMsg"]</p>
 					<p>Failed to send verification mail</p>
 					<p></p>
-
 				</div>		
 			}
 
@@ -42,5 +39,4 @@
 	@{
 		Html.RenderPartial("_ValidationScriptsPartial");
 	}
-
 }
