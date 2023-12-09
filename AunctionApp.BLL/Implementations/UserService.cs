@@ -219,23 +219,22 @@ namespace AunctionApp.BLL.Implementations
         {
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
             if (user == null)
-            {
-                return (true, "User Does not exist!");
-            }
-
+                return (false, "User does not exist!");
+            
 
             var fileName = model.ProfileImagePath.FileName;
+            if (string.IsNullOrEmpty(fileName))
+                return (false, "Invalid file name for profile image.");
+            
+
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
-
-
-            if (!Directory.Exists(imagePath))
-            {
+            if (!Directory.Exists(imagePath))          
                 Directory.CreateDirectory(imagePath);
-            }
+            
 
-            var existing = Path.Combine(imagePath, user.ProfileImagePath);
-            if (user.ProfileImagePath != null || user.ProfileImagePath != "Blank-Pfp.jpg")
+            if (!string.IsNullOrEmpty(user.ProfileImagePath) && user.ProfileImagePath != "Blank-Pfp.jpg")
             {
+                var existing = Path.Combine(imagePath, user.ProfileImagePath);
                 File.Delete(existing);
             }
 
@@ -245,8 +244,7 @@ namespace AunctionApp.BLL.Implementations
                 await model.ProfileImagePath.CopyToAsync(stream);
             }
 
-
-            user.ProfileImagePath = model.ProfileImagePath.FileName;
+            user.ProfileImagePath = fileName;
             var result = await _userRepo.UpdateAsync(user);
             return (true, "Profile picture updated!");
         }
