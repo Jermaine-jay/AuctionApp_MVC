@@ -4,8 +4,10 @@ using AunctionApp.DAL.Entities;
 using AunctionApp.DAL.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static AunctionApp.BLL.Implementations.UserService;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -220,17 +222,18 @@ namespace AunctionApp.BLL.Implementations
             var user = await _userRepo.GetSingleByAsync(u => u.Id == userId);
             if (user == null)
                 return (false, "User does not exist!");
-            
+
 
             var fileName = model.ProfileImagePath.FileName;
             if (string.IsNullOrEmpty(fileName))
                 return (false, "Invalid file name for profile image.");
-            
+
 
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "ProfileImages");
-            if (!Directory.Exists(imagePath))          
+
+            if (!Directory.Exists(imagePath))
                 Directory.CreateDirectory(imagePath);
-            
+
 
             if (!string.IsNullOrEmpty(user.ProfileImagePath) && user.ProfileImagePath != "Blank-Pfp.jpg")
             {
