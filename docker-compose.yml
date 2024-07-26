@@ -6,9 +6,9 @@ services:
         image: postgres:latest
         container_name: app_db
         environment:
-          - POSTGRES_USER=applicationdb_fpio_user
-          - POSTGRES_PASSWORD=wZcq1oC8lKYEnWkr36FpF1aqVFHqWXi7
-          - POSTGRES_DB=applicationdb_fpio
+          - POSTGRES_USER=auctionapp_db_user
+          - POSTGRES_PASSWORD=gKe6Kxk7TQkoVGYveZXLrE0hBsKsKTVH
+          - POSTGRES_DB=dpg-cqhmlqaju9rs738nput0-a
         ports:
           - 5432:5433
 
@@ -23,5 +23,5 @@ services:
         depends_on:
             - "app_database"
         environment: 
-             - ConnectionStrings:DefaultConnection="Host=dpg-cnt268fjbltc7398dcg0-a;Database=applicationdb_fpio;Username=applicationdb_fpio_user;Password=wZcq1oC8lKYEnWkr36FpF1aqVFHqWXi7;Port=5432;"
+             - ConnectionStrings:DefaultConnection="Host=dpg-cqhmlqaju9rs738nput0-a;Database=auctionapp_db;Username=auctionapp_db_user;Password=gKe6Kxk7TQkoVGYveZXLrE0hBsKsKTVH;Port=5432;"
              - ASPNETCORE_URLS=http://+80
