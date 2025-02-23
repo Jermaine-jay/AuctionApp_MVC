@@ -50,21 +50,16 @@ namespace AunctionAppMVC.Controllers
             return View(data);
         }
 
-
         public IActionResult RegisterUser()
         {
             return View(new RegisterVM());
         }
-
-
 
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult RegisterAdmin()
         {
             return View(new RegisterVM());
         }
-
-
 
         [Authorize]
         public async Task<IActionResult> Profile()
@@ -87,13 +82,10 @@ namespace AunctionAppMVC.Controllers
             return View(new SignInVM());
         }
 
-
         public IActionResult ForgotPassword()
         {
             return View(new ForgotPasswordVM());
         }
-
-
 
         public IActionResult ResetPassword(string? code, string userId)
         {
@@ -105,8 +97,6 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
-
-
         [Authorize]
         public async Task<IActionResult> GetUser(string userId)
         {
@@ -114,15 +104,11 @@ namespace AunctionAppMVC.Controllers
             return View(model);
         }
 
-
-
         [Authorize]
         public IActionResult AddBid()
         {
             return View(new AddOrUpdateBidVM());
         }
-
-
 
         [Authorize]
         public async Task<IActionResult> UpdateUser()
@@ -132,8 +118,6 @@ namespace AunctionAppMVC.Controllers
             return View(user);
         }
 
-
-
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UserBids()
         {
@@ -141,8 +125,6 @@ namespace AunctionAppMVC.Controllers
             var model = await _productService.GetUserBidsAsync(bidder);
             return View(model);
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> SaveBid(AddOrUpdateBidVM model)
@@ -164,8 +146,6 @@ namespace AunctionAppMVC.Controllers
             return View("New");
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> SaveUser(RegisterVM model)
         {
@@ -182,8 +162,6 @@ namespace AunctionAppMVC.Controllers
             }
             return View("RegisterUser");
         }
-
-
 
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
@@ -202,8 +180,6 @@ namespace AunctionAppMVC.Controllers
             }
             return View("RegisterAdmin");
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> Update(UserVM model)
@@ -224,7 +200,6 @@ namespace AunctionAppMVC.Controllers
             return View("UpdateUser");
         }
 
-
         public async Task<IActionResult> ConfirmEmail(string appcode,string code)
         {
             var (successful, msg) = await _serviceFactory.GetService<IAuthenticationService>().ConfirmEmail(appcode, code);
@@ -236,8 +211,6 @@ namespace AunctionAppMVC.Controllers
             TempData["ErrMsg"] = msg;
             return View("SignIn");
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInVM model)
@@ -257,8 +230,6 @@ namespace AunctionAppMVC.Controllers
             return View("SignIn");
         }
 
-
-
         public async Task<IActionResult> SignOut()
         {
             if (ModelState.IsValid)
@@ -274,8 +245,6 @@ namespace AunctionAppMVC.Controllers
             }
             return View("SignIn");
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateProfileImage(ProfileVM model)
@@ -298,7 +267,6 @@ namespace AunctionAppMVC.Controllers
         }
 
 
-
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
@@ -318,8 +286,6 @@ namespace AunctionAppMVC.Controllers
             return View("Users");
 
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -360,7 +326,6 @@ namespace AunctionAppMVC.Controllers
 
         }
 
-
         public async Task<ActionResult> ChangePassword()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -374,7 +339,6 @@ namespace AunctionAppMVC.Controllers
             return View(new ConfirmTokenVM { UserId = userId });
         }
 
-
         public async Task<IActionResult> UserChangePassword()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -387,8 +351,6 @@ namespace AunctionAppMVC.Controllers
             TempData["ErrMsg"] = msg;
             return View("WaitingPage");
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -409,8 +371,6 @@ namespace AunctionAppMVC.Controllers
             return View("ConfirmToken");
 
         }
-
-
 
         [HttpPost]
         [Authorize]

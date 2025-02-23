@@ -91,7 +91,6 @@ namespace AunctionApp.BLL.Implementations
             return true;
         }
 
-
         public async Task<bool> VerifyEmail(string emailAddress)
         {
             try

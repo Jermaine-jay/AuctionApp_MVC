@@ -81,7 +81,7 @@ namespace AunctionApp.BLL.Implementations
                 ActualAmount = model.ActualAmount,
             };
 
-            product.UpdatedAt = DateTime.UtcNow;
+            product.UpdatedAt = DateTime.Now;
             var updateproduct = _mapper.Map(form, product);
             var rowChanges = await _ProductRepo.UpdateAsync(updateproduct);
 
