@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AunctionAppDbContext>(opts =>
 {
     var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection");
-    opts.UseNpgsql(defaultConn);
+    opts.UseSqlServer(defaultConn);
 });
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSenderOptions"));

@@ -25,7 +25,6 @@ namespace AunctionAppMVC.Extensions
 
 		}
 
-
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

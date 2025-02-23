@@ -62,6 +62,13 @@ namespace AunctionApp.DAL.Database
                  .HasForeignKey(w => w.ProductId)
                  .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.Property(r => r.Id)
+                      .HasColumnType("nvarchar(450)");
+                entity.Property(r => r.Id).ValueGeneratedOnAdd();
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }
