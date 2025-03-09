@@ -4,8 +4,9 @@ namespace AunctionApp.BLL.Implementations
 {
     public class GenerateEmailVerificationPage : IGenerateEmailVerificationPage
     {
-        public string EmailVerificationPage(string name, string callbackurl)
+        public string EmailVerificationPage(string name, string callbackurl, string baseURL)
         {
+            string imageUrl = $"{baseURL}/img/car-logo20.jpg";
             string html = $@"
                 <!DOCTYPE html>
                 <html>
@@ -64,7 +65,7 @@ namespace AunctionApp.BLL.Implementations
                 </head>
                 <body>
                   <div class=""container"">
-		            <img src=""~/img/car-logo20.jpg"" class=""my-3"" style=""width: 50px; height: 50px; position:center; "">
+                    <img src=""{imageUrl}"" class=""my-3"" style=""width: 50px; height: 50px; display:flex; justify-context:center;"" alt=""Logo"">
                      <h1>Email Verification</h1>
                         <p>Hi {name},Thanks for getting started with our Jermaine Auction!</p>
                         <p>We need a little more information to complete your registration, including a confirmation of your email address.</p>
@@ -80,8 +81,9 @@ namespace AunctionApp.BLL.Implementations
             return html;
         }
 
-        public string PasswordResetPage(string callbackurl)
+        public string PasswordResetPage(string callbackurl, string baseurl)
         {
+            string imageUrl = $"{baseurl}/img/car-logo20.jpg";
             string html = $@"
                 <!DOCTYPE html>
                 <html>
@@ -140,7 +142,7 @@ namespace AunctionApp.BLL.Implementations
                 </head>
                 <body>
                   <div class=""container"">
-		            <img src=""~/img/car-logo20.jpg"" class=""my-3"" style=""width: 50px; height: 50px; position:center; "">
+                    <img src=""{imageUrl}"" class=""my-3"" style=""width: 50px; height: 50px; display:flex; justify-context:center;"" alt=""Logo"">
                      <h1>Reset Password</h1>
                         <p>We need a little more information to complete your account recovery.</p>
 	                    <p>Click below to reset your password.</p>
@@ -155,9 +157,10 @@ namespace AunctionApp.BLL.Implementations
             return html;
         }
 
-		public string ChangePasswordPage(string code)
+		public string ChangePasswordPage(string code, string baseurl)
 		{
-			string html = $@"
+            string imageUrl = $"{baseurl}/img/car-logo20.jpg";
+            string html = $@"
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -215,7 +218,7 @@ namespace AunctionApp.BLL.Implementations
                 </head>
                 <body>
                   <div class=""container"">
-		            <img src=""~/img/car-logo20.jpg"" class=""my-3"" style=""width: 50px; height: 50px; position:center; "">
+                    <img src=""{imageUrl}"" class=""my-3"" style=""width: 50px; height: 50px; display:flex; justify-context:center;"" alt=""Logo"">
                      <h1>Change Password</h1>
                         <p>Use the code below.</p>
                         <div>

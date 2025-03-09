@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Text;
 using User = AunctionApp.DAL.Entities.User;
 
@@ -127,7 +128,8 @@ namespace AunctionApp.BLL.Implementations
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
             var callbackUrl = link.GetUriByAction(context,"ConfirmEmail", "User", new { appcode, code });
-            await SendEmailAsync(newUser.Email, "Confirm your email", page(newUser.UserName, callbackUrl));
+            string? baseUrl = link.GetUriByAction(context, action: "Index", controller: "Home");
+            await SendEmailAsync(newUser.Email, "Confirm your email", page(newUser.UserName, callbackUrl, baseUrl));
              
             return true;
         }

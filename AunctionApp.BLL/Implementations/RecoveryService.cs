@@ -5,6 +5,7 @@ using AunctionApp.DAL.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
+using System.Net.Http;
 
 namespace AunctionApp.BLL.Implementations
 {
@@ -52,8 +53,8 @@ namespace AunctionApp.BLL.Implementations
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext,
                 action: "ResetPassword", controller: "User", values: new { UserId = user.Id, code });
-
-            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().PasswordResetPage(callbackUrl);
+            string baseUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, action: "Index", controller: "Home");
+            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().PasswordResetPage(callbackUrl, baseUrl);
 
             await _serviceFactory.GetService<IAuthenticationService>().SendEmailAsync(model.Email, "Reset Password", page);
             return (true, "Reset Password Email Sent");
@@ -97,7 +98,8 @@ namespace AunctionApp.BLL.Implementations
             }
 
             var token = await _userManager.GenerateUserTokenAsync(user, "PasswordlessLoginTotpProvider", "passwordless-auth");
-            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().ChangePasswordPage(token);
+            string baseUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, action: "Index", controller: "Home") ?? "https://yourfallbackdomain.com";
+            var page = _serviceFactory.GetService<IGenerateEmailVerificationPage>().ChangePasswordPage(token, baseUrl);
 
             await _serviceFactory.GetService<IAuthenticationService>().SendEmailAsync(user.Email, "Change Details", page);
             return (true, "Change Detail Email Sent");
